@@ -1064,8 +1064,10 @@ end;
 
 procedure TMainForm.decodeRecievedData(s: string);
 var
-
+//  SMsg      : string;
+//  lsLineNum : string;
   i         : integer;
+//  count     : byte;
   DPtr      : pbyte;
   SPtr      : pbyte;
 
@@ -1172,8 +1174,10 @@ end;
 
 procedure TMainForm.cpOutputData(s: string; rc: boolean);
 var
-
+//   i         : integer;
+//   count     : byte;
    SMsg      : string;
+//   lsLineNum : string;
 begin
   SMsg       := '';                                                     // start with a clean label to write on.
   if s <> '' then
@@ -1433,6 +1437,7 @@ begin
     Sini := TIniFile.Create('C:\Simtek.Ini');
     Sini.WriteString(InstSec, InstSeck01, gPort);                             // Save the open com port
     Sini.WriteString(InstSec, InstSecK02, gBaud);                             // Set the default baud rate for startup
+//    Sini.WriteString(InstSec, InstSecK03, InttoStr(gAddress));              // Set the default address for startup
     Sini.WriteString(GENSec,  GenSecK03,  gDataBits);                         // Set the default Data word length
     Sini.WriteString(GENSec,  GenSecK04,  gStopBits);                         // Set the default Parity mode for startup
     Sini.WriteString(InstSec, GenSecK05,  gParity);                           // Set the default Number of Stop bits
@@ -1460,13 +1465,14 @@ begin
 end;
 
 procedure TMainForm.cpSetComPort;
-
+//var i        : integer;                                     //
 begin
   if cpDrv.Connected then                                     // check to make sure the port is closed
     begin
     cpDrv.Disconnect;                                         // disconnect the com port
 
     end;
+//  gParity := 'none';
 
   cpDrv.PortName            := '\\.\'+gPort;                   // assign the port
   cpDrv.BaudRate            := cpIntToBaudRate(gBaud);         // set the baud rate

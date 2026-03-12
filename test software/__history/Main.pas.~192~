@@ -35,6 +35,7 @@ const
   GENSec             = 'general';
   InstSecK01         = 'cbValidPorts';
   InstSecK02         = 'cbBaudRate';
+//  InstSecK03         = 'cbAddress';
   GenSecK01          = 'TxWinLimit';
   GenSecK02          = 'RxWinLimit';
   GenSecK03          = 'cpdDATABITS';
@@ -483,17 +484,19 @@ begin
         // load the com port setting if they are stored else load the defaults
         gPort                     :=                ReadString(InstSec, InstSecK01, 'COM3');  //
         gBaud                     :=                ReadString(InstSec, InstSecK02, '9600');  //
+//        gAddress                  :=                StrtoInt(ReadString(InstSec, InstSecK03, '0'));  //
         gDataBits                 :=                ReadString(GENSec,  GenSecK03,  '3');     //
         gStopBits                 :=                ReadString(GENSec,  GenSecK04,  '1');     //
         gParity                   :=                'none';//   ReadString(InstSec, GenSecK05,  'none');  //
       end;
     Sini.Free;
 
-    TxPlace                       := Length(IntToStr(TxWinLimit));                            // get the number of possible lines in the window
-    RxPlace                       := Length(IntToStr(RxWinLimit));                            // get the number of possible lines in the window
+    TxPlace                         := Length(IntToStr(TxWinLimit));                            // get the number of possible lines in the window
+    RxPlace                         := Length(IntToStr(RxWinLimit));                            // get the number of possible lines in the window
 
     cbValidPorts.Text := gPort;
     cbBaudRate.Text   := gBaud;
+    //cbAddress.Text    := InttoStr(gAddress);
 
     responseReset;
     DXTimer1.Enabled              := true;
@@ -503,6 +506,7 @@ procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   // Any background operations in other threads must be closed here
   if hComm <> INVALID_HANDLE_VALUE then CloseHandle(hComm);
+//  if PanelMap.Handle <> INVALID_HANDLE_VALUE then PanelMap.Free;
 end;
 
 procedure TMainForm.responseReset;
@@ -535,7 +539,7 @@ begin
     lblDimming2.Caption  := lblDimming2Cap + '0';
 
 
-    MainForm.Caption                 := buildMainCaption;
+    MainForm.Caption                 := buildMainCaption;       //
     lblTransmitRate.Caption          := TSCapHeader + '0.00Hz';
 
     lbl_Firmware_TX_Rate.Caption     := Firmware_Caption_Header + '0.00Hz';
@@ -711,7 +715,7 @@ end;
 function TMainForm.encodeCommandData(CommandByte: byte): string; //preps messages to be send to the instrument
 var
    s       : string;
-
+//   DPtr    : pbyte;
 begin
   s := '';
   case CommandByte of
@@ -822,6 +826,7 @@ end;
 function  TMainForm.cleanRxBuffer(len : integer) : string;
 var x : integer;
 begin
+//    Result := mem2str(gSerialBuffer,len);
   x        := 1;
   while(x <= len)do
   begin
@@ -898,6 +903,7 @@ begin
       wdlist[li]  := wrstr;
       wrstr       := '';
       end;// mm_individual_msg.Checked
+    //gRate_Firmware := calculateRate(ctime, gRate_Firmware, True, lbl_Firmware_TX_Rate, tkb_Firmware_Update_Rate, Reset_Caption_Header);
     Flag_Reset_Request    := False;
     end;// if Flag_Reset_Request
 
@@ -963,8 +969,10 @@ begin
   if gRate.uc >= (tbUpdateRate.Position) then
     begin
     if mm_continuous.Checked then gRate := calculateRate(ctime,    gRate, True, lblTransmitRate, tbUpdateRate, TSCapHeader)
-
     else                    gRate := calculateRate(gRate.uc, gRate, True, lblTransmitRate, tbUpdateRate, TSCapHeader);
+
+    //if li <> 0 then
+//      begin
       for counter  := 1 to li do
         begin
         wrstr           := wdlist[counter];
@@ -972,7 +980,7 @@ begin
         if counter       = li then ratecalc := True else  ratecalc := False;
         cpOutputData(wrstr, ratecalc);
         end;//for counter := 1 to li do
-
+//      end;//if li <> 0 then
     gRate.uc := 0;
     inc(gRate_Firmware.uc);
     inc(gRate_Status.uc);
@@ -1002,7 +1010,7 @@ procedure  TMainForm.decodeSerial(var sp1, sp2 : string);
 var     // sp1 = gSerialBuffer    sp2 = gSerialBufferSMsg
   SMsg       : string;
   tmp1       : byte;
-
+//  i          : integer;
 begin
   sp1          := sp1 + sp2;   // add message to the buffer
   sp2          := '';          // clean out the message
@@ -1064,8 +1072,10 @@ end;
 
 procedure TMainForm.decodeRecievedData(s: string);
 var
-
+//  SMsg      : string;
+//  lsLineNum : string;
   i         : integer;
+//  count     : byte;
   DPtr      : pbyte;
   SPtr      : pbyte;
 
@@ -1172,8 +1182,10 @@ end;
 
 procedure TMainForm.cpOutputData(s: string; rc: boolean);
 var
-
+//   i         : integer;
+//   count     : byte;
    SMsg      : string;
+//   lsLineNum : string;
 begin
   SMsg       := '';                                                     // start with a clean label to write on.
   if s <> '' then
@@ -1433,6 +1445,7 @@ begin
     Sini := TIniFile.Create('C:\Simtek.Ini');
     Sini.WriteString(InstSec, InstSeck01, gPort);                             // Save the open com port
     Sini.WriteString(InstSec, InstSecK02, gBaud);                             // Set the default baud rate for startup
+//    Sini.WriteString(InstSec, InstSecK03, InttoStr(gAddress));              // Set the default address for startup
     Sini.WriteString(GENSec,  GenSecK03,  gDataBits);                         // Set the default Data word length
     Sini.WriteString(GENSec,  GenSecK04,  gStopBits);                         // Set the default Parity mode for startup
     Sini.WriteString(InstSec, GenSecK05,  gParity);                           // Set the default Number of Stop bits
@@ -1460,13 +1473,14 @@ begin
 end;
 
 procedure TMainForm.cpSetComPort;
-
+//var i        : integer;                                     //
 begin
   if cpDrv.Connected then                                     // check to make sure the port is closed
     begin
     cpDrv.Disconnect;                                         // disconnect the com port
 
     end;
+//  gParity := 'none';
 
   cpDrv.PortName            := '\\.\'+gPort;                   // assign the port
   cpDrv.BaudRate            := cpIntToBaudRate(gBaud);         // set the baud rate

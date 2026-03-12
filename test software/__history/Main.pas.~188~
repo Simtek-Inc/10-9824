@@ -35,6 +35,7 @@ const
   GENSec             = 'general';
   InstSecK01         = 'cbValidPorts';
   InstSecK02         = 'cbBaudRate';
+//  InstSecK03         = 'cbAddress';
   GenSecK01          = 'TxWinLimit';
   GenSecK02          = 'RxWinLimit';
   GenSecK03          = 'cpdDATABITS';
@@ -297,6 +298,8 @@ type
     procedure MemoTxClick(Sender: TObject);
     procedure tkbDimming2Change(Sender: TObject);
     procedure responseIndicator(s : string);
+    //procedure ApplyDisplayDimming(Level: Byte);
+    //function ScaleColor(Base: TColor; Bright: Byte): TColor;
 
     //*************************************************************************************************************
    private
@@ -483,17 +486,19 @@ begin
         // load the com port setting if they are stored else load the defaults
         gPort                     :=                ReadString(InstSec, InstSecK01, 'COM3');  //
         gBaud                     :=                ReadString(InstSec, InstSecK02, '9600');  //
+//        gAddress                  :=                StrtoInt(ReadString(InstSec, InstSecK03, '0'));  //
         gDataBits                 :=                ReadString(GENSec,  GenSecK03,  '3');     //
         gStopBits                 :=                ReadString(GENSec,  GenSecK04,  '1');     //
         gParity                   :=                'none';//   ReadString(InstSec, GenSecK05,  'none');  //
       end;
     Sini.Free;
 
-    TxPlace                       := Length(IntToStr(TxWinLimit));                            // get the number of possible lines in the window
-    RxPlace                       := Length(IntToStr(RxWinLimit));                            // get the number of possible lines in the window
+    TxPlace                         := Length(IntToStr(TxWinLimit));                            // get the number of possible lines in the window
+    RxPlace                         := Length(IntToStr(RxWinLimit));                            // get the number of possible lines in the window
 
     cbValidPorts.Text := gPort;
     cbBaudRate.Text   := gBaud;
+    //cbAddress.Text    := InttoStr(gAddress);
 
     responseReset;
     DXTimer1.Enabled              := true;
@@ -503,6 +508,7 @@ procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   // Any background operations in other threads must be closed here
   if hComm <> INVALID_HANDLE_VALUE then CloseHandle(hComm);
+//  if PanelMap.Handle <> INVALID_HANDLE_VALUE then PanelMap.Free;
 end;
 
 procedure TMainForm.responseReset;
@@ -535,7 +541,7 @@ begin
     lblDimming2.Caption  := lblDimming2Cap + '0';
 
 
-    MainForm.Caption                 := buildMainCaption;
+    MainForm.Caption                 := buildMainCaption;       //
     lblTransmitRate.Caption          := TSCapHeader + '0.00Hz';
 
     lbl_Firmware_TX_Rate.Caption     := Firmware_Caption_Header + '0.00Hz';
@@ -711,7 +717,7 @@ end;
 function TMainForm.encodeCommandData(CommandByte: byte): string; //preps messages to be send to the instrument
 var
    s       : string;
-
+//   DPtr    : pbyte;
 begin
   s := '';
   case CommandByte of
@@ -812,7 +818,12 @@ end;
 
 procedure TMainForm.cbxResponseClick(Sender: TObject);
 begin
+  //lblResponseRequestsTitle1.Visible := cbxResponse.Checked;
+  //lblRequestsSent.Visible           := cbxResponse.Checked;
+  //lblResponseRequestsTitle2.Visible := cbxResponse.Checked;
   lblResponseRecieved.Visible       := cbxResponse.Checked;
+  //lblRecievedTimeout.Visible        := cbxResponse.Checked;
+  //tkbRecieveTimeOut.Visible         := cbxResponse.Checked;
   N1.Visible                        := cbxResponse.Checked;
   mm_clear_counts.Visible           := cbxResponse.Checked;
   NumberOfRequests                  :=   0;
@@ -822,6 +833,7 @@ end;
 function  TMainForm.cleanRxBuffer(len : integer) : string;
 var x : integer;
 begin
+//    Result := mem2str(gSerialBuffer,len);
   x        := 1;
   while(x <= len)do
   begin
@@ -898,6 +910,7 @@ begin
       wdlist[li]  := wrstr;
       wrstr       := '';
       end;// mm_individual_msg.Checked
+    //gRate_Firmware := calculateRate(ctime, gRate_Firmware, True, lbl_Firmware_TX_Rate, tkb_Firmware_Update_Rate, Reset_Caption_Header);
     Flag_Reset_Request    := False;
     end;// if Flag_Reset_Request
 
@@ -963,8 +976,10 @@ begin
   if gRate.uc >= (tbUpdateRate.Position) then
     begin
     if mm_continuous.Checked then gRate := calculateRate(ctime,    gRate, True, lblTransmitRate, tbUpdateRate, TSCapHeader)
-
     else                    gRate := calculateRate(gRate.uc, gRate, True, lblTransmitRate, tbUpdateRate, TSCapHeader);
+
+    //if li <> 0 then
+//      begin
       for counter  := 1 to li do
         begin
         wrstr           := wdlist[counter];
@@ -972,7 +987,7 @@ begin
         if counter       = li then ratecalc := True else  ratecalc := False;
         cpOutputData(wrstr, ratecalc);
         end;//for counter := 1 to li do
-
+//      end;//if li <> 0 then
     gRate.uc := 0;
     inc(gRate_Firmware.uc);
     inc(gRate_Status.uc);
@@ -993,8 +1008,6 @@ begin
     RXCount := 0;
     end;
 end;
-
-
 //------------------------------------------------------------------------------
 
 
@@ -1002,10 +1015,10 @@ procedure  TMainForm.decodeSerial(var sp1, sp2 : string);
 var     // sp1 = gSerialBuffer    sp2 = gSerialBufferSMsg
   SMsg       : string;
   tmp1       : byte;
-
+//  i          : integer;
 begin
   sp1          := sp1 + sp2;   // add message to the buffer
-  sp2          := '';          // clean out the message
+  sp2          := '';         // clean out the message
 
   gByteCount  := length(sp1);  //set byte count to the length of the buffer
   SMsg := ' ';
@@ -1022,7 +1035,7 @@ begin
         else
         begin
 		      decodeRecievedData(copy(sp1,1,Status_Response_Length));   // send it here cause I already set up this function
-		      cleanRxBuffer(Status_Response_Length)                     // get rid of the message
+		      cleanRxBuffer(Status_Response_Length)             // get rid of the message
         end;
       end
       else if (tmp1 = Firmware_Response) then
@@ -1058,18 +1071,28 @@ begin
 	      SMsg := cleanRxBuffer(1);  // not start byte
       end;
     end
-
+//    else
+//    begin
+//      SMsg := cleanRxBuffer(2);  // not start byte
+//    end;
+//    end;// while
+//    if (cbfilterGarbage.Checked = false) then
+//    begin                                                   //
+ //   wrMemoWindow(cbxRDXWindowEnable,memoRx,lblReceived,RxWinLimit,RxPlace,'RX ','Lines Received : ',SMsg);
+//    end;                                //
 end;
 
 
 procedure TMainForm.decodeRecievedData(s: string);
 var
-
+//  SMsg      : string;
+//  lsLineNum : string;
   i         : integer;
+//  count     : byte;
   DPtr      : pbyte;
   SPtr      : pbyte;
 
-//0- reset 1- status 2-rtbuttons 3-rtpot 4-displays 5-firmware
+  //0- reset 1- status 2-rtbuttons 3-rtpot 4-displays 5-firmware
 begin
   if length(s) <> 0 then
   begin
@@ -1094,26 +1117,26 @@ begin
           responseIndicator(s);
           i := i + Indicator_Request_length;
         end;
-      Dimming_Request:
-        begin
-        if Length(s) >= 2 then
-         begin
-         UpdatingDimmingFromCmd := True;
+Dimming_Request:
+begin
+  if Length(s) >= 2 then
+  begin
+    UpdatingDimmingFromCmd := True;
 
-         CurrentDisplayBrightness := Ord(s[2]);
+    CurrentDisplayBrightness := Ord(s[2]);
 
-         tkbDimming1.Position := CurrentDisplayBrightness;
-         tkbDimming1Old := CurrentDisplayBrightness;
+    tkbDimming1.Position := CurrentDisplayBrightness;
+    tkbDimming1Old := CurrentDisplayBrightness;
 
-         lblDimming1.Caption := lblDimming1Cap + IntToStr(CurrentDisplayBrightness);
+    lblDimming1.Caption := lblDimming1Cap + IntToStr(CurrentDisplayBrightness);
 
-         ApplyDisplayDimming(CurrentDisplayBrightness);
+    ApplyDisplayDimming(CurrentDisplayBrightness);
 
-         UpdatingDimmingFromCmd := False;
-       end;
+    UpdatingDimmingFromCmd := False;
+  end;
 
-       i := i + Dimming_Request_Length + 1;
-       end;
+  i := i + Dimming_Request_Length + 1;
+end;
         else
           begin
           i          := i + 1;
@@ -1172,13 +1195,17 @@ end;
 
 procedure TMainForm.cpOutputData(s: string; rc: boolean);
 var
-
+//   i         : integer;
+//   count     : byte;
    SMsg      : string;
+//   lsLineNum : string;
 begin
   SMsg       := '';                                                     // start with a clean label to write on.
   if s <> '' then
     begin
-    cpDrv.SendString(s);                                                // send the whole string                                                   //
+    cpDrv.SendString(s);                                                // send the whole string
+    //LightTXOnTime := LightOnTime;                                       //
+    //i        := 1;                                                      //                                  //
     end;
   wrMemoWindow(cbxTRXWindowEnable,memoTx,lblTransmitted,TxWinLimit,TxPlace,'TX ','Lines Transmitted : ',s);
 end;
@@ -1433,6 +1460,7 @@ begin
     Sini := TIniFile.Create('C:\Simtek.Ini');
     Sini.WriteString(InstSec, InstSeck01, gPort);                             // Save the open com port
     Sini.WriteString(InstSec, InstSecK02, gBaud);                             // Set the default baud rate for startup
+//    Sini.WriteString(InstSec, InstSecK03, InttoStr(gAddress));                // Set the default address for startup
     Sini.WriteString(GENSec,  GenSecK03,  gDataBits);                         // Set the default Data word length
     Sini.WriteString(GENSec,  GenSecK04,  gStopBits);                         // Set the default Parity mode for startup
     Sini.WriteString(InstSec, GenSecK05,  gParity);                           // Set the default Number of Stop bits
@@ -1460,19 +1488,20 @@ begin
 end;
 
 procedure TMainForm.cpSetComPort;
-
+//var i        : integer;                                       //
 begin
   if cpDrv.Connected then                                     // check to make sure the port is closed
     begin
     cpDrv.Disconnect;                                         // disconnect the com port
 
     end;
+//  gParity := 'none';
 
-  cpDrv.PortName            := '\\.\'+gPort;                   // assign the port
-  cpDrv.BaudRate            := cpIntToBaudRate(gBaud);         // set the baud rate
-  cpDrv.BaudRateValue       := StrToInt(gBaud);                // set the default baud rate
+  cpDrv.PortName            := '\\.\'+gPort;                  // assign the port
+  cpDrv.BaudRate            := cpIntToBaudRate(gBaud);        // set the baud rate
+  cpDrv.BaudRateValue       := StrToInt(gBaud);               // set the default baud rate
   cpDrv.Parity              := TParity(cpParityToInt(gParity));// set the parity
-  cpDrv.Databits            := TDataBits(StrToInt(gDataBits)); // set the number of data bits
+  cpDrv.Databits            := TDataBits(StrToInt(gDataBits));// set the number of data bits
   cpDrv.StopBits            := TStopBits(cpStopBitsToInt(gStopBits)); // set the number of stop bits
 
   CPDrv.HwFlow              := THwFlowControl(0);             //
@@ -1483,18 +1512,18 @@ begin
   CPDrv.OutBufSize          := 2048;                          //
   try
     cpDrv.Connect;                                            // open the com port
-    mm_status.Enabled            := cpDrv.Connected;          // deactivate all comport dependent menu functions
-    if mm_status.Enabled then                                 // make sure that the port is open
+    mm_status.Enabled            := cpDrv.Connected;               // deactivate all comport dependent menu functions
+    if mm_status.Enabled then                                      // make sure that the port is open
       begin
       saveSettings;                                           // save new settings to INI file
-      mm_status.Enabled          := True;                     // set the status menu item to active
+      mm_status.Enabled          := True;                          // set the status menu item to active
       end
     else
       MessageDlg('Error Port Not Opened Properly!',mtError,[mbOk],0);
   except
     MessageDlg('Error Port Not Opened Properly!',mtError,[mbOk],0);
   end;
-  mm_update_method.Enabled              := mm_status.Enabled; // enable the menu item if the com port was opened
+  mm_update_method.Enabled              := mm_status.Enabled;                  // enable the menu item if the com port was opened
 
   Application.OnHint        := loadStatusBarText;             // reset the window message to recieve
   Application.ShowHint      := True;                          // enable the messaging
