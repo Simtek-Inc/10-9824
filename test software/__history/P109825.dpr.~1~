@@ -1,0 +1,17 @@
+program P109825;
+
+uses
+  Forms,
+  Main in '..\..\..\10-9658\10-9658\test software\Main.pas' {MainForm},
+  CPDrv in '..\..\..\10-9658\10-9658\test software\CPDrv.pas',
+  AddrDialog in '..\..\..\10-9658\10-9658\test software\AddrDialog.pas' {AddrDlg};
+
+{$R *.RES}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TAddrDlg, AddrDlg);
+  Application.Run;
+
+  end.
