@@ -1,0 +1,31 @@
+
+
+@S |Clock Optimization Summary
+
+
+#### START OF CLOCK OPTIMIZATION REPORT #####[
+
+Clock optimization not enabled
+2 non-gated/non-generated clock tree(s) driving 65 clock pin(s) of sequential element(s)
+5 gated/generated clock tree(s) driving 771 clock pin(s) of sequential element(s)
+0 instances converted, 771 sequential instances remain driven by gated/generated clocks
+
+================================= Non-Gated/Non-Generated Clocks ==================================
+Clock Tree ID     Driving Element     Drive Element Type     Fanout     Sample Instance            
+---------------------------------------------------------------------------------------------------
+@K:CKID0006       SerialClock         port                   64         ioBank61reader.cellindex[1]
+@K:CKID0007       XCLK                port                   1          clockdivider.counter[0]    
+===================================================================================================
+===================================================================================== Gated/Generated Clocks =====================================================================================
+Clock Tree ID     Driving Element             Drive Element Type     Fanout     Sample Instance                           Explanation                                                             
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+@K:CKID0001       clock_master.counter[3]     DFN1                   455        A2DRead.DataRegU1Ch0n[12]                 No generated or derived clock directive on output of sequential instance
+@K:CKID0002       clock_master.counter[2]     DFN1                   176        gen_pwm_control.6.snkpout_inst.PWMOut     No generated or derived clock directive on output of sequential instance
+@K:CKID0003       clock_master.counter[0]     DFN1                   77         ioBank61reader.parallelholdreg[3]         No generated or derived clock directive on output of sequential instance
+@K:CKID0004       clock_master.counter[1]     DFN1                   59         iobank61debounce.PreviousPosition[3]      No generated or derived clock directive on output of sequential instance
+@K:CKID0005       clockdivider.counter[0]     DFN1                   4          clock_master.counter[3]                   No generated or derived clock directive on output of sequential instance
+==================================================================================================================================================================================================
+
+
+##### END OF CLOCK OPTIMIZATION REPORT ######]
+

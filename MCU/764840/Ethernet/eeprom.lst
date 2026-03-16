@@ -1,0 +1,2421 @@
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 1   
+
+
+C51 COMPILER V8.06, COMPILATION OF MODULE EEPROM
+OBJECT MODULE PLACED IN eeprom.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE src\eeprom\eeprom.c LARGE OMF2 ROM(D16M) OPTIMIZE(0,SPEED) BROWSE INTVECTOR
+                    -(0X6020) INCDIR(.\src\cpu\;.\src\ethernet;.\src\swdma\;.\src\mstimer\;.\src\uart\;.\src\main\;.\src\tcpip\;.\src\hsur\;.
+                    -\src\gs2e\;.\src\debug\;.\src\dhcp;.\src\dns\;.\src\adapter\;.\src\pppoe\;.\src\console;.\src\telnet;.\src\smtp;.\src\ht
+                    -tp;.\src\web_page;.\src\si2c;.\src\eeprom;.\src\ping;.\src\fpga;.\src\menu;.\src\spi) DEFINE(RuntimeCodeAt24KH) VARBANKI
+                    -NG DEBUG CODE LISTINCLUDE SYMBOLS PRINT(.\eeprom.lst) OBJECT(eeprom.obj)
+
+line level    source
+
+   1          //=============================================================================
+   2          //     Copyright (c) 2006       ASIX Electronic Corporation      All rights reserved.
+   3          //
+   4          //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5          //
+   6          //     The copyright notice above does not evidence any actual or intended
+   7          //     publication of such source code.
+   8          //=============================================================================
+   9          //
+  10          //=============================================================================
+  11          // Module Name     : eeprom.c
+  12          // Purpose       :
+  13          // Author        :
+  14          // Date                  :
+  15          // Note          :
+  16          // $Log                  : eeprom.c,v $
+  17          //=============================================================================
+  18          
+  19          // INCLUDE FILE DECLARATIONS //
+  20          #include "eeprom.h"
+   1      =1  /*
+   2      =1   ******************************************************************************
+   3      =1   *     Copyright (c) 2006       ASIX Electronic Corporation      All rights reserved.
+   4      =1   *
+   5      =1   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6      =1   *
+   7      =1   *     The copyright notice above does not evidence any actual or intended 
+   8      =1   *     publication of such source code.
+   9      =1   ******************************************************************************
+  10      =1   */
+  11      =1  /*=============================================================================
+  12      =1   * Module Name:eeprom.h
+  13      =1   * Purpose:
+  14      =1   * Author:
+  15      =1   * Date:
+  16      =1   * Notes:
+  17      =1   * $Log: eeprom.h,v $
+  18      =1   *
+  19      =1   *=============================================================================
+  20      =1   */
+  21      =1  
+  22      =1  #ifndef __EEPROM_H__
+  23      =1  #define __EEPROM_H__
+  24      =1  
+  25      =1  /* INCLUDE FILE DECLARATIONS */
+  26      =1  #include "types.h"
+   1      =2  //----------------------------------------------------------------------------------------
+   2      =2  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =2  //
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 2   
+
+   6      =2  //     The copyright notice above does not evidence any actual or intended
+   7      =2  //     publication of such source code.
+   8      =2  //----------------------------------------------------------------------------------------
+   9      =2  // Module Name : types.h
+  10      =2  // Purpose     : Definition of type.
+  11      =2  // Author      : Robin Lee
+  12      =2  // Date        : 2005-12-28
+  13      =2  // Notes       : None.
+  14      =2  // $Log: types.h,v $
+  15      =2  //----------------------------------------------------------------------------------------
+  16      =2  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =2  // no message
+  18      =2  //----------------------------------------------------------------------------------------
+  19      =2  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =2  // no message
+  21      =2  //----------------------------------------------------------------------------------------
+  22      =2  
+  23      =2  #ifndef TYPES_H
+  24      =2  #define TYPES_H
+  25      =2  
+  26      =2  typedef unsigned short int          bool;                                                 // boolean
+  27      =2  typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+  28      =2  typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+  29      =2  typedef short int                   sint;                                                 // 16-bit signed
+  30      =2  typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+  31      =2  typedef unsigned short int          word;                                                 // 16-bit unsign
+             -ed
+  32      =2  
+  33      =2  #ifndef NULL
+  34      =2    #define NULL ((void *) 0L)
+  35      =2  #endif
+  36      =2  
+  37      =2  #define TRUE                  1
+  38      =2  #define FALSE                 0
+  39      =2  #define ON                    1
+  40      =2  #define OFF                   0
+  41      =2  #define Client                1
+  42      =2  #define Server                0
+  43      =2  
+  44      =2  // Bit Definitions for Bitwise Operation //
+  45      =2  #define BIT0            0x01
+  46      =2  #define BIT1            0x02
+  47      =2  #define BIT2            0x04
+  48      =2  #define BIT3            0x08
+  49      =2  #define BIT4            0x10
+  50      =2  #define BIT5            0x20
+  51      =2  #define BIT6            0x40
+  52      =2  #define BIT7            0x80
+  53      =2  #define BIT8            0x0100
+  54      =2  #define BIT9            0x0200
+  55      =2  #define BIT10           0x0400
+  56      =2  #define BIT11           0x0800
+  57      =2  #define BIT12           0x1000
+  58      =2  #define BIT13           0x2000
+  59      =2  #define BIT14           0x4000
+  60      =2  #define BIT15           0x8000
+  61      =2  #define BIT16           0x00010000
+  62      =2  #define BIT17           0x00020000
+  63      =2  #define BIT18           0x00040000
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 3   
+
+  64      =2  #define BIT19           0x00080000
+  65      =2  #define BIT20           0x00100000
+  66      =2  #define BIT21           0x00200000
+  67      =2  #define BIT22           0x00400000
+  68      =2  #define BIT23           0x00800000
+  69      =2  #define BIT24           0x01000000
+  70      =2  #define BIT25           0x02000000
+  71      =2  #define BIT26           0x04000000
+  72      =2  #define BIT27           0x08000000
+  73      =2  #define BIT28           0x10000000
+  74      =2  #define BIT29           0x20000000
+  75      =2  #define BIT30           0x40000000
+  76      =2  #define BIT31           0x80000000
+  77      =2  
+  78      =2  #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+  79      =2  #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+  80      =2  
+  81      =2  #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+  82      =2  #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+  83      =2  #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+  84      =2  #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+  85      =2   
+  86      =2  // Keil compiler user define //
+  87      =2  #define     KEIL_CPL
+  88      =2  
+  89      =2  #ifdef KEIL_CPL
+  90      =2   #define XDATA    xdata
+  91      =2   #define IDATA    idata
+  92      =2   #define BDATA    bdata
+  93      =2   #define CODE     code
+  94      =2   #define FAR      far
+  95      =2  #else
+           =2  #define XDATA
+           =2  #define IDATA
+           =2  #define BDATA
+           =2  #define CODE
+           =2  #define FAR
+           =2 #endif
+ 102      =2  
+ 103      =2  // Serial interface command direction //
+ 104      =2  #define     SI_WR                   BIT0
+ 105      =2  #define     SI_RD                   BIT1
+ 106      =2  
+ 107      =2  #define     FLASH_WR_ENB            (PCON |= PWE_)
+ 108      =2  #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+ 109      =2  
+ 110      =2  #endif  // end of TYPES_H //
+  27      =1  #include "si2c.h"
+   1      =2  //=============================================================================
+   2      =2  //     Copyright (c) 2006       ASIX Electronic Corporation      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =2  //
+   6      =2  //     The copyright notice above does not evidence any actual or intended 
+   7      =2  //     publication of such source code.
+   8      =2  //=============================================================================
+   9      =2  // Module Name:si2c.h
+  10      =2  // Purpose:
+  11      =2  // Author:
+  12      =2  // Date:
+  13      =2  // Notes:
+  14      =2  // $Log: si2c.h,v $
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 4   
+
+  15      =2  //=============================================================================
+  16      =2  
+  17      =2  #ifndef __SI2C_H__
+  18      =2  #define __SI2C_H__
+  19      =2  
+  20      =2  // INCLUDE FILE DECLARATIONS //
+  21      =2  #include "types.h"
+   1      =3  //----------------------------------------------------------------------------------------
+   2      =3  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =3  //
+   4      =3  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =3  //
+   6      =3  //     The copyright notice above does not evidence any actual or intended
+   7      =3  //     publication of such source code.
+   8      =3  //----------------------------------------------------------------------------------------
+   9      =3  // Module Name : types.h
+  10      =3  // Purpose     : Definition of type.
+  11      =3  // Author      : Robin Lee
+  12      =3  // Date        : 2005-12-28
+  13      =3  // Notes       : None.
+  14      =3  // $Log: types.h,v $
+  15      =3  //----------------------------------------------------------------------------------------
+  16      =3  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =3  // no message
+  18      =3  //----------------------------------------------------------------------------------------
+  19      =3  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =3  // no message
+  21      =3  //----------------------------------------------------------------------------------------
+  22      =3  
+  23      =3  #ifndef TYPES_H
+           =3 #define TYPES_H
+           =3 
+           =3 typedef unsigned short int          bool;                                                 // boolean
+           =3 typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+           =3 typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+           =3 typedef short int                   sint;                                                 // 16-bit signed
+           =3 typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+           =3 typedef unsigned short int          word;                                                 // 16-bit unsign
+             -ed
+           =3 
+           =3 #ifndef NULL
+           =3   #define NULL ((void *) 0L)
+           =3 #endif
+           =3 
+           =3 #define TRUE                  1
+           =3 #define FALSE                 0
+           =3 #define ON                    1
+           =3 #define OFF                   0
+           =3 #define Client                1
+           =3 #define Server                0
+           =3 
+           =3 // Bit Definitions for Bitwise Operation //
+           =3 #define BIT0            0x01
+           =3 #define BIT1            0x02
+           =3 #define BIT2            0x04
+           =3 #define BIT3            0x08
+           =3 #define BIT4            0x10
+           =3 #define BIT5            0x20
+           =3 #define BIT6            0x40
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 5   
+
+           =3 #define BIT7            0x80
+           =3 #define BIT8            0x0100
+           =3 #define BIT9            0x0200
+           =3 #define BIT10           0x0400
+           =3 #define BIT11           0x0800
+           =3 #define BIT12           0x1000
+           =3 #define BIT13           0x2000
+           =3 #define BIT14           0x4000
+           =3 #define BIT15           0x8000
+           =3 #define BIT16           0x00010000
+           =3 #define BIT17           0x00020000
+           =3 #define BIT18           0x00040000
+           =3 #define BIT19           0x00080000
+           =3 #define BIT20           0x00100000
+           =3 #define BIT21           0x00200000
+           =3 #define BIT22           0x00400000
+           =3 #define BIT23           0x00800000
+           =3 #define BIT24           0x01000000
+           =3 #define BIT25           0x02000000
+           =3 #define BIT26           0x04000000
+           =3 #define BIT27           0x08000000
+           =3 #define BIT28           0x10000000
+           =3 #define BIT29           0x20000000
+           =3 #define BIT30           0x40000000
+           =3 #define BIT31           0x80000000
+           =3 
+           =3 #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+           =3 #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+           =3 
+           =3 #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+           =3 #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+           =3 #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+           =3 #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+           =3  
+           =3 // Keil compiler user define //
+           =3 #define     KEIL_CPL
+           =3 
+           =3 #ifdef KEIL_CPL
+           =3  #define XDATA    xdata
+           =3  #define IDATA    idata
+           =3  #define BDATA    bdata
+           =3  #define CODE     code
+           =3  #define FAR      far
+           =3 #else
+           =3  #define XDATA
+           =3  #define IDATA
+           =3  #define BDATA
+           =3  #define CODE
+           =3  #define FAR
+           =3 #endif
+           =3 
+           =3 // Serial interface command direction //
+           =3 #define     SI_WR                   BIT0
+           =3 #define     SI_RD                   BIT1
+           =3 
+           =3 #define     FLASH_WR_ENB            (PCON |= PWE_)
+           =3 #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+           =3 
+           =3 #endif  // end of TYPES_H //
+  22      =2  
+  23      =2  // NAMING CONSTANT DECLARATIONS //
+  24      =2  
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 6   
+
+  25      =2  // I2C Register //
+  26      =2  #define I2CCPR                                  0x00    // I2C Clock Pre-scale Register
+  27      =2  #define I2CTR                                   0x02    // I2C Transmit Register
+  28      =2  #define I2CRR                                   0x03    // I2C Receive Register
+  29      =2  #define I2CCTL                                  0x04    // I2C Control Register
+  30      =2  #define I2CCR                                   0x05    // I2C Command Register
+  31      =2  #define I2CMSR                                  0x06    // I2C Master Status Register
+  32      =2  #define I2CSDAR                                 0x08    // I2C Slave Device Address Register
+  33      =2  #define I2CSSR                                  0x0A    // I2C Slave Status Register
+  34      =2  // I2CCTLR //
+  35      =2  #define I2C_MST_IE                              BIT0    // I2C master mode interrupt enable
+  36      =2  #define I2C_ENB                                 BIT1    // I2C module enable
+  37      =2  #define I2C_DISB                                0               // I2C module disable
+  38      =2  #define I2C_STANDARD                    BIT2    // I2C standard speed in slave mode
+  39      =2  #define I2C_FAST                                0               // I2C fast speed in slave mode
+  40      =2  #define I2C_10BIT                               BIT3    // I2C 10-bit device address mode
+  41      =2  #define I2C_7BIT                                0               // I2C 7-bit device address mode
+  42      =2  #define I2C_RELOAD                              BIT4    // Reload I2C configuration EEPROM
+  43      =2  #define I2C_SLV_IE                              BIT6    // I2C slave mode interrupt enable
+  44      =2  #define I2C_MASTER_MODE                 BIT7    // I2C operated as master mode
+  45      =2  #define I2C_SLAVE_MODE                  0               // I2C operated as slave mode
+  46      =2  
+  47      =2  // I2CCR //
+  48      =2  #define I2C_RLS                                 BIT0    // release SCLK, only for slave
+  49      =2  #define I2C_SLAVE_GO                    BIT1    // I2C slave go command
+  50      =2  #define I2C_MASTER_GO                   BIT3    // I2C master go command
+  51      =2  #define I2C_CMD_WRITE                   BIT4    // Request to send data in master mode
+  52      =2  #define I2C_CMD_READ                    BIT5    // Request to receive data in master mode
+  53      =2  #define I2C_STOP_COND                   BIT6    // Generate a STOP condition in master mode
+  54      =2  #define I2C_NO_STOP                             0               // No STOP condition
+  55      =2  #define I2C_START_COND                  BIT7    // Generate a START condition in master mode
+  56      =2  
+  57      =2  // I2CMSR //
+  58      =2  #define I2C_INTR_FLAG                   BIT0    // Interrupt flag
+  59      =2  #define I2C_TIP                                 BIT1    // Transfer in progress
+  60      =2  #define I2C_RLE_ING                             BIT3    // EEPROM reloading
+  61      =2  #define I2C_BL_DONE                             BIT4    // Bootloader done
+  62      =2  #define I2C_ARB_LOST                    BIT5    // Arbitration lost
+  63      =2  #define I2C_BUS_BUSY                    BIT6    // I2C bus busy
+  64      =2  #define I2C_NO_ACK                              BIT7    // No ack after a byte transfer.
+  65      =2  
+  66      =2  // I2CSSR //
+  67      =2  #define I2C_SLV_TXR_OK                  BIT0    // Slave transfer complete
+  68      =2  #define I2C_SLV_NACK                    BIT1    // No ack condition
+  69      =2  #define I2C_SLV_WR                              BIT2    // Slave write command
+  70      =2  #define I2C_SLV_RD                              BIT3    // Slave read command
+  71      =2  #define I2C_SLV_RESTART                 BIT4    // Restart condition detected
+  72      =2  #define I2C_SLV_START                   BIT5    // Start condition detected
+  73      =2  #define I2C_SLV_STOP                    BIT6    // Stop condition detected
+  74      =2  #define I2C_SLV_ERR                             BIT7    // Error occur
+  75      =2  
+  76      =2  // I2C packet direction //
+  77      =2  #define I2C_MASTER                              BIT1
+  78      =2  #define I2C_XMIT                                BIT0
+  79      =2  #define I2C_MST_XMIT                    BIT1 + BIT0     //11 (BIT1:Master, BIT0:Xmit)
+  80      =2  #define I2C_MST_RCVR                    BIT1            //10
+  81      =2  #define I2C_SLV_XMIT                    BIT0            //01
+  82      =2  #define I2C_SLV_RCVR                    0                       //00
+  83      =2  
+  84      =2  #define I2C_BUSY                                BIT0    // I2C busy flag
+  85      =2  #define I2C_RESTART                             BIT1    // I2C restart flag
+  86      =2  #define I2C_LOST                                NIT2    // I2C arbitration lost flag
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 7   
+
+  87      =2  #define I2C_NACK                                BIT7    // I2C NACK flag
+  88      =2  
+  89      =2  // I2C Slave Command //
+  90      =2  #define I2C_SLV_SRSFR                   BIT5                    // SFR single read
+  91      =2  #define I2C_SLV_SWSFR                   BIT7+BIT5               // SFR single write
+  92      =2  #define I2C_SLV_IRSFR                   BIT5+BIT4               // SFR indirect read
+  93      =2  #define I2C_SLV_IWSFR                   BIT7+BIT5+BIT4  // SFR indirect write
+  94      =2  #define I2C_SLV_BRDM                    BIT6                    // Memory burst read
+  95      =2  #define I2C_SLV_BWDM                    BIT7+BIT6               // Memory burst write
+  96      =2  
+  97      =2  // I2C Master Clock //
+  98      =2  #define I2C_FAST_25M                    0x0C    // Fast mode pre-scale at 25M
+  99      =2  #define I2C_FAST_50M                    0x18    // Fast mode pre-scale at 50M
+ 100      =2  #define I2C_FAST_100M                   0x31    // Fast mode pre-scale at 100M
+ 101      =2  #define I2C_STD_25M                             0x3A    // Standard mode pre-scale at 25M
+ 102      =2  #define I2C_STD_50M                             0x76    // Standard mode pre-scale at 50M
+ 103      =2  #define I2C_STD_100M                    0xC7    // Standard mode pre-scale at 100M
+ 104      =2  
+ 105      =2  // TYPE DECLARATIONS //
+ 106      =2  typedef enum _I2C_STATUS
+ 107      =2  {
+ 108      =2          I2C_OK = 0,
+ 109      =2          I2C_NACK_ERR,
+ 110      =2  } teI2C_STATUS;
+ 111      =2  
+ 112      =2  // GLOBAL VARIABLES //
+ 113      =2  
+ 114      =2  // EXPORTED SUBPROGRAM SPECIFICATIONS //
+ 115      =2  void I2C_Setup(byte Mode, uint PreClk, uint SlavDevAddr);
+ 116      =2  teI2C_STATUS I2C_Read(byte DevAddr, byte RegAddr, byte *pBuf, byte Len);
+ 117      =2  teI2C_STATUS I2C_Write(byte DevAddr, byte RegAddr, byte *pBuf, byte Len);
+ 118      =2  
+ 119      =2  #endif // End of __EEPCONFIG_H__ //
+ 120      =2  
+ 121      =2  // End of eepconfig.h //
+  28      =1  
+  29      =1  /* NAMING CONSTANT DECLARATIONS */
+  30      =1  #define DEVICE_ADDR     (0xA0)
+  31      =1  
+  32      =1  /* TYPE DECLARATIONS */
+  33      =1  
+  34      =1  /* GLOBAL VARIABLES */
+  35      =1  
+  36      =1  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+  37      =1  void EEPROM_Init(void);
+  38      =1  teI2C_STATUS EEPROM_Read(byte DevAddr, byte RegAddr, byte *pBuf, byte Len);
+  39      =1  teI2C_STATUS EEPROM_Write(byte DevAddr, byte RegAddr, byte *pBuf, byte Len);
+  40      =1  #endif /* End of __EEPCONFIG_H__ */
+  41      =1  
+  42      =1  /* End of eepconfig.h */
+  43      =1  
+  21          #include "uart.h"
+   1      =1  //----------------------------------------------------------------------------------------
+   2      =1  //     Copyright (c) 2005     ASIX Electronic Corporation      All rights reserved.
+   3      =1  //
+   4      =1  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =1  //
+   6      =1  //     The copyright notice above does not evidence any actual or intended
+   7      =1  //     publication of such source code.
+   8      =1  //----------------------------------------------------------------------------------------
+   9      =1  //
+  10      =1  //========================================================================================
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 8   
+
+  11      =1  // Module Name : uart.h
+  12      =1  // Purpose     : A header file of uart.c includes UART0 and UART1 module.
+  13      =1  // Author      : Robin Lee
+  14      =1  // Date        : 2006-01-10
+  15      =1  // Notes       :
+  16      =1  // $Log: uart.h,v $
+  17      =1  // Revision 1.1  2006/05/12 14:24:47  robin6633
+  18      =1  // no message
+  19      =1  //
+  20      =1  // Revision 1.3  2006/05/03 02:46:00  robin6633
+  21      =1  // Changed the the function name UART_GetBufCount()
+  22      =1  // to UART_GetRxBufCount() .
+  23      =1  //
+  24      =1  // Revision 1.2  2006/05/02 01:43:45  robin6633
+  25      =1  // Add an expanding function to get the counter value of UART software buffer.
+  26      =1  //
+  27      =1  // Revision 1.1  2006/04/07 11:39:14  robin6633
+  28      =1  // no message
+  29      =1  //
+  30      =1  //========================================================================================
+  31      =1  
+  32      =1  #ifndef __UART_H__
+  33      =1  #define __UART_H__
+  34      =1  
+  35      =1  // INCLUDE FILE DECLARATIONS //
+  36      =1  #include        "uart_cfg.h"
+   1      =2  /*
+   2      =2   *********************************************************************************
+   3      =2   *     Copyright (c) 2005       ASIX Electronic Corporation      All rights reserved.
+   4      =2   *
+   5      =2   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6      =2   *
+   7      =2   *     The copyright notice above does not evidence any actual or intended
+   8      =2   *     publication of such source code.
+   9      =2   *********************************************************************************
+  10      =2   */
+  11      =2  /*================================================================================
+  12      =2   * Module Name : uart_cfg.h
+  13      =2   * Purpose     : Configuration setting of UART0 and UART1 module.
+  14      =2   * Author      : Robin Lee
+  15      =2   * Date        : 2006-01-10
+  16      =2   * Notes       :
+  17      =2   * $Log: uart_cfg.h,v $
+  18      =2   * Revision 1.2  2006/05/18 02:15:57  robin6633
+  19      =2   * 1.Disabled UART1.
+  20      =2   *
+  21      =2   * Revision 1.1  2006/05/12 14:24:47  robin6633
+  22      =2   * no message
+  23      =2   *
+  24      =2   * Revision 1.1  2006/04/07 11:39:14  robin6633
+  25      =2   * no message
+  26      =2   *
+  27      =2   *================================================================================
+  28      =2   */
+  29      =2  #ifndef UART_CFG_H
+  30      =2  #define UART_CFG_H
+  31      =2  
+  32      =2  /* INCLUDE FILE DECLARATIONS */
+  33      =2  
+  34      =2  
+  35      =2  /* NAMING CONSTANT DECLARATIONS */
+  36      =2  #define UART0_ENABLE            1       // 1:enable UART0 ; 0:disable UART0
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 9   
+
+  37      =2  #define UART1_ENABLE            1       // 1:enable UART1 ; 0:disable UART1
+  38      =2  #define HSUR_ENABLE         0   // 1:enable Hihg Speed UART ; 0:disable Hihg Speed UART
+  39      =2  #define UART_PMM_ENABLE         0       // 1:use UART in PMM mode ; 0:disable
+  40      =2  #define     HSUR_RS485_ENABLE       0     // 1:enable RS485 Driver and Receiver Settings 
+  41      =2  
+  42      =2  /* MACRO DECLARATIONS */
+  43      =2  
+  44      =2  
+  45      =2  /* TYPE DECLARATIONS */
+  46      =2  
+  47      =2  
+  48      =2  /* GLOBAL VARIABLES */
+  49      =2  
+  50      =2  
+  51      =2  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+  52      =2  
+  53      =2  
+  54      =2  #endif /* End of UART_CFG_H */
+  37      =1  
+  38      =1  // NAMING CONSTANT DECLARATIONS //
+  39      =1  #define MAX_TX_UART0_BUF_SIZE   256 //512
+  40      =1  #define MAX_TX_UART0_MASK               (MAX_TX_UART0_BUF_SIZE - 1)
+  41      =1  #define MAX_RX_UART0_BUF_SIZE   256 //512
+  42      =1  #define MAX_RX_UART0_MASK               (MAX_RX_UART0_BUF_SIZE - 1)
+  43      =1  
+  44      =1  #define MAX_TX_UART1_BUF_SIZE   256
+  45      =1  #define MAX_TX_UART1_MASK               (MAX_TX_UART1_BUF_SIZE - 1)
+  46      =1  #define MAX_RX_UART1_BUF_SIZE   256
+  47      =1  #define MAX_RX_UART1_MASK               (MAX_RX_UART1_BUF_SIZE - 1)
+  48      =1  
+  49      =1  /* GLOBAL VARIABLES */
+  50      =1  extern uint  UART0_RxCount;
+  51      =1  extern byte  uart0_RxBuf[MAX_RX_UART0_BUF_SIZE];
+  52      =1  extern uint  uart0_RxCount;
+  53      =1  extern uint  uart0_RxTail;
+  54      =1  extern byte  uart0_RxBuf[];
+  55      =1  extern uint  uart0_RxHead;
+  56      =1  
+  57      =1  extern uint  uart1_RxCount;
+  58      =1  extern uint  uart1_RxTail;
+  59      =1  extern byte  uart1_RxBuf[MAX_RX_UART1_BUF_SIZE];
+  60      =1  extern uint  uart1_RxHead;
+  61      =1  
+  62      =1  #define SCS100M                                    0xC0
+  63      =1  #define SCSx75M                                    0x80
+  64      =1  #define SCSx50M                                    0x40
+  65      =1  #define SCSx25M                                    0x00
+  66      =1  
+  67      =1  #define Baud___1200                                0x00
+  68      =1  #define Baud___2400                                0x01
+  69      =1  #define Baud___4800                                0x02
+  70      =1  #define Baud___9600                                0x03
+  71      =1  #define Baud__19200                                0x04
+  72      =1  #define Baud__28800                                0x05
+  73      =1  #define Baud__38400                                0x06
+  74      =1  #define Baud__57600                                0x07
+  75      =1  #define Baud__76800                                0x08
+  76      =1  #define Baud__94750                                0x09
+  77      =1  #define Baud_115200                                0x0A
+  78      =1  
+  79      =1  #define F_25_B___1200                              Baud___1200 | SCSx25M
+  80      =1  #define F_25_B___2400                              Baud___2400 | SCSx25M
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 10  
+
+  81      =1  #define F_25_B___4800                              Baud___4800 | SCSx25M
+  82      =1  #define F_25_B___9600                              Baud___9600 | SCSx25M
+  83      =1  #define F_25_B__19200                              Baud__19200 | SCSx25M
+  84      =1  #define F_25_B__28800                              Baud__28800 | SCSx25M
+  85      =1  #define F_25_B__38400                              Baud__38400 | SCSx25M
+  86      =1  #define F_25_B__57600                              Baud__57600 | SCSx25M
+  87      =1  #define F_25_B__76800                              Baud__76800 | SCSx25M
+  88      =1  #define F_25_B__94750                              Baud__94750 | SCSx25M
+  89      =1  #define F_25_B_115200                              Baud_115200 | SCSx25M
+  90      =1  #define F_50_B___1200                              Baud___1200 | SCSx50M
+  91      =1  #define F_50_B___2400                              Baud___2400 | SCSx50M
+  92      =1  #define F_50_B___4800                              Baud___4800 | SCSx50M
+  93      =1  #define F_50_B___9600                              Baud___9600 | SCSx50M
+  94      =1  #define F_50_B__19200                              Baud__19200 | SCSx50M
+  95      =1  #define F_50_B__28800                              Baud__28800 | SCSx50M
+  96      =1  #define F_50_B__38400                              Baud__38400 | SCSx50M
+  97      =1  #define F_50_B__57600                              Baud__57600 | SCSx50M
+  98      =1  #define F_50_B__76800                              Baud__76800 | SCSx50M
+  99      =1  #define F_50_B__94750                              Baud__94750 | SCSx50M
+ 100      =1  #define F_50_B_115200                              Baud_115200 | SCSx50M
+ 101      =1  #define F100_B___1200                              Baud___1200 | SCS100M
+ 102      =1  #define F100_B___2400                              Baud___2400 | SCS100M
+ 103      =1  #define F100_B___4800                              Baud___4800 | SCS100M
+ 104      =1  #define F100_B___9600                              Baud___9600 | SCS100M
+ 105      =1  #define F100_B__19200                              Baud__19200 | SCS100M
+ 106      =1  #define F100_B__28800                              Baud__28800 | SCS100M
+ 107      =1  #define F100_B__38400                              Baud__38400 | SCS100M
+ 108      =1  #define F100_B__57600                              Baud__57600 | SCS100M
+ 109      =1  #define F100_B__76800                              Baud__76800 | SCS100M
+ 110      =1  #define F100_B__94750                              Baud__94750 | SCS100M
+ 111      =1  #define F100_B_115200                              Baud_115200 | SCS100M
+ 112      =1  
+ 113      =1  // EXPORTED SUBPROGRAM SPECIFICATIONS //
+ 114      =1         void  uart_Init(byte port, baudrate, parity);
+ 115      =1  extern void  uart_ShowBuffer(byte* pd, byte eol);
+ 116      =1         bool  uart_ParityChk(char checkbyte);
+ 117      =1         bool  uart_SetPort(byte portNum);
+ 118      =1  // UART 0 routines
+ 119      =1  extern uint  uart0_PutChar(char c);
+ 120      =1  extern uint  uart0_GetKey(void);
+ 121      =1  
+ 122      =1  extern byte  uart0_setBaudRate(byte baudrate);
+ 123      =1  extern void  uart0_PutStr(byte* pData, byte cnt);
+ 124      =1  extern void  uart0_GetBuf(byte* pData, byte cnt);
+ 125      =1  extern void  uart0_RxBufUpdate(byte cnt);
+ 126      =1  extern byte  uart0_RxPtrSet(byte c);
+ 127      =1  extern void  uart0_RxBufSet(byte c, uint  len);
+ 128      =1  extern byte  uart0_RxBufCmp(byte *pData,byte len);
+ 129      =1  extern uint  uart0_GetByteCount(void);
+ 130      =1  extern void  uart0_DisplayRxPointers(void);
+ 131      =1  extern void  uart0_ShowRxBuffer(void);
+ 132      =1         byte  uart0_TxChk(void);
+ 133      =1         void  uart0_SetMode(byte mode);
+ 134      =1  uint  UA0_GetCount(void);
+ 135      =1  extern char  uart0_NoBlockGetkey(void);
+ 136      =1  // UART 1 routines
+ 137      =1  extern uint  uart1_PutChar(char c);
+ 138      =1  extern uint  uart1_GetKey(void);
+ 139      =1  extern void  uart1_PutStr(byte* pData, byte cnt);
+ 140      =1  extern void  uart1_GetBuf(byte* pData, byte cnt);
+ 141      =1  extern void  uart1_RxBufUpdate(byte cnt);
+ 142      =1  extern byte  uart1_RxPtrSet(byte c);
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 11  
+
+ 143      =1  extern void  uart1_RxBufSet(byte c, uint  len);
+ 144      =1  extern byte  uart1_RxBufCmp(byte *pData,byte len);
+ 145      =1  extern uint  uart1_GetByteCount(void);
+ 146      =1  extern void  uart1_DisplayRxPointers(byte crlf);
+ 147      =1         bool  UART_ParityChk(char checkbyte);
+ 148      =1         byte  uart1_TxChk(void);
+ 149      =1         void  uart1_SetMode(byte mode);
+ 150      =1  uint  UA1_GetCount(void);
+ 151      =1  extern char  uart1_NoBlockGetkey(void);
+ 152      =1  //
+ 153      =1  void  PMM_Uart0Init(void);
+ 154      =1  
+ 155      =1  #endif // End of __UART_H__ //
+ 156      =1  // End of uart.h //
+  22          #include "reg80390.h"
+   1      =1  //--------------------------------------------------------------------------
+   2      =1  // AX110XX.H
+   3      =1  //
+   4      =1  // Header file for the AX110XX.
+   5      =1  // Copyright (c) 2001 Keil Software, Inc.  All rights reserved.
+   6      =1  //--------------------------------------------------------------------------
+   7      =1  //
+   8      =1  // --------------------------------------------------------------------------*/
+   9      =1  // Make sure that this file gets included only once.
+  10      =1  // --------------------------------------------------------------------------*/
+  11      =1  #ifndef AX110XX_HEADER_FILE
+  12      =1  #define AX110XX_HEADER_FILE             1
+  13      =1  // --------------------------------------------------------------------------*/
+  14      =1  // Byte Registers
+  15      =1  // --------------------------------------------------------------------------*/
+  16      =1  sfr     P0                      = 0x80;// Port 0
+  17      =1  sfr     SP                      = 0x81;// Stack Pointer
+  18      =1  sfr     DPL0            = 0x82;// Data Pointer 0 Low Byte
+  19      =1  sfr     DPH0            = 0x83;// Data Pointer 0 High Byte
+  20      =1  sfr     DPL                     = 0x82;// Data Pointer 0 Low Byte
+  21      =1  sfr     DPH                     = 0x83;// Data Pointer 0 High Byte
+  22      =1  sfr     DPL1            = 0x84;// Data Pointer 1 Low Byte
+  23      =1  sfr     DPH1            = 0x85;// Data Pointer 1 High Byte
+  24      =1  sfr     DPS                     = 0x86;// Data Pointers Select Register
+  25      =1  sfr     PCON            = 0x87;// Power Configuration Register
+  26      =1  sfr TCON                = 0x88;// Timer 0,1 Configuration Register
+  27      =1  sfr TMOD                = 0x89;// Timer 0,1 Control Mode Register
+  28      =1  sfr TL0                 = 0x8A;// Timer 0 Low Byte Counter
+  29      =1  sfr TL1                 = 0x8B;// Timer 1 Low Byte Counter
+  30      =1  sfr TH0                 = 0x8C;// Timer 0 High Byte Counter
+  31      =1  sfr TH1                 = 0x8D;// Timer 1 High Byte Counter
+  32      =1  sfr CKCON               = 0x8E;// Clock Control Register
+  33      =1  sfr CSREPR              = 0x8F;// Software Reset and External Program RAM Select Register
+  34      =1  
+  35      =1  sfr P1                  = 0x90;// Port 1
+  36      =1  sfr EIF                 = 0x91;// Extended Interrupt Flag Register
+  37      =1  sfr WTST                = 0x92;// Program Wait States Register
+  38      =1  sfr DPX0                = 0x93;// Data Pointer Extended Register 0
+  39      =1  sfr DPX                 = 0x93;// Data Pointer Extended Register 0
+  40      =1  sfr     SDSTSR          = 0x94;// Software Timer and Software DMA complete interrupt status
+  41      =1  sfr DPX1                = 0x95;// Data Pointer Extended Register 1
+  42      =1  sfr I2CCIR              = 0x96;// I2C Command Index Register
+  43      =1  sfr I2CDR               = 0x97;// I2C Data Register
+  44      =1  sfr SCON0               = 0x98;// UART 0 Configuration Register
+  45      =1  sfr SBUF0               = 0x99;// UART 0 Buffer Register
+  46      =1  sfr DBAR                = 0x9A;// DMA Bus Arbitration Register
+  47      =1  sfr DCIR                = 0x9B;// DMA Command Index Register
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 12  
+
+  48      =1  sfr DDR                 = 0x9C;// DMA Data Register
+  49      =1  sfr ACON                = 0x9D;// Address Control Register
+  50      =1  sfr PISSR1              = 0x9E;// Peripheral Interrupt Status Summary Register 1
+  51      =1  sfr PISSR2              = 0x9F;// Peripheral Interrupt Status Summary Register 2
+  52      =1  
+  53      =1  sfr P2                  = 0xA0;// Port 2
+  54      =1  // Local Bus Master Mode //
+  55      =1  sfr LMSR                = 0xA1;// Local Bus Mode Setup Register
+  56      =1  sfr LCR                 = 0xA2;// Local Bus Command Register
+  57      =1  sfr LSR                 = 0xA3;// Local Bus Status Register
+  58      =1  sfr LDALR               = 0xA4;// Local Bus Device Address Low Register
+  59      =1  sfr LDAHR               = 0xA5;// Local Bus Device Address High Register
+  60      =1  sfr LDCSR               = 0xA6;// Local Bus Device Chip Select Register
+  61      =1  // Local Bus Slave Mode //
+  62      =1  sfr LSAIER              = 0xA1;// Local Bus Slave mode Action and Interrupt Enable Register
+  63      =1  sfr LSCR                = 0xA2;// Local Bus Slave mode Command Register
+  64      =1  sfr LSSR                = 0xA3;// Local Bus Slave mode Status Register
+  65      =1  sfr XMWLR               = 0xA4;// External Master Write-read Low Register
+  66      =1  sfr XMWHR               = 0xA5;// External Master Write-read High Register
+  67      =1  sfr XMRLR               = 0xA6;// External Master Read-only Low Register
+  68      =1  sfr XMRHR               = 0xA7;// External Master Read-only High Register
+  69      =1  
+  70      =1  sfr IE                  = 0xA8;// Interrupt Enable register
+  71      =1  sfr LDLR                = 0xA9;// Local Bus Data Low Register
+  72      =1  sfr LDHR                = 0xAA;// Local Bus Data High Register
+  73      =1  sfr DMALR               = 0xAB;// Local Bus DMA Address Low Register
+  74      =1  sfr DMAMR               = 0xAC;// Local Bus DMA Address Medium Register
+  75      =1  sfr DMAHR               = 0xAD;// Local Bus DMA Address High Register
+  76      =1  sfr TCIR                = 0xAE;// TOE Command Index Register
+  77      =1  sfr     TDR                     = 0xAF;// TOE Data Register
+  78      =1  
+  79      =1  sfr P3                  = 0xB0;// Port 3
+  80      =1  sfr CCAPL0      = 0xB1;// PCA Module 0 Compare/Capture Low Byte Register
+  81      =1  sfr CCAPL1      = 0xB2;// PCA Module 1 Compare/Capture Low Byte Register
+  82      =1  sfr CCAPL2      = 0xB3;// PCA Module 2 Compare/Capture Low Byte Register
+  83      =1  sfr CCAPL3      = 0xB4;// PCA Module 3 Compare/Capture Low Byte Register
+  84      =1  sfr CCAPL4      = 0xB5;// PCA Module 4 Compare/Capture Low Byte Register
+  85      =1  sfr MCIR                = 0xB6;// MAC Command Index Register
+  86      =1  sfr MDR                 = 0xB7;// MAC Data Register
+  87      =1  sfr IP                  = 0xB8;// Interrupt Priority Register
+  88      =1  sfr CCAPH0      = 0xB9;// PCA Module 0 Compare/Capture High Byte Register
+  89      =1  sfr CCAPH1      = 0xBA;// PCA Module 1 Compare/Capture High Byte Register
+  90      =1  sfr CCAPH2      = 0xBB;// PCA Module 2 Compare/Capture High Byte Register
+  91      =1  sfr CCAPH3      = 0xBC;// PCA Module 3 Compare/Capture High Byte Register
+  92      =1  sfr CCAPH4      = 0xBD;// PCA Module 4 Compare/Capture High Byte Register
+  93      =1  sfr EPCR                = 0xBE;// Ethernet PHY Command Index Register
+  94      =1  sfr EPDR                = 0xBF;// Ethernet PHY Data Register
+  95      =1  
+  96      =1  sfr SCON1               = 0xC0;// UART 1 Configuration Register
+  97      =1  sfr SBUF1               = 0xC1;// UART 1 Buffer Register
+  98      =1  sfr CMOD                = 0xC2;// PCA Timer/Counter Mode Register
+  99      =1  sfr CCON                = 0xC3;// PCA Timer/Counter Control Register
+ 100      =1  sfr CL                  = 0xC4;// PCA Timer/Counter Low
+ 101      =1  sfr CH                  = 0xC5;// PCA Timer/Counter High
+ 102      =1  sfr T2CON               = 0xC8;// Timer 2 Configuration Register
+ 103      =1  sfr T2IF                = 0xC9;// Timer 2 Interrupt Flags
+ 104      =1  sfr RLDL                = 0xCA;// Timer 2 Reload Low Byte
+ 105      =1  sfr RLDH                = 0xCB;// Timer 2 Reload High Byte
+ 106      =1  sfr TL2                 = 0xCC;// Timer 2 Low Byte Counter
+ 107      =1  sfr TH2                 = 0xCD;// Timer 2 High Byte Counter
+ 108      =1  sfr SPICIR              = 0xCE;// SPI Command Index Register
+ 109      =1  sfr SPIDR               = 0xCF;// SPI Data Register
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 13  
+
+ 110      =1  
+ 111      =1  sfr PSW                 = 0xD0;// Program Status Word
+ 112      =1  sfr CCAPM0              = 0xD1;// PCA Compare/Capture Module Mode Register 0
+ 113      =1  sfr CCAPM1              = 0xD2;// PCA Compare/Capture Module Mode Register 1
+ 114      =1  sfr CCAPM2              = 0xD3;// PCA Compare/Capture Module Mode Register 2
+ 115      =1  sfr CCAPM3              = 0xD4;// PCA Compare/Capture Module Mode Register 3
+ 116      =1  sfr CCAPM4              = 0xD5;// PCA Compare/Capture Module Mode Register 4
+ 117      =1  sfr OWCIR               = 0xD6;// OneWire Command Index Register
+ 118      =1  sfr OWDR                = 0xD7;// OneWire Data Register
+ 119      =1  sfr WDCON               = 0xD8;// Watchdog Configuration
+ 120      =1  sfr CANCIR              = 0xDE;// CAN Bus Command Index Register
+ 121      =1  sfr CANDR               = 0xDF;// CAN Bus Data Register
+ 122      =1  
+ 123      =1  sfr ACC                 = 0xE0;// Accumulator
+ 124      =1  
+ 125      =1  // UART2 registers //
+ 126      =1  sfr     UR2_DLL         = 0xE1;// High Speed UART2 Divisor Latch Low Register
+ 127      =1  sfr     UR2_THR         = 0xE1;// High Speed UART2 Transmit Holding Register for Writing
+ 128      =1  sfr     UR2_RBR         = 0xE1;// High Speed UART2 Receive Buffer Register for Reading
+ 129      =1  sfr     UR2_DLH         = 0xE2;// High Speed UART2 Divisor Latch High Register
+ 130      =1  sfr     UR2_IER         = 0xE2;// High Speed UART2 Interrupt Enable Register
+ 131      =1  sfr     UR2_FCR         = 0xE3;// High Speed UART2 FIFO Control Register for Writing
+ 132      =1  sfr     UR2_IIR         = 0xE3;// High Speed UART2 Interrupt Identification Register for Reading
+ 133      =1  sfr     UR2_LCR         = 0xE4;// High Speed UART2 Line Control Register
+ 134      =1  sfr     UR2_MCR         = 0xE5;// High Speed UART2 Modem Control Register
+ 135      =1  sfr     UR2_LSR         = 0xE6;// High Speed UART2 Line Status Register
+ 136      =1  sfr     UR2_MSR         = 0xE7;// High Speed UART2 Modem Status Register
+ 137      =1  
+ 138      =1  sfr EIE                 = 0xE8;// External Interrupt Enable
+ 139      =1  sfr STATUS              = 0xE9;// Status Register
+ 140      =1  sfr MXAX                = 0xEA;// MOVX @Ri Extended Register
+ 141      =1  sfr TA                  = 0xEB;// Timed Access Protection
+ 142      =1  
+ 143      =1  sfr B                   = 0xF0;// B Working Register
+ 144      =1  sfr EIP                 = 0xF8;// Extended Interrupt Priority Register
+ 145      =1  sfr MD0                 = 0xF9;// MDU Data 0
+ 146      =1  sfr MD1                 = 0xFA;// MDU Data 1
+ 147      =1  sfr MD2                 = 0xFB;// MDU Data 2
+ 148      =1  sfr MD3                 = 0xFC;// MDU Data 3
+ 149      =1  sfr MD4                 = 0xFD;// MDU Data 4
+ 150      =1  sfr MD5                 = 0xFE;// MDU Data 5
+ 151      =1  sfr ARCON               = 0xFF;// MDU Control Register
+ 152      =1  //--------------------------------------------------------------------------
+ 153      =1  // P0 (0x80) Bit Registers
+ 154      =1  //--------------------------------------------------------------------------
+ 155      =1  sbit P0_0               = 0x80;
+ 156      =1  sbit P0_1               = 0x81;
+ 157      =1  sbit P0_2               = 0x82;
+ 158      =1  sbit P0_3               = 0x83;
+ 159      =1  sbit P0_4               = 0x84;
+ 160      =1  sbit P0_5               = 0x85;
+ 161      =1  sbit P0_6               = 0x86;
+ 162      =1  sbit P0_7               = 0x87;
+ 163      =1  //--------------------------------------------------------------------------
+ 164      =1  // DPS (0x86) Bit Values
+ 165      =1  //--------------------------------------------------------------------------
+ 166      =1  #define SEL_    0x01
+ 167      =1  #define TSL_    0x20
+ 168      =1  #define ID0_    0x40
+ 169      =1  #define ID1_    0x80
+ 170      =1  //--------------------------------------------------------------------------
+ 171      =1  // PCON (0x87) Bit Values
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 14  
+
+ 172      =1  //--------------------------------------------------------------------------
+ 173      =1  #define PMM_    0x01
+ 174      =1  #define STOP_   0x02
+ 175      =1  #define SWB_    0x04
+ 176      =1  #define PWE_    0x10
+ 177      =1  #define SMOD1_  0x40
+ 178      =1  #define SMOD2_  0x80
+ 179      =1  //--------------------------------------------------------------------------
+ 180      =1  // TCON (0x88) Bit Registers
+ 181      =1  //--------------------------------------------------------------------------
+ 182      =1  sbit    IT0             = 0x88;
+ 183      =1  sbit    IE0             = 0x89;
+ 184      =1  sbit    IT1             = 0x8A;
+ 185      =1  sbit    IE1             = 0x8B;
+ 186      =1  sbit    TR0             = 0x8C;
+ 187      =1  sbit    TF0             = 0x8D;
+ 188      =1  sbit    TR1             = 0x8E;
+ 189      =1  sbit    TF1             = 0x8F;
+ 190      =1  //--------------------------------------------------------------------------
+ 191      =1  // TMOD (0x89) Bit Values
+ 192      =1  //--------------------------------------------------------------------------
+ 193      =1  #define T0_M0_          0x01
+ 194      =1  #define T0_M1_          0x02
+ 195      =1  #define T0_CT_          0x04
+ 196      =1  #define T0_GATE_        0x08
+ 197      =1  #define T1_M0_          0x10
+ 198      =1  #define T1_M1_          0x20
+ 199      =1  #define T1_CT_          0x40
+ 200      =1  #define T1_GATE_        0x80
+ 201      =1  
+ 202      =1  #define T1_MASK_        0xF0
+ 203      =1  #define T0_MASK_        0x0F
+ 204      =1  //--------------------------------------------------------------------------
+ 205      =1  // CKCON (0x8E) Bit Values
+ 206      =1  //--------------------------------------------------------------------------
+ 207      =1  #define MD0_    0x01
+ 208      =1  #define MD1_    0x02
+ 209      =1  #define MD2_    0x04
+ 210      =1  #define T0M_    0x08
+ 211      =1  #define T1M_    0x10
+ 212      =1  #define T2M_    0x20
+ 213      =1  #define WD0_    0x40
+ 214      =1  #define WD1_    0x80
+ 215      =1  //--------------------------------------------------------------------------
+ 216      =1  // CSREPR (0x8F) Bit Values
+ 217      =1  //--------------------------------------------------------------------------
+ 218      =1  #define SW_RST                          0x01
+ 219      =1  #define SW_RBT                          0x02
+ 220      =1  #define FARM                            0x04
+ 221      =1  #define FAES                            0x08
+ 222      =1  #define PMS                                     0x10
+ 223      =1  #define SCS_100M                        0xC0
+ 224      =1  #define SCS_75M                         0x80
+ 225      =1  #define SCS_50M                         0x40
+ 226      =1  #define SCS_25M                         0x00
+ 227      =1  //--------------------------------------------------------------------------
+ 228      =1  // P1 (0x90) Bit Registers
+ 229      =1  //--------------------------------------------------------------------------
+ 230      =1  sbit P1_0               = 0x90;
+ 231      =1  sbit P1_1               = 0x91;
+ 232      =1  sbit P1_2               = 0x92;
+ 233      =1  sbit P1_3               = 0x93;
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 15  
+
+ 234      =1  sbit P1_4               = 0x94;
+ 235      =1  sbit P1_5               = 0x95;
+ 236      =1  sbit P1_6               = 0x96;
+ 237      =1  sbit P1_7               = 0x97;
+ 238      =1  //--------------------------------------------------------------------------
+ 239      =1  // EIF (0x91) Bit Values
+ 240      =1  //--------------------------------------------------------------------------
+ 241      =1  #define INT2F           0x01
+ 242      =1  #define INT3F           0x02
+ 243      =1  #define INT4F           0x04
+ 244      =1  #define INT5F           0x08
+ 245      =1  #define INT6F           0x10
+ 246      =1  //--------------------------------------------------------------------------
+ 247      =1  // SCON0 (0x98) Bit Registers
+ 248      =1  //--------------------------------------------------------------------------
+ 249      =1  sbit RI0                        = 0x98;
+ 250      =1  sbit TI0                        = 0x99;
+ 251      =1  sbit RB08                       = 0x9A;
+ 252      =1  sbit TB08                       = 0x9B;
+ 253      =1  sbit REN0                       = 0x9C;
+ 254      =1  sbit SM02                       = 0x9D;
+ 255      =1  sbit SM01                       = 0x9E;
+ 256      =1  sbit SM00                       = 0x9F;
+ 257      =1  //--------------------------------------------------------------------------
+ 258      =1  // DBAR (0x9A) Bit Values
+ 259      =1  //--------------------------------------------------------------------------
+ 260      =1  #define BUS_REQ                         0x01
+ 261      =1  #define BUS_GRANT                       0x80
+ 262      =1  //--------------------------------------------------------------------------
+ 263      =1  // ACON (0x9D) Bit Values
+ 264      =1  //--------------------------------------------------------------------------
+ 265      =1  #define FLAT_MODE                       0x02
+ 266      =1  #define LARGE_MODE                      0x00
+ 267      =1  //--------------------------------------------------------------------------
+ 268      =1  // PISSR1 (0x9E) Bit Values
+ 269      =1  //--------------------------------------------------------------------------
+ 270      =1  #define LB_INT_STU                      0x01
+ 271      =1  #define LB_EXT_INT_STU          0x02
+ 272      =1  #define ETH_INT_STU                     0x04
+ 273      =1  #define TOE_INT_STU                     0x08
+ 274      =1  #define OW_INT_STU                      0x10
+ 275      =1  #define SPI_INT_STU                     0x20
+ 276      =1  #define I2C_INT_STU                     0x40
+ 277      =1  #define CAN_INT_STU                     0x80
+ 278      =1  //--------------------------------------------------------------------------
+ 279      =1  // PISSR2 (0x9F) Bit Values
+ 280      =1  //--------------------------------------------------------------------------
+ 281      =1  #define UART2_INT_STU           0x01
+ 282      =1  //--------------------------------------------------------------------------
+ 283      =1  // P2 (0xA0) Bit Registers
+ 284      =1  //--------------------------------------------------------------------------
+ 285      =1  sbit P2_0               = 0xA0;
+ 286      =1  sbit P2_1               = 0xA1;
+ 287      =1  sbit P2_2               = 0xA2;
+ 288      =1  sbit P2_3               = 0xA3;
+ 289      =1  sbit P2_4               = 0xA4;
+ 290      =1  sbit P2_5               = 0xA5;
+ 291      =1  sbit P2_6               = 0xA6;
+ 292      =1  sbit P2_7               = 0xA7;
+ 293      =1  //--------------------------------------------------------------------------
+ 294      =1  // IE (0xA8) Bit Registers
+ 295      =1  //--------------------------------------------------------------------------
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 16  
+
+ 296      =1  sbit EX0                    = 0xA8;                                                       // 1=Enable Exte
+             -rnal interrupt 0
+ 297      =1  sbit ET0                    = 0xA9;                                                       // 1=Enable Time
+             -r 0 interrupt
+ 298      =1  sbit EX1                    = 0xAA;                                                       // 1=Enable Exte
+             -rnal interrupt 1
+ 299      =1  sbit ET1                    = 0xAB;                                                       // 1=Enable Time
+             -r 1 interrupt
+ 300      =1  sbit ES0                    = 0xAC;                                                       // 1=Enable Seri
+             -al port 0 interrupt
+ 301      =1  sbit ET2                    = 0xAD;                                                       // 1=Enable Time
+             -r 2 interrupt
+ 302      =1  sbit ES1                    = 0xAE;                                                       // 1=Enable Seri
+             -al port 1 interrupt
+ 303      =1  sbit EA                     = 0xAF;                                                       // 0=Disabe all 
+             -interrupts
+ 304      =1  //--------------------------------------------------------------------------
+ 305      =1  // P3 (0xB0) Bit Registers (Mnemonics & Ports)
+ 306      =1  //--------------------------------------------------------------------------
+ 307      =1  sbit P3_0               = 0xB0;
+ 308      =1  sbit P3_1               = 0xB1;
+ 309      =1  sbit P3_2               = 0xB2;
+ 310      =1  sbit P3_3               = 0xB3;
+ 311      =1  sbit P3_4               = 0xB4;
+ 312      =1  sbit P3_5               = 0xB5;
+ 313      =1  sbit P3_6               = 0xB6;
+ 314      =1  sbit P3_7               = 0xB7;
+ 315      =1  
+ 316      =1  sbit RXD                    = 0xB0;                                                       // Serial data i
+             -nput
+ 317      =1  sbit TXD                    = 0xB1;                                                       // Serial data o
+             -utput
+ 318      =1  sbit INT0                   = 0xB2;                                                       // External inte
+             -rrupt 0
+ 319      =1  sbit INT1                   = 0xB3;                                                       // External inte
+             -rrupt 1
+ 320      =1  sbit T0                     = 0xB4;                                                       // Timer 0 exter
+             -nal input
+ 321      =1  sbit T1                     = 0xB5;                                                       // Timer 1 exter
+             -nal input
+ 322      =1  sbit WR                     = 0xB6;                                                       // External data
+             - memory write strobe
+ 323      =1  sbit RD                     = 0xB7;                                                       // External data
+             - memory read strobe
+ 324      =1  //--------------------------------------------------------------------------
+ 325      =1  // IP (0xB8) Bit Registers
+ 326      =1  //--------------------------------------------------------------------------
+ 327      =1  sbit PX0                = 0xB8;
+ 328      =1  sbit PT0                = 0xB9;
+ 329      =1  sbit PX1                = 0xBA;
+ 330      =1  sbit PT1                = 0xBB;
+ 331      =1  sbit PS0                = 0xBC;
+ 332      =1  sbit PT2                = 0xBD;
+ 333      =1  sbit PS1                = 0xBE;
+ 334      =1  //--------------------------------------------------------------------------
+ 335      =1  // SCON1 (0xC0) Bit Registers
+ 336      =1  //--------------------------------------------------------------------------
+ 337      =1  sbit RI1                = 0xC0;
+ 338      =1  sbit TI1                = 0xC1;
+ 339      =1  sbit RB18               = 0xC2;
+ 340      =1  sbit TB18               = 0xC3;
+ 341      =1  sbit REN1               = 0xC4;
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 17  
+
+ 342      =1  sbit SM12               = 0xC5;
+ 343      =1  sbit SM11               = 0xC6;
+ 344      =1  sbit SM10               = 0xC7;
+ 345      =1  //--------------------------------------------------------------------------
+ 346      =1  // CMOM (0xC2) Bit Values
+ 347      =1  //--------------------------------------------------------------------------
+ 348      =1  #define PCA_ECF                 0x01
+ 349      =1  #define PCA_T0_OF               0x08
+ 350      =1  #define PCA_EXT_CLK             0x0E
+ 351      =1  #define PCA_GATE_OFF    0x80
+ 352      =1  //--------------------------------------------------------------------------
+ 353      =1  // CCON (0xC3) Bit Values
+ 354      =1  //--------------------------------------------------------------------------
+ 355      =1  #define PCA_CCF0                0x01
+ 356      =1  #define PCA_CCF1                0x02
+ 357      =1  #define PCA_CCF2                0x04
+ 358      =1  #define PCA_CCF3                0x08
+ 359      =1  #define PCA_CCF4                0x10
+ 360      =1  #define PCA_CR                  0x40
+ 361      =1  #define PCA_CF                  0x80
+ 362      =1  //--------------------------------------------------------------------------
+ 363      =1  // T2CON (0xC8) Bit Registers
+ 364      =1  //--------------------------------------------------------------------------
+ 365      =1  sbit CPRL2              = 0xC8;
+ 366      =1  sbit CT2                = 0xC9;
+ 367      =1  sbit TR2                = 0xCA;
+ 368      =1  sbit EXEN2              = 0xCB;
+ 369      =1  sbit TCLK               = 0xCC;
+ 370      =1  sbit RCLK               = 0xCD;
+ 371      =1  sbit EXF2               = 0xCE;
+ 372      =1  sbit TF2                = 0xCF;
+ 373      =1  //--------------------------------------------------------------------------
+ 374      =1  // PSW (0xD0) Bit Registers
+ 375      =1  //--------------------------------------------------------------------------
+ 376      =1  sbit P                  = 0xD0;
+ 377      =1  sbit F1                 = 0xD1;
+ 378      =1  sbit OV                 = 0xD2;
+ 379      =1  sbit RS0                = 0xD3;
+ 380      =1  sbit RS1                = 0xD4;
+ 381      =1  sbit F0                 = 0xD5;
+ 382      =1  sbit AC                 = 0xD6;
+ 383      =1  sbit CY                 = 0xD7;
+ 384      =1  //--------------------------------------------------------------------------
+ 385      =1  // CCAPM0-4 (0xD1-0xD5) Bit Values
+ 386      =1  //--------------------------------------------------------------------------
+ 387      =1  #define ECCFs           0x01
+ 388      =1  #define PWMs            0x02
+ 389      =1  #define TOGs            0x04
+ 390      =1  #define MATs            0x08
+ 391      =1  #define CAPNs           0x10
+ 392      =1  #define CAPPs           0x20
+ 393      =1  #define ECOMs           0x40
+ 394      =1  #define CEXs            0x80
+ 395      =1  //--------------------------------------------------------------------------
+ 396      =1  // PSW (0xD8) Bit Registers
+ 397      =1  //--------------------------------------------------------------------------
+ 398      =1  sbit RWT                = 0xD8;
+ 399      =1  sbit EWT                = 0xD9;
+ 400      =1  sbit WTRF               = 0xDA;
+ 401      =1  sbit WDIF               = 0xDB;
+ 402      =1  
+ 403      =1  //--------------------------------------------------------------------------
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 18  
+
+ 404      =1  // Interrupt Vectors:
+ 405      =1  // Interrupt Address = (Number * 8) + 3
+ 406      =1  //--------------------------------------------------------------------------
+ 407      =1  #define IE0_VECTOR            0                                                           // 0x03 External
+             - Interrupt 0
+ 408      =1  #define TF0_VECTOR            1                                                           // 0x0B Timer 0
+ 409      =1  #define IE1_VECTOR            2                                                           // 0x13 External
+             - Interrupt
+ 410      =1  #define TF1_VECTOR            3                                                           // 0x1B Timer 1
+ 411      =1  #define SIO_VECTOR            4                                                           // 0x23 Serial p
+             -ort
+ 412      =1  //--------------------------------------------------------------------------
+ 413      =1  // UR2_IER (0xE2) Bit Values
+ 414      =1  //--------------------------------------------------------------------------
+ 415      =1  #define UR2_RDI_ENB             0x01
+ 416      =1  #define UR2_THRI_ENB    0x02
+ 417      =1  #define UR2_RLSI_ENB    0x04
+ 418      =1  #define UR2_MSI_ENB             0x08
+ 419      =1  //--------------------------------------------------------------------------
+ 420      =1  // UR2_IIR (0xE3) Bit Values
+ 421      =1  //--------------------------------------------------------------------------
+ 422      =1  #define UR2_NONE_INTR           0x01
+ 423      =1  #define UR2_RLS_INTR            0x06
+ 424      =1  #define UR2_RD_TRIG_INTR        0x04
+ 425      =1  #define UR2_RD_TI_INTR          0x0C
+ 426      =1  #define UR2_THRE_INTR           0x02
+ 427      =1  #define UR2_MS_INTR                     0x00
+ 428      =1  //--------------------------------------------------------------------------
+ 429      =1  // UR2_FCR (0xE3) Bit Values
+ 430      =1  //--------------------------------------------------------------------------
+ 431      =1  #define UR2_FIFO_MODE   0x01
+ 432      =1  #define UR2_RXFIFO_RST  0x02
+ 433      =1  #define UR2_TXFIFO_RST  0x04
+ 434      =1  #define UR2_TRIG_01             0x00
+ 435      =1  #define UR2_TRIG_04             0x40
+ 436      =1  #define UR2_TRIG_08             0x80
+ 437      =1  #define UR2_TRIG_14             0xC0
+ 438      =1  //--------------------------------------------------------------------------
+ 439      =1  // UR2_LCR (0xE4) Bit Values
+ 440      =1  //--------------------------------------------------------------------------
+ 441      =1  #define UR2_CHAR_5                      0x00
+ 442      =1  #define UR2_CHAR_6                      0x01
+ 443      =1  #define UR2_CHAR_7                      0x02
+ 444      =1  #define UR2_CHAR_8                      0x03
+ 445      =1  #define UR2_STOP_10                     0x00
+ 446      =1  #define UR2_STOP_15                     0x04
+ 447      =1  #define UR2_PARITY_ENB          0x08
+ 448      =1  #define UR2_EVEN_PARITY         0x10
+ 449      =1  #define UR2_STICK_PARITY        0x20
+ 450      =1  #define UR2_BREAK_ENB           0x40
+ 451      =1  #define UR2_DLAB_ENB            0x80
+ 452      =1  //--------------------------------------------------------------------------
+ 453      =1  // UR2_MCR (0xE5) Bit Values
+ 454      =1  //--------------------------------------------------------------------------
+ 455      =1  #define UR2_DTR                         0x01
+ 456      =1  #define UR2_RTS                         0x02
+ 457      =1  #define UR2_OUT1                        0x04
+ 458      =1  #define UR2_OUT2                        0x08
+ 459      =1  #define UR2_LOOPBACK            0x10
+ 460      =1  #define UR2_RS485_RECEIVE       0x40
+ 461      =1  #define UR2_RS485_DRIVE         0x80
+ 462      =1  //--------------------------------------------------------------------------
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 19  
+
+ 463      =1  // UR2_LSR (0xE6) Bit Values
+ 464      =1  //--------------------------------------------------------------------------
+ 465      =1  #define UR2_DR                          0x01
+ 466      =1  #define UR2_OE                          0x02
+ 467      =1  #define UR2_PE                          0x04
+ 468      =1  #define UR2_FE                          0x08
+ 469      =1  #define UR2_BI                          0x10
+ 470      =1  #define UR2_THRE                        0x20
+ 471      =1  #define UR2_TEMT                        0x40
+ 472      =1  #define UR2_FRAME_ERR           0x80
+ 473      =1  //--------------------------------------------------------------------------
+ 474      =1  // UR2_MSR (0xE7) Bit Values
+ 475      =1  //--------------------------------------------------------------------------
+ 476      =1  #define UR2_DCTS                        0x01
+ 477      =1  #define UR2_DDSR                        0x02
+ 478      =1  #define UR2_TERI                        0x04
+ 479      =1  #define UR2_DDCD                        0x08
+ 480      =1  #define UR2_CTS                         0x10
+ 481      =1  #define UR2_DSR                         0x20
+ 482      =1  #define UR2_RI                          0x40
+ 483      =1  #define UR2_DCD                         0x80
+ 484      =1  //--------------------------------------------------------------------------
+ 485      =1  // EIE (0xE8) Bit Registers
+ 486      =1  //--------------------------------------------------------------------------
+ 487      =1  sbit EINT2              = 0xE8;
+ 488      =1  sbit EINT3              = 0xE9;
+ 489      =1  sbit EINT4              = 0xEA;
+ 490      =1  sbit EINT5              = 0xEB;
+ 491      =1  sbit EINT6              = 0xEC;
+ 492      =1  sbit EWDI               = 0xED;
+ 493      =1  //--------------------------------------------------------------------------
+ 494      =1  // EIP (0xF8) Bit Registers
+ 495      =1  //--------------------------------------------------------------------------
+ 496      =1  sbit PINT2              = 0xF8;
+ 497      =1  sbit PINT3              = 0xF9;
+ 498      =1  sbit PINT4              = 0xFA;
+ 499      =1  sbit PINT5              = 0xFB;
+ 500      =1  sbit PINT6              = 0xFC;
+ 501      =1  sbit PWDI               = 0xFD;
+ 502      =1  //--------------------------------------------------------------------------
+ 503      =1  //--------------------------------------------------------------------------
+ 504      =1  #endif
+  23          #include "ax11000.h"
+   1      =1  /*
+   2      =1   *********************************************************************************
+   3      =1   *     Copyright (c) 2005   ASIX Electronic Corporation      All rights reserved.
+   4      =1   *
+   5      =1   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6      =1   *
+   7      =1   *     The copyright notice above does not evidence any actual or intended
+   8      =1   *     publication of such source code.
+   9      =1   *********************************************************************************
+  10      =1   */
+  11      =1  /*================================================================================
+  12      =1   * Module Name : ax11000.h
+  13      =1   * Purpose     : A header file belongs to AX11000 module.
+  14      =1   *               It define all globe parameters in AX11000 module.
+  15      =1   * Author      : Robin Lee
+  16      =1   * Date        : 2006-01-09
+  17      =1   * Notes       : None.
+  18      =1   * $Log: ax11000.h,v $
+  19      =1   * Revision 1.2  2006/05/18 05:02:20  Louis
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 20  
+
+  20      =1   * no message
+  21      =1   *
+  22      =1   * Revision 1.2  2006/04/20 01:20:33  robin6633
+  23      =1   * 1.Added software reboot function.
+  24      =1   * 2.Added watchdog setting function.
+  25      =1   *
+  26      =1   * Revision 1.1  2006/04/07 11:36:17  robin6633
+  27      =1   * no message
+  28      =1   *
+  29      =1   *================================================================================
+  30      =1   */
+  31      =1  #ifndef AX11000_H
+  32      =1  #define AX11000_H
+  33      =1  
+  34      =1  /* INCLUDE FILE DECLARATIONS */
+  35      =1  #include        "ax11000_cfg.h"
+   1      =2  /*
+   2      =2   *********************************************************************************
+   3      =2   *     Copyright (c) 2005   ASIX Electronic Corporation      All rights reserved.
+   4      =2   *
+   5      =2   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6      =2   *
+   7      =2   *     The copyright notice above does not evidence any actual or intended
+   8      =2   *     publication of such source code.
+   9      =2   *********************************************************************************
+  10      =2   */
+  11      =2  /*================================================================================
+  12      =2   * Module Name : ax11000_cfg.h
+  13      =2   * Purpose     : Configuration setting of AX11000 module.
+  14      =2   * Author      : Robin Lee
+  15      =2   * Date        : 2006-01-06
+  16      =2   * Notes       : None.
+  17      =2   * $Log: ax11000_cfg.h,v $
+  18      =2   * Revision 1.3  2006/05/19 03:41:49  robin6633
+  19      =2   * 1.Enabled AX_WATCHDOG_ENB.
+  20      =2   *
+  21      =2   * Revision 1.2  2006/05/18 05:02:29  Louis
+  22      =2   * no message
+  23      =2   *
+  24      =2   *================================================================================
+  25      =2   */
+  26      =2  #ifndef AX11000_CFG_H
+  27      =2  #define AX11000_CFG_H
+  28      =2  
+  29      =2  /* INCLUDE FILE DECLARATIONS */
+  30      =2  
+  31      =2  
+  32      =2  /* NAMING CONSTANT DECLARATIONS */
+  33      =2  #define         GET_SYS_VALUE           1 // 1:get the system globe value information
+  34      =2  #define         AX_SWRST_ENB            1 // 1:use software reset function ; 0:not use
+  35      =2  #define         AX_SWRBT_ENB            1 // 1:use software reboot function ; 0:not use
+  36      =2  #define         STOE_ENABLE                     1
+  37      =2  #define         AX_WATCHDOG_ENB         1 // 1:involve watchdog function ; 0:not use
+  38      =2  
+  39      =2  /* MACRO DECLARATIONS */
+  40      =2  #define         AX_DBG_LED(value)       {P1 = value;} // debug LED port, default is P1
+  41      =2  
+  42      =2  
+  43      =2  /* TYPE DECLARATIONS */
+  44      =2  
+  45      =2  
+  46      =2  /* GLOBAL VARIABLES */
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 21  
+
+  47      =2  
+  48      =2  
+  49      =2  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+  50      =2  
+  51      =2  
+  52      =2  #endif /* End of AX11000_CFG_H */
+  36      =1  
+  37      =1  
+  38      =1  /* NAMING CONSTANT DECLARATIONS */
+  39      =1  #define         PROG_WTST_0                     0
+  40      =1  #define         PROG_WTST_1                     1
+  41      =1  #define         PROG_WTST_2                     2
+  42      =1  #define         PROG_WTST_3                     3
+  43      =1  #define         PROG_WTST_4                     4
+  44      =1  #define         PROG_WTST_5                     5
+  45      =1  #define         PROG_WTST_6                     6
+  46      =1  #define         PROG_WTST_7                     7
+  47      =1  #define         DATA_STRETCH_0          0
+  48      =1  #define         DATA_STRETCH_1          1
+  49      =1  #define         DATA_STRETCH_2          2
+  50      =1  #define         DATA_STRETCH_3          3
+  51      =1  #define         DATA_STRETCH_4          4
+  52      =1  #define         DATA_STRETCH_5          5
+  53      =1  #define         DATA_STRETCH_6          6
+  54      =1  #define         DATA_STRETCH_7          7
+  55      =1  
+  56      =1  #define         SHADOW_MEM_ENB          0x10
+  57      =1  #define         SYS_CLK_100M            0xC0
+  58      =1  #define         SYS_CLK_50M                     0x40
+  59      =1  #define         SYS_CLK_25M                     0x00
+  60      =1  
+  61      =1  #define         WD_INTR_ENABLE          1
+  62      =1  #define         WD_INTR_DISABLE         0
+  63      =1  #define         WD_RESET_ENABLE         1
+  64      =1  #define         WD_RESET_DISABLE        0
+  65      =1  #define         WD_HIGH_PRIORITY        1
+  66      =1  #define         WD_LOW_PRIORITY         0
+  67      =1  #define         WD_INTERVAL_131K        0x00
+  68      =1  #define         WD_INTERVAL_1M          WD0_
+  69      =1  #define         WD_INTERVAL_8M          WD1_
+  70      =1  #define         WD_INTERVAL_67M         WD1_|WD0_
+  71      =1  
+  72      =1  
+  73      =1  /* MACRO DECLARATIONS */
+  74      =1  
+  75      =1  
+  76      =1  /* TYPE DECLARATIONS */
+  77      =1  
+  78      =1  
+  79      =1  /* GLOBAL VARIABLES */
+  80      =1  
+  81      =1  
+  82      =1  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+  83      =1  void    AX11000_Init(void);
+  84      =1  byte    AX11000_GetSysClk(void);
+  85      =1  byte    AX11000_GetMemSdw(void);
+  86      =1  byte    AX11000_GetProgWst(void);
+  87      =1  byte    AX11000_GetDataSth(void);
+  88      =1  #if AX_SWRST_ENB
+  89      =1  void    AX11000_SoftReset(void);
+  90      =1  #endif
+  91      =1  #if AX_SWRBT_ENB
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 22  
+
+  92      =1  void    AX11000_SoftReboot(void);
+  93      =1  #endif
+  94      =1  #if AX_WATCHDOG_ENB
+  95      =1  void    AX11000_WatchDogSetting(byte wdIntrEnb, byte wdRstEnb, byte wdPrty, byte wdTime);
+  96      =1  #endif
+  97      =1  
+  98      =1  
+  99      =1  #endif /* End of AX11000_H */
+  24          #include "interrupt.h"
+   1      =1  /*
+   2      =1   *********************************************************************************
+   3      =1   *     Copyright (c) 2005       ASIX Electronic Corporation      All rights reserved.
+   4      =1   *
+   5      =1   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6      =1   *
+   7      =1   *     The copyright notice above does not evidence any actual or intended
+   8      =1   *     publication of such source code.
+   9      =1   *********************************************************************************
+  10      =1   */
+  11      =1  /*================================================================================
+  12      =1   * Module Name : interrupt.h
+  13      =1   * Purpose     : A header file belongs to interrupt module.
+  14      =1   * Author      : Robin Lee
+  15      =1   * Date        : 2005-01-09
+  16      =1   * Notes       : None.
+  17      =1   * $Log: interrupt.h,v $
+  18      =1   * Revision 1.2  2006/05/18 05:02:30  Louis
+  19      =1   * no message
+  20      =1   *
+  21      =1   * Revision 1.2  2006/04/20 01:24:55  robin6633
+  22      =1   * 1.Removed the power management interrupt enable/disable.
+  23      =1   *
+  24      =1   * Revision 1.1  2006/04/07 11:36:17  robin6633
+  25      =1   * no message
+  26      =1   *
+  27      =1   *================================================================================
+  28      =1   */
+  29      =1  #ifndef INTERRUPT_H
+  30      =1  #define INTERRUPT_H
+  31      =1  
+  32      =1  /* INCLUDE FILE DECLARATIONS */
+  33      =1  #include        "interrupt_cfg.h"
+   1      =2  //================================================================================
+   2      =2  //     Copyright (c) 2005       ASIX Electronic Corporation      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =2  //
+   6      =2  //     The copyright notice above does not evidence any actual or intended
+   7      =2  //     publication of such source code.
+   8      =2  //================================================================================
+   9      =2  //
+  10      =2  //================================================================================
+  11      =2  // Module Name : interrupt_cfg.h
+  12      =2  // Purpose     : Configuration setting of interrupt module.
+  13      =2  // Author      : Robin Lee
+  14      =2  // Date        : 2006-01-09
+  15      =2  // Notes       : None.
+  16      =2  // $Log: interrupt_cfg.h,v $
+  17      =2  // Revision 1.2  2006/05/18 05:02:30  Louis
+  18      =2  // no message
+  19      =2  //
+  20      =2  // Revision 1.2  2006/04/20 01:25:49  robin6633
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 23  
+
+  21      =2  // 1.Added the power management ISR enable/disable.
+  22      =2  // 2.Added the watchdog ISR enable/disable.
+  23      =2  //
+  24      =2  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  25      =2  // no message
+  26      =2  //
+  27      =2  //================================================================================
+  28      =2  //
+  29      =2  #ifndef INTERRUPT_CFG_H
+  30      =2  #define INTERRUPT_CFG_H
+  31      =2  
+  32      =2  // INCLUDE FILE DECLARATIONS //
+  33      =2  
+  34      =2  // NAMING CONSTANT DECLARATIONS //
+  35      =2  //#define  AX_LBI_INT_ENABLE                    0 // 1:enable Local Bus ISR ; 0:disable Local Bus ISR
+  36      =2  //#define  AX_ETH_INT_ENABLE                    1 // 1:enable Ethernet ISR ; 0:disable Ethernet ISR
+  37      =2  //#define  AX_I2C_INT_ENABLE                    0 // 1:enable I2C ISR ; 0:disable I2C ISR
+  38      =2  //#define  AX_SPI_INT_ENABLE                    0 // 1:enable SPI ISR ; 0:disable SPI ISR
+  39      =2  //#define  AX_ONEWIRE_INT_ENABLE                0 // 1:enable OneWire ISR ; 0:disable OneWire ISR
+  40      =2  //#define  AX_CAN_INT_ENABLE                    0 // 1:enable CAN ISR ; 0:disable CAN ISR
+  41      =2  //#define  AX_HSUART_INT_ENABLE                 0 // 1:enable High Speed Uart ISR ; 0:disable High Speed Uart ISR
+  42      =2  //#define  BOOTLDR_ISR                          0 // 1:involve the boot loader source code.
+  43      =2  //#define  AX_POWER_MANAGEMENT_INT_ENABLE       1 // 1:enable power management wake up  ISR ; 0:disable that
+  44      =2  //#define  AX_WATCHDOG_INT_ENB          0 // 1:enable watchdog ISR ; 0:disable watchdog ISR;
+  45      =2  
+  46      =2  // MACRO DECLARATIONS //
+  47      =2  
+  48      =2  // TYPE DECLARATIONS //
+  49      =2  
+  50      =2  // GLOBAL VARIABLES //
+  51      =2  extern byte             ax11000WakeupEvent;
+  52      =2  
+  53      =2  // EXPORTED SUBPROGRAM SPECIFICATIONS //
+  54      =2  
+  55      =2  #endif // End of INTERRUPT_CFG_H //
+  34      =1  
+  35      =1  
+  36      =1  /* NAMING CONSTANT DECLARATIONS */
+  37      =1  #define         ON              1
+  38      =1  #define         OFF             0
+  39      =1  #define         EXTINT0(val)    {EX0 = val;}
+  40      =1  #define         EXTINT1(val)    {EX1 = val;}
+  41      =1  #define         EXTINT2(val)    {EINT2 = val;}
+  42      =1  #define         EXTINT3(val)    {EINT3 = val;}
+  43      =1  #define         EXTINT4(val)    {EINT4 = val;}
+  44      =1  #define         EXTINT5(val)    {EINT5 = val;}
+  45      =1  #define         EXTINT6(val)    {EINT6 = val;}
+  46      =1  
+  47      =1  
+  48      =1  /* MACRO DECLARATIONS */
+  49      =1  
+  50      =1  
+  51      =1  /* TYPE DECLARATIONS */
+  52      =1  
+  53      =1  
+  54      =1  /* GLOBAL VARIABLES */
+  55      =1  
+  56      =1  
+  57      =1  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+  58      =1  
+  59      =1  
+  60      =1  #endif /* End of INTERRUPT_H */
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 24  
+
+  25          #include "delay.h"
+   1      =1  /*
+   2      =1   ******************************************************************************
+   3      =1   *     Copyright (c) 2006       ASIX Electronic Corporation      All rights reserved.
+   4      =1   *
+   5      =1   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6      =1   *
+   7      =1   *     The copyright notice above does not evidence any actual or intended
+   8      =1   *     publication of such source code.
+   9      =1   ******************************************************************************
+  10      =1   */
+  11      =1  /*=============================================================================
+  12      =1   * Module Name:delay.h
+  13      =1   * Purpose:
+  14      =1   * Author:
+  15      =1   * Date:
+  16      =1   * Notes:
+  17      =1   * $Log: delay.h,v $
+  18      =1   * Revision 1.1.1.1  2006/06/20 05:50:28  borbin
+  19      =1   * no message
+  20      =1   *
+  21      =1   * Revision 1.1.1.1  2006/02/23 00:55:10  borbin
+  22      =1   * no message
+  23      =1   *
+  24      =1   *=============================================================================
+  25      =1   */
+  26      =1  
+  27      =1  #ifndef __DELAY_H__
+  28      =1  #define __DELAY_H__
+  29      =1  
+  30      =1  /* INCLUDE FILE DECLARATIONS */
+  31      =1  #include "types.h"
+   1      =2  //----------------------------------------------------------------------------------------
+   2      =2  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =2  //
+   6      =2  //     The copyright notice above does not evidence any actual or intended
+   7      =2  //     publication of such source code.
+   8      =2  //----------------------------------------------------------------------------------------
+   9      =2  // Module Name : types.h
+  10      =2  // Purpose     : Definition of type.
+  11      =2  // Author      : Robin Lee
+  12      =2  // Date        : 2005-12-28
+  13      =2  // Notes       : None.
+  14      =2  // $Log: types.h,v $
+  15      =2  //----------------------------------------------------------------------------------------
+  16      =2  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =2  // no message
+  18      =2  //----------------------------------------------------------------------------------------
+  19      =2  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =2  // no message
+  21      =2  //----------------------------------------------------------------------------------------
+  22      =2  
+  23      =2  #ifndef TYPES_H
+           =2 #define TYPES_H
+           =2 
+           =2 typedef unsigned short int          bool;                                                 // boolean
+           =2 typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+           =2 typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 25  
+
+           =2 typedef short int                   sint;                                                 // 16-bit signed
+           =2 typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+           =2 typedef unsigned short int          word;                                                 // 16-bit unsign
+             -ed
+           =2 
+           =2 #ifndef NULL
+           =2   #define NULL ((void *) 0L)
+           =2 #endif
+           =2 
+           =2 #define TRUE                  1
+           =2 #define FALSE                 0
+           =2 #define ON                    1
+           =2 #define OFF                   0
+           =2 #define Client                1
+           =2 #define Server                0
+           =2 
+           =2 // Bit Definitions for Bitwise Operation //
+           =2 #define BIT0            0x01
+           =2 #define BIT1            0x02
+           =2 #define BIT2            0x04
+           =2 #define BIT3            0x08
+           =2 #define BIT4            0x10
+           =2 #define BIT5            0x20
+           =2 #define BIT6            0x40
+           =2 #define BIT7            0x80
+           =2 #define BIT8            0x0100
+           =2 #define BIT9            0x0200
+           =2 #define BIT10           0x0400
+           =2 #define BIT11           0x0800
+           =2 #define BIT12           0x1000
+           =2 #define BIT13           0x2000
+           =2 #define BIT14           0x4000
+           =2 #define BIT15           0x8000
+           =2 #define BIT16           0x00010000
+           =2 #define BIT17           0x00020000
+           =2 #define BIT18           0x00040000
+           =2 #define BIT19           0x00080000
+           =2 #define BIT20           0x00100000
+           =2 #define BIT21           0x00200000
+           =2 #define BIT22           0x00400000
+           =2 #define BIT23           0x00800000
+           =2 #define BIT24           0x01000000
+           =2 #define BIT25           0x02000000
+           =2 #define BIT26           0x04000000
+           =2 #define BIT27           0x08000000
+           =2 #define BIT28           0x10000000
+           =2 #define BIT29           0x20000000
+           =2 #define BIT30           0x40000000
+           =2 #define BIT31           0x80000000
+           =2 
+           =2 #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+           =2 #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+           =2 
+           =2 #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+           =2 #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+           =2 #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+           =2 #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+           =2  
+           =2 // Keil compiler user define //
+           =2 #define     KEIL_CPL
+           =2 
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 26  
+
+           =2 #ifdef KEIL_CPL
+           =2  #define XDATA    xdata
+           =2  #define IDATA    idata
+           =2  #define BDATA    bdata
+           =2  #define CODE     code
+           =2  #define FAR      far
+           =2 #else
+           =2  #define XDATA
+           =2  #define IDATA
+           =2  #define BDATA
+           =2  #define CODE
+           =2  #define FAR
+           =2 #endif
+           =2 
+           =2 // Serial interface command direction //
+           =2 #define     SI_WR                   BIT0
+           =2 #define     SI_RD                   BIT1
+           =2 
+           =2 #define     FLASH_WR_ENB            (PCON |= PWE_)
+           =2 #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+           =2 
+           =2 #endif  // end of TYPES_H //
+  32      =1  
+  33      =1  /* NAMING CONSTANT DECLARATIONS */
+  34      =1  
+  35      =1  /* GLOBAL VARIABLES */
+  36      =1  
+  37      =1  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+  38      =1  void DELAY_Init(void);
+  39      =1  void DELAY_Ms(uint);
+  40      =1  void DELAY_Us(uint);
+  41      =1  
+  42      =1  
+  43      =1  #endif /* End of __DELAY_H__ */
+  44      =1  
+  45      =1  
+  46      =1  /* End of timer.h */
+  26          
+  27          #include <string.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STRING.H
+   3      =1  
+   4      =1  String functions.
+   5      =1  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+   8      =1  
+   9      =1  #ifndef __STRING_H__
+  10      =1  #define __STRING_H__
+  11      =1  
+  12      =1  #ifndef _SIZE_T
+  13      =1   #define _SIZE_T
+  14      =1   typedef unsigned int size_t;
+  15      =1  #endif
+  16      =1  
+  17      =1  #ifndef NULL
+           =1  #define NULL ((void *) 0L)
+           =1 #endif
+  20      =1  
+  21      =1  #pragma SAVE
+  22      =1  #pragma REGPARMS
+  23      =1  extern char *strcat (char *s1, char *s2);
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 27  
+
+  24      =1  extern char *strncat (char *s1, char *s2, int n);
+  25      =1  
+  26      =1  extern char strcmp (char *s1, char *s2);
+  27      =1  extern char strncmp (char *s1, char *s2, int n);
+  28      =1  
+  29      =1  extern char *strcpy (char *s1, char *s2);
+  30      =1  extern char *strncpy (char *s1, char *s2, int n);
+  31      =1  
+  32      =1  extern int strlen (char *);
+  33      =1  
+  34      =1  extern char *strchr (const char *s, char c);
+  35      =1  extern int strpos (const char *s, char c);
+  36      =1  extern char *strrchr (const char *s, char c);
+  37      =1  extern int strrpos (const char *s, char c);
+  38      =1  
+  39      =1  extern int strspn (char *s, char *set);
+  40      =1  extern int strcspn (char *s, char *set);
+  41      =1  extern char *strpbrk (char *s, char *set);
+  42      =1  extern char *strrpbrk (char *s, char *set);
+  43      =1  extern char *strstr  (char *s, char *sub);
+  44      =1  extern char *strtok  (char *str, const char *set);
+  45      =1  
+  46      =1  extern char memcmp (void *s1, void *s2, int n);
+  47      =1  extern void *memcpy (void *s1, void *s2, int n);
+  48      =1  extern void *memchr (void *s, char val, int n);
+  49      =1  extern void *memccpy (void *s1, void *s2, char val, int n);
+  50      =1  extern void *memmove (void *s1, void *s2, int n);
+  51      =1  extern void *memset  (void *s, char val, int n);
+  52      =1  #pragma RESTORE
+  53      =1  
+  54      =1  #endif
+  28          #include "printd.h"
+   1      =1  //--------------------------------------------------------------------------------
+   2      =1  //     Copyright (c) 2005   ASIX Electronic Corporation      All rights reserved.
+   3      =1  //
+   4      =1  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =1  //
+   6      =1  //     The copyright notice above does not evidence any actual or intended
+   7      =1  //     publication of such source code.
+   8      =1  //--------------------------------------------------------------------------------
+   9      =1  //================================================================================
+  10      =1  // File Name : printd.h
+  11      =1  // Purpose   :
+  12      =1  // Author    :
+  13      =1  // Date      :
+  14      =1  // Notes     :
+  15      =1  //    printd("justif: \"%-10s\"\n", "left");    =>    justif: "left      "
+  16      =1  //    printd("justif: \"%10s\"\n", "right");    =>    justif: "     right"
+  17      =1  //    printd(" 3: %04d zero padded\n",   3);     =>     3: 0003 zero padded
+  18      =1  //    printd(" 3: %-4d left justif.\n",  3);    =>     3: 3    left justif.
+  19      =1  //    printd(" 3: %4d right justif.\n",  3);    =>     3:    3 right justif.
+  20      =1  //    printd("-3: %04d zero padded\n",  -3);    =>    -3: -003 zero padded
+  21      =1  //    printd("-3: %-4d left justif.\n", -3);    =>    -3: -3   left justif.
+  22      =1  //    printd("-3: %4d right justif.\n", -3);    =>    -3:   -3 right justif.
+  23      =1  //================================================================================
+  24      =1  //
+  25      =1  #ifndef PRINTD_H
+  26      =1  #define PRINTD_H
+  27      =1  
+  28      =1  // INCLUDE FILE DECLARATIONS //
+  29      =1  
+  30      =1  // NAMING CONSTANT DECLARATIONS //
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 28  
+
+  31      =1  #define UART0                             0
+  32      =1  #define UART1                             1
+  33      =1  #define DEBUG_PORT                      (UART1)
+  34      =1  #define PAD_RIGHT                               1
+  35      =1  #define PAD_ZERO                                2
+  36      =1  #define PRINT_BUF_LEN                     18
+  37      =1  
+  38      =1  #define DRIVER_MSG                              0x0001
+  39      =1  #define INIT_MSG                                0x0002
+  40      =1  #define TX_MSG                                  0x0004
+  41      =1  #define RX_MSG                                  0x0008
+  42      =1  #define INT_MSG                                 0x0010
+  43      =1  #define ERROR_MSG                               0x0020
+  44      =1  #define WARNING_MSG                             0x0040
+  45      =1  #define DEBUG_MSG                               0x0080
+  46      =1  #define TCP_MSG                                 0x0100
+  47      =1  #define ALL_MSG                                 0x01FF
+  48      =1  #define NO_MSG                                  0x0000
+  49      =1  #define DEFAULT_MSG                             (ALL_MSG) 
+  50      =1  #define DEBUG_FLAGS                             DEFAULT_MSG
+  51      =1  #define DEBUG_DISPLAY_DIAG              1
+  52      =1  
+  53      =1  // MACRO DECLARATIONS //
+  54      =1  #if   ( DEBUG_PORT == UART0 )
+           =1 #define     DEBUG_PORT_PUTCHR(x)    uart0_PutChar(x)
+           =1 #else
+  57      =1  #define DEBUG_PORT_PUTCHR(x)    uart1_PutChar(x)
+  58      =1  #endif
+  59      =1  
+  60      =1  #if DEBUG_DISPLAY_DIAG
+  61      =1  #define PRINTD(flag,x)                  if(flag & DEBUG_FLAGS) {printd x;}
+  62      =1  #else
+           =1 #define PRINTD(flag,x)
+           =1 #endif
+  65      =1  
+  66      =1  // GLOBAL VARIABLES //
+  67      =1  extern byte DEBUG_MsgEnable;
+  68      =1  
+  69      =1  // EXPORTED SUBPROGRAM SPECIFICATIONS //
+  70      =1  int printd(const char *format, ...);
+  71      =1  
+  72      =1  #endif // End of PRINTD_H //
+  73      =1  
+  29          // NAMING CONSTANT DECLARATIONS //
+  30          
+  31          // MACRO DECLARATIONS //
+  32          
+  33          // TYPE DECLARATIONS //
+  34          
+  35          // GLOBAL VARIABLES DECLARATIONS //
+  36          
+  37          // LOCAL VARIABLES DECLARATIONS //
+  38          
+  39          // LOCAL SUBPROGRAM DECLARATIONS //
+  40          static void EEPCFG_ChgByteOrder(byte *pBuf, byte Len);
+  41          
+  42          // ----------------------------------------------------------------------------
+  43          // Function Name : EEPROM_Init
+  44          // Purpose       :
+  45          // Params          :
+  46          // Returns         :
+  47          // Note                  :
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 29  
+
+  48          // ----------------------------------------------------------------------------
+  49          void EEPROM_Init(void)
+  50          {
+  51   1            // Disable I2C interrupt.
+  52   1      
+  53   1              switch (CSREPR & (BIT6|BIT7))
+  54   1              {
+  55   2              case SYS_CLK_100M:
+  56   2                      // I2C master mode, interrupt enable, fast mode in slave, 7-bits address, 400KHz at 100M
+  57   2                      I2C_Setup(I2C_ENB|I2C_FAST|I2C_7BIT|I2C_MASTER_MODE, I2C_FAST_100M, 0x005A);
+  58   2                      break;
+  59   2              case SYS_CLK_50M:
+  60   2                      // I2C master mode, interrupt enable, fast mode in slave, 7-bits address, 400KHz at 50M
+  61   2                      I2C_Setup(I2C_ENB|I2C_FAST|I2C_7BIT|I2C_MASTER_MODE, I2C_FAST_50M, 0x005A);
+  62   2                      break;
+  63   2              case SYS_CLK_25M:
+  64   2                      // I2C master mode, interrupt enable, fast mode in slave, 7-bits address, 400KHz at 25M
+  65   2                      I2C_Setup(I2C_ENB|I2C_FAST|I2C_7BIT|I2C_MASTER_MODE, I2C_FAST_25M, 0x005A);
+  66   2                      break;
+  67   2              }
+  68   1      
+  69   1      } // End of EEPROM_Init() //
+  70          
+  71          // ----------------------------------------------------------------------------
+  72          // Function Name : teI2C_STATUS EEPROM_Read(byte DevAddr, byte RegAddr, byte *pBuf, byte Len)
+  73          // Purpose       :
+  74          // Params          :
+  75          // Returns         :
+  76          // Note                  :
+  77          // ----------------------------------------------------------------------------
+  78          teI2C_STATUS EEPROM_Read(byte DevAddr, byte RegAddr, byte *pBuf, byte Len)
+  79          {
+  80   1              return I2C_Read(DevAddr, RegAddr, pBuf, Len);
+  81   1      }
+  82          
+  83          // ----------------------------------------------------------------------------
+  84          // Function Name : teI2C_STATUS EEPROM_Write(byte DevAddr, byte RegAddr, byte *pBuf, byte Len)
+  85          // Purpose       :
+  86          // Params          :
+  87          // Returns         :
+  88          // Note                  :
+  89          // ----------------------------------------------------------------------------
+  90          teI2C_STATUS EEPROM_Write(byte DevAddr, byte RegAddr, byte *pBuf, byte Len)
+  91          {
+  92   1            byte LenTemp, ErrFlag = 0;
+  93   1              
+  94   1              while (Len)
+  95   1              {
+  96   2                      LenTemp = 0x08 - (RegAddr & 0x07);
+  97   2                      if (LenTemp > Len)
+  98   2                              LenTemp = Len;
+  99   2                              
+ 100   2                      ErrFlag = I2C_Write(DevAddr, RegAddr, pBuf, LenTemp);
+ 101   2                      
+ 102   2                      Len -= LenTemp;
+ 103   2                      RegAddr += LenTemp;
+ 104   2                      pBuf += LenTemp;
+ 105   2                      
+ 106   2                      DELAY_Ms(10);
+ 107   2              }
+ 108   1              return ErrFlag;
+ 109   1      }
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 30  
+
+ 110          
+ 111          // End of eeprom.c //
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 31  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION EEPROM_Init (BEGIN)
+                                           ; SOURCE LINE # 49
+                                           ; SOURCE LINE # 50
+                                           ; SOURCE LINE # 53
+0000 E58F              MOV     A,CSREPR
+0002 54C0              ANL     A,#0C0H
+0004 FF                MOV     R7,A
+0005 EF                MOV     A,R7
+0006 12000000    E     LCALL   ?C?CCASE
+000A 0000        R     DW      ?C0004
+000C 00                DB      00H
+000D 0000        R     DW      ?C0003
+000F 40                DB      040H
+0010 0000        R     DW      ?C0002
+0012 C0                DB      0C0H
+0013 0000              DW      00H
+0015 0000        R     DW      ?C0005
+                                           ; SOURCE LINE # 54
+                                           ; SOURCE LINE # 55
+0017         ?C0002:
+                                           ; SOURCE LINE # 57
+0017 7B5A              MOV     R3,#05AH
+0019 7A00              MOV     R2,#00H
+001B 7D31              MOV     R5,#031H
+001D 7C00              MOV     R4,#00H
+001F 7F82              MOV     R7,#082H
+0021 12000000    E     LCALL   _I2C_Setup
+                                           ; SOURCE LINE # 58
+0025 22                RET     
+                                           ; SOURCE LINE # 59
+0026         ?C0003:
+                                           ; SOURCE LINE # 61
+0026 7B5A              MOV     R3,#05AH
+0028 7A00              MOV     R2,#00H
+002A 7D18              MOV     R5,#018H
+002C 7C00              MOV     R4,#00H
+002E 7F82              MOV     R7,#082H
+0030 12000000    E     LCALL   _I2C_Setup
+                                           ; SOURCE LINE # 62
+0034 22                RET     
+                                           ; SOURCE LINE # 63
+0035         ?C0004:
+                                           ; SOURCE LINE # 65
+0035 7B5A              MOV     R3,#05AH
+0037 7A00              MOV     R2,#00H
+0039 7D0C              MOV     R5,#0CH
+003B 7C00              MOV     R4,#00H
+003D 7F82              MOV     R7,#082H
+003F 12000000    E     LCALL   _I2C_Setup
+                                           ; SOURCE LINE # 66
+                                           ; SOURCE LINE # 67
+0043         ?C0001:
+                                           ; SOURCE LINE # 69
+0043         ?C0005:
+0043 22                RET     
+             ; FUNCTION EEPROM_Init (END)
+
+             ; FUNCTION _EEPROM_Read (BEGIN)
+                                           ; SOURCE LINE # 78
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 32  
+
+0000 90000000    R     MOV     DPTR,#DevAddr
+0004 EF                MOV     A,R7
+0005 F0                MOVX    @DPTR,A
+0006 90000000    R     MOV     DPTR,#RegAddr
+000A ED                MOV     A,R5
+000B F0                MOVX    @DPTR,A
+000C 90000000    R     MOV     DPTR,#pBuf
+0010 EB                MOV     A,R3
+0011 F0                MOVX    @DPTR,A
+0012 A3                INC     DPTR
+0013 EA                MOV     A,R2
+0014 F0                MOVX    @DPTR,A
+0015 A3                INC     DPTR
+0016 E9                MOV     A,R1
+0017 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 79
+                                           ; SOURCE LINE # 80
+0018 90000000    R     MOV     DPTR,#DevAddr
+001C E0                MOVX    A,@DPTR
+001D FF                MOV     R7,A
+001E 90000000    R     MOV     DPTR,#RegAddr
+0022 E0                MOVX    A,@DPTR
+0023 FD                MOV     R5,A
+0024 90000000    R     MOV     DPTR,#pBuf
+0028 E0                MOVX    A,@DPTR
+0029 FB                MOV     R3,A
+002A A3                INC     DPTR
+002B E0                MOVX    A,@DPTR
+002C FA                MOV     R2,A
+002D A3                INC     DPTR
+002E E0                MOVX    A,@DPTR
+002F F9                MOV     R1,A
+0030 90000000    R     MOV     DPTR,#Len
+0034 E0                MOVX    A,@DPTR
+0035 FE                MOV     R6,A
+0036 90000000    E     MOV     DPTR,#?_I2C_Read?BYTE+05H
+003A EE                MOV     A,R6
+003B F0                MOVX    @DPTR,A
+003C 12000000    E     LCALL   _I2C_Read
+                                           ; SOURCE LINE # 81
+0040         ?C0006:
+0040 22                RET     
+             ; FUNCTION _EEPROM_Read (END)
+
+             ; FUNCTION _EEPROM_Write (BEGIN)
+                                           ; SOURCE LINE # 90
+0000 90000000    R     MOV     DPTR,#DevAddr
+0004 EF                MOV     A,R7
+0005 F0                MOVX    @DPTR,A
+0006 90000000    R     MOV     DPTR,#RegAddr
+000A ED                MOV     A,R5
+000B F0                MOVX    @DPTR,A
+000C 90000000    R     MOV     DPTR,#pBuf
+0010 EB                MOV     A,R3
+0011 F0                MOVX    @DPTR,A
+0012 A3                INC     DPTR
+0013 EA                MOV     A,R2
+0014 F0                MOVX    @DPTR,A
+0015 A3                INC     DPTR
+0016 E9                MOV     A,R1
+0017 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 91
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 33  
+
+                                           ; SOURCE LINE # 92
+0018 90000000    R     MOV     DPTR,#ErrFlag
+001C E4                CLR     A
+001D F0                MOVX    @DPTR,A
+001E         ?C0007:
+                                           ; SOURCE LINE # 94
+001E 90000000    R     MOV     DPTR,#Len
+0022 E0                MOVX    A,@DPTR
+0023 FF                MOV     R7,A
+0024 EF                MOV     A,R7
+0025 7003              JNZ     $ + 5H
+0027 010000      R     AJMP    ?C0008
+                                           ; SOURCE LINE # 95
+                                           ; SOURCE LINE # 96
+002A 90000000    R     MOV     DPTR,#RegAddr
+002E E0                MOVX    A,@DPTR
+002F FF                MOV     R7,A
+0030 EF                MOV     A,R7
+0031 5407              ANL     A,#07H
+0033 FF                MOV     R7,A
+0034 C3                CLR     C
+0035 7408              MOV     A,#08H
+0037 9F                SUBB    A,R7
+0038 FF                MOV     R7,A
+0039 90000000    R     MOV     DPTR,#LenTemp
+003D EF                MOV     A,R7
+003E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 97
+003F 90000000    R     MOV     DPTR,#Len
+0043 E0                MOVX    A,@DPTR
+0044 FF                MOV     R7,A
+0045 90000000    R     MOV     DPTR,#LenTemp
+0049 E0                MOVX    A,@DPTR
+004A FE                MOV     R6,A
+004B EE                MOV     A,R6
+004C D3                SETB    C
+004D 9F                SUBB    A,R7
+004E 400C              JC      ?C0009
+                                           ; SOURCE LINE # 98
+0050 90000000    R     MOV     DPTR,#Len
+0054 E0                MOVX    A,@DPTR
+0055 FF                MOV     R7,A
+0056 90000000    R     MOV     DPTR,#LenTemp
+005A EF                MOV     A,R7
+005B F0                MOVX    @DPTR,A
+005C         ?C0009:
+                                           ; SOURCE LINE # 100
+005C 90000000    R     MOV     DPTR,#DevAddr
+0060 E0                MOVX    A,@DPTR
+0061 FF                MOV     R7,A
+0062 90000000    R     MOV     DPTR,#RegAddr
+0066 E0                MOVX    A,@DPTR
+0067 FD                MOV     R5,A
+0068 90000000    R     MOV     DPTR,#pBuf
+006C E0                MOVX    A,@DPTR
+006D FB                MOV     R3,A
+006E A3                INC     DPTR
+006F E0                MOVX    A,@DPTR
+0070 FA                MOV     R2,A
+0071 A3                INC     DPTR
+0072 E0                MOVX    A,@DPTR
+0073 F9                MOV     R1,A
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 34  
+
+0074 90000000    R     MOV     DPTR,#LenTemp
+0078 E0                MOVX    A,@DPTR
+0079 FE                MOV     R6,A
+007A 90000000    E     MOV     DPTR,#?_I2C_Write?BYTE+05H
+007E EE                MOV     A,R6
+007F F0                MOVX    @DPTR,A
+0080 12000000    E     LCALL   _I2C_Write
+0084 90000000    R     MOV     DPTR,#ErrFlag
+0088 EF                MOV     A,R7
+0089 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 102
+008A 90000000    R     MOV     DPTR,#Len
+008E E0                MOVX    A,@DPTR
+008F FF                MOV     R7,A
+0090 90000000    R     MOV     DPTR,#LenTemp
+0094 E0                MOVX    A,@DPTR
+0095 FE                MOV     R6,A
+0096 C3                CLR     C
+0097 EF                MOV     A,R7
+0098 9E                SUBB    A,R6
+0099 FF                MOV     R7,A
+009A 90000000    R     MOV     DPTR,#Len
+009E EF                MOV     A,R7
+009F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 103
+00A0 90000000    R     MOV     DPTR,#LenTemp
+00A4 E0                MOVX    A,@DPTR
+00A5 FF                MOV     R7,A
+00A6 90000000    R     MOV     DPTR,#RegAddr
+00AA E0                MOVX    A,@DPTR
+00AB 2F                ADD     A,R7
+00AC F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 104
+00AD 90000000    R     MOV     DPTR,#LenTemp
+00B1 E0                MOVX    A,@DPTR
+00B2 FF                MOV     R7,A
+00B3 7E00              MOV     R6,#00H
+00B5 90000000    R     MOV     DPTR,#pBuf+01H
+00B9 EE                MOV     A,R6
+00BA 8FF0              MOV     B,R7
+00BC 12000000    E     LCALL   ?C?IILDX
+                                           ; SOURCE LINE # 106
+00C0 7F0A              MOV     R7,#0AH
+00C2 7E00              MOV     R6,#00H
+00C4 12000000    E     LCALL   _DELAY_Ms
+                                           ; SOURCE LINE # 107
+00C8 010000      R     AJMP    ?C0007
+00CB         ?C0008:
+                                           ; SOURCE LINE # 108
+00CB 90000000    R     MOV     DPTR,#ErrFlag
+00CF E0                MOVX    A,@DPTR
+00D0 FF                MOV     R7,A
+                                           ; SOURCE LINE # 109
+00D1         ?C0010:
+00D1 22                RET     
+             ; FUNCTION _EEPROM_Write (END)
+
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 35  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+TB08 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009BH  1
+TB18 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C3H  1
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+SM00 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009FH  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+SM10 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C7H  1
+SM01 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009EH  1
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+SM11 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C6H  1
+SM02 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009DH  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+AC . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D6H  1
+SM12 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C5H  1
+T0 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B4H  1
+SPIDR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CFH  1
+T1 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B5H  1
+EA . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AFH  1
+OWCIR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D6H  1
+I2C_NACK_ERR . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+CH . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C5H  1
+DPH0 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0083H  1
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+DPH1 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0085H  1
+CL . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C4H  1
+P0_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0080H  1
+P1_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0090H  1
+P0_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0081H  1
+CCAPH0 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B9H  1
+DPL0 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0082H  1
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+_DELAY_Ms. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+P2_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A0H  1
+P1_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0091H  1
+P0_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0082H  1
+CCAPH1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BAH  1
+DPL1 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0084H  1
+P3_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B0H  1
+P2_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A1H  1
+P1_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0092H  1
+P0_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0083H  1
+UR2_DLH. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E2H  1
+CCAPH2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BBH  1
+XMRHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A7H  1
+P3_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B1H  1
+P2_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A2H  1
+P1_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0093H  1
+P0_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0084H  1
+CCAPH3 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BCH  1
+P3_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B2H  1
+P2_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A3H  1
+P1_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0094H  1
+P0_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0085H  1
+TA . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00EBH  1
+CCAPH4 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BDH  1
+CCAPL0 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B1H  1
+EXF2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CEH  1
+RD . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B7H  1
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 36  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+P3_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B3H  1
+P2_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A4H  1
+REN0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009CH  1
+P1_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0095H  1
+P0_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0086H  1
+UR2_FCR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E3H  1
+CCAPM0 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D1H  1
+T2IF . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C9H  1
+CCAPL1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B2H  1
+REN1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C4H  1
+P3_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B4H  1
+P2_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A5H  1
+P1_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0096H  1
+P0_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0087H  1
+UR2_DLL. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E1H  1
+CCAPM1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D2H  1
+CCAPL2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B3H  1
+XMRLR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A6H  1
+P3_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B5H  1
+P2_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A6H  1
+P1_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0097H  1
+CCAPM2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D3H  1
+CCAPL3 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B4H  1
+XMWHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A5H  1
+P3_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B6H  1
+P2_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A7H  1
+CCAPM3 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D4H  1
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+CCAPL4 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B5H  1
+P3_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B7H  1
+CCAPM4 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D5H  1
+DBAR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009AH  1
+UR2_IER. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E2H  1
+CY . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D7H  1
+INT0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B2H  1
+UR2_LCR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E4H  1
+XMWLR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A4H  1
+INT1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B3H  1
+UR2_MCR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E5H  1
+DPX0 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0093H  1
+_I2C_Read. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+I2CCIR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0096H  1
+DPX1 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0095H  1
+UR2_IIR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E3H  1
+UR2_RBR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E1H  1
+ACON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009DH  1
+DCIR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009BH  1
+SP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0081H  1
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C3H  1
+CMOD . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C2H  1
+OV . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D2H  1
+ulong. . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+WR . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B6H  1
+UR2_THR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E1H  1
+_EEPROM_Read . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  DevAddr. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  RegAddr. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0001H  1
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 37  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  pBuf . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0002H  3
+  Len. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0005H  1
+EWDI . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00EDH  1
+WDIF . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00DBH  1
+RLDH . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CBH  1
+EPCR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BEH  1
+LDHR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AAH  1
+UR2_LSR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E6H  1
+EPDR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BFH  1
+MCIR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B6H  1
+RCLK . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CDH  1
+UR2_MSR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E7H  1
+_I2C_Write . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+bool . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+TCLK . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CCH  1
+RLDL . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CAH  1
+LDLR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A9H  1
+PCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0087H  1
+CANCIR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00DEH  1
+TCIR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AEH  1
+_I2C_Setup . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+PWDI . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FDH  1
+LSCR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A2H  1
+TMOD . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0089H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+byte . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+_EEPROM_Write. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  DevAddr. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  RegAddr. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0001H  1
+  pBuf . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0002H  3
+  Len. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0005H  1
+  LenTemp. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0006H  1
+  ErrFlag. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0007H  1
+I2C_OK . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+OWDR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D7H  1
+IE0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0089H  1
+word . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+IE1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008BH  1
+MXAX . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00EAH  1
+LMSR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A1H  1
+sint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+MD0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F9H  1
+B. . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F0H  1
+EEPROM_Init. . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+MD1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FAH  1
+LSAIER . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A1H  1
+uint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+MD2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FBH  1
+WTRF . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00DAH  1
+MD3. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FCH  1
+PISSR1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009EH  1
+MD4. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FDH  1
+LSSR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A3H  1
+PISSR2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009FH  1
+MD5. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FEH  1
+ACC. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E0H  1
+ES0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ACH  1
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 38  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+CT2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C9H  1
+ES1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AEH  1
+ET0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A9H  1
+ET1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ABH  1
+TF0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008DH  1
+ET2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ADH  1
+RI0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0098H  1
+TF1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008FH  1
+TF2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CFH  1
+RI1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C0H  1
+SPICIR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CEH  1
+TH0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008CH  1
+EX0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A8H  1
+TI0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0099H  1
+IT0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0088H  1
+TH1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008DH  1
+TI1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C1H  1
+EX1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AAH  1
+IT1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008AH  1
+TH2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CDH  1
+P. . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D0H  1
+TL0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008AH  1
+CSREPR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008FH  1
+TL1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008BH  1
+TL2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CCH  1
+PS0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BCH  1
+EIE. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E8H  1
+WTST . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0092H  1
+PS1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BEH  1
+PT0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B9H  1
+EIF. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0091H  1
+RS0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D3H  1
+PT1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BBH  1
+I2CDR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0097H  1
+RS1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D4H  1
+PT2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BDH  1
+TR0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008CH  1
+TR1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008EH  1
+TR2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CAH  1
+PX0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B8H  1
+PX1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BAH  1
+DDR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009CH  1
+DPH. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0083H  1
+EIP. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F8H  1
+DPL. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0082H  1
+teI2C_STATUS . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+LCR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A2H  1
+SBUF0. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0099H  1
+SBUF1. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C1H  1
+EINT2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00E8H  1
+EXEN2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CBH  1
+MDR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B7H  1
+EINT3. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00E9H  1
+CPRL2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C8H  1
+SCON0. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+EINT4. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00EAH  1
+SCON1. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+C51 COMPILER V8.06   EEPROM                                                                03/13/2026 10:21:45 PAGE 39  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+SDSTSR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0094H  1
+_I2C_STATUS. . . . . . . . . . . . . .  * TAG *  -----  ENUM     -----  -----
+EINT5. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00EBH  1
+STATUS . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E9H  1
+EINT6. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ECH  1
+T2CON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+DPS. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0086H  1
+CANDR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00DFH  1
+TDR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AFH  1
+LDAHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A5H  1
+DPX. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0093H  1
+DMAHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ADH  1
+PINT2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00F8H  1
+RXD. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B0H  1
+PINT3. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00F9H  1
+CKCON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008EH  1
+PINT4. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FAH  1
+EWT. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D9H  1
+TXD. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B1H  1
+LDALR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A4H  1
+PINT5. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FBH  1
+DMALR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ABH  1
+LSR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A3H  1
+PINT6. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FCH  1
+DMAMR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ACH  1
+ARCON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FFH  1
+F0 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D5H  1
+F1 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D1H  1
+LDCSR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A6H  1
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+RB08 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009AH  1
+WDCON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+RWT. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D8H  1
+RB18 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C2H  1
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    343    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     14    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

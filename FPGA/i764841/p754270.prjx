@@ -1,0 +1,891 @@
+KEY LIBERO "11.9"
+KEY CAPTURE "11.9.2.1"
+KEY DEFAULT_IMPORT_LOC "G:\Datasheets\IGLOO_NANO\Led_PatternProj\Led_PatternProj\hdl"
+KEY DEFAULT_OPEN_LOC ""
+KEY ProjectID "0"
+KEY HDLTechnology "VHDL"
+KEY VERILOGMODE "VERILOG2001"
+KEY VHDLMODE "VHDL2008"
+KEY UseConstraintFlowTechnology "FALSE"
+KEY VendorTechnology_Family "IGLOO"
+KEY VendorTechnology_Die "UM4X4M1NLP"
+KEY VendorTechnology_Package "vq100"
+KEY VendorTechnology_Speed "STD"
+KEY VendorTechnology_DieVoltage "1.5"
+KEY VendorTechnology_PART_RANGE "COM"
+KEY VendorTechnology_DSW_VCCA_VOLTAGE_RAMP_RATE ""
+KEY VendorTechnology_IO_DEFT_STD "LVCMOS33"
+KEY VendorTechnology_OPCONR ""
+KEY VendorTechnology_PLL_SUPPLY ""
+KEY VendorTechnology_RAD_EXPOSURE ""
+KEY VendorTechnology_RESERVEMIGRATIONPINS "1"
+KEY VendorTechnology_RESTRICTPROBEPINS "1"
+KEY VendorTechnology_RESTRICTSPIPINS "0"
+KEY VendorTechnology_SYSTEM_CONTROLLER_SUSPEND_MODE ""
+KEY VendorTechnology_TARGETDEVICESFORMIGRATION "UM4X4M1NLP"
+KEY VendorTechnology_TEMPR "COM"
+KEY VendorTechnology_UNUSED_MSS_IO_RESISTOR_PULL "None"
+KEY VendorTechnology_VCCI_1.5_VOLTR "COM"
+KEY VendorTechnology_VCCI_1.8_VOLTR "COM"
+KEY VendorTechnology_VCCI_2.5_VOLTR "COM"
+KEY VendorTechnology_VCCI_3.3_VOLTR "COM"
+KEY VendorTechnology_VOLTR "COM"
+KEY ProjectLocation "C:\_swork\10-\9800\9824\FPGA\i764841"
+KEY ProjectDescription ""
+KEY Pa4PeripheralNewSeq "GOOD"
+KEY SimulationType "VHDL"
+KEY Vendor "Actel"
+KEY ActiveRoot "mainprogram::work"
+LIST REVISIONS
+VALUE="Impl1",NUM=1
+CURREV=1
+ENDLIST
+LIST FileManager
+VALUE "<project>\designer\impl1\75-4270A.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="102151"
+ENDFILE
+VALUE "<project>\designer\impl1\753033.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="112386"
+ENDFILE
+VALUE "<project>\designer\impl1\ClockMaster.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="244"
+ENDFILE
+VALUE "<project>\designer\impl1\i1100\projectData\mainprogram.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="99794"
+ENDFILE
+VALUE "<project>\designer\impl1\i754270A\projectData\mainprogram.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="98471"
+ENDFILE
+VALUE "<project>\designer\impl1\i758667_10_25\projectData\mainprogram.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="99051"
+ENDFILE
+VALUE "<project>\designer\impl1\i762203\projectData\mainprogram.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="95683"
+ENDFILE
+VALUE "<project>\designer\impl1\i762303\projectData\mainprogram.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="97606"
+ENDFILE
+VALUE "<project>\designer\impl1\i8667new\projectData\mainprogram.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="99050"
+ENDFILE
+VALUE "<project>\designer\impl1\i8667\projectData\mainprogram.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="101763"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram.adb,adb"
+STATE="utd"
+TIME="1773689479"
+SIZE="4034048"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram.ide_des,ide_des"
+STATE="utd"
+TIME="1773689480"
+SIZE="1062"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_ba.sdf,ba_sdf"
+STATE="ood"
+TIME="1773415379"
+SIZE="1801434"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_ba.vhd,ba_hdl"
+STATE="ood"
+TIME="1773415379"
+SIZE="868440"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_compile_log.rpt,log"
+STATE="utd"
+TIME="1773688946"
+SIZE="9411"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_floorplan_log.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="20249"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_fp\mainprogram.pro,pro"
+STATE="utd"
+TIME="1773430528"
+SIZE="0"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_fp\projectData\mainprogram.pdb,pdb"
+STATE="utd"
+TIME="1773415379"
+SIZE="119753"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_iteration_summary.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="4496"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r1_s1.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r1_s2.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r1_s3.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r1_s4.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r1_s5.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_initial.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s10.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s11.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s12.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s13.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s14.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s15.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s6.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s7.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s8.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_power_r2_s9.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="11468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_initial.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2275840"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_initial.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1206"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s10.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2279424"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s10.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1202"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s11.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2275840"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s11.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1202"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s12.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2278912"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s12.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1202"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s13.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2282496"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s13.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1202"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s14.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2278912"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s14.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1202"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s15.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2278912"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s15.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1202"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s6.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2275840"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s6.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1201"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s7.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2280960"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s7.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1201"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s8.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2282496"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s8.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1201"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s9.adb,adb"
+STATE="ood"
+TIME="1773415379"
+SIZE="2275840"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_r2_s9.ide_des,ide_des"
+STATE="utd"
+TIME="1773415379"
+SIZE="1201"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="84979"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timingconstraints_log.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="2852"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r1_s1.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="85095"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r1_s2.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="85585"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r1_s3.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="85786"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r1_s4.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="85189"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r1_s5.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="85805"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_initial.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="85433"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s10.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="84979"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s11.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="86086"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s12.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="85451"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s13.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="86508"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s14.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="84380"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s15.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="85580"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s6.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="85204"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s7.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="86074"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s8.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="86644"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_r2_s9.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="86675"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29498"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r1_s1.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29438"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r1_s2.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29526"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r1_s3.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29408"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r1_s4.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29468"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r1_s5.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29450"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_initial.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29438"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s10.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29498"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s11.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29486"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s12.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29458"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s13.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29480"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s14.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29363"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s15.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29429"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s6.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29465"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s7.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29445"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s8.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29406"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_max_r2_s9.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="29417"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28912"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r1_s1.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28919"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r1_s2.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28923"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r1_s3.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28911"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r1_s4.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28928"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r1_s5.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28924"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_initial.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28919"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s10.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28912"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s11.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28932"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s12.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28930"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s13.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28920"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s14.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28904"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s15.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28906"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s6.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28907"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s7.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28908"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s8.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28926"
+ENDFILE
+VALUE "<project>\designer\impl1\mainprogram_timing_violations_min_r2_s9.rpt,log"
+STATE="utd"
+TIME="1773415379"
+SIZE="28903"
+ENDFILE
+VALUE "<project>\hdl\ClockMaster.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="1732"
+ENDFILE
+VALUE "<project>\hdl\divider.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="992"
+ENDFILE
+VALUE "<project>\hdl\HeartBeat.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="1285"
+ENDFILE
+VALUE "<project>\hdl\IODebounce.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="2515"
+ENDFILE
+VALUE "<project>\hdl\mainprogram.vhd,hdl"
+STATE="utd"
+TIME="1773688649"
+SIZE="27329"
+ENDFILE
+VALUE "<project>\hdl\Max144.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="21285"
+ENDFILE
+VALUE "<project>\hdl\piso.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="2843"
+ENDFILE
+VALUE "<project>\hdl\PWM.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="1146"
+ENDFILE
+VALUE "<project>\hdl\PWMs1.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="1456"
+ENDFILE
+VALUE "<project>\hdl\revsion.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="3665"
+ENDFILE
+VALUE "<project>\hdl\sipo.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="3048"
+ENDFILE
+VALUE "<project>\hdl\t2.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="6641"
+ENDFILE
+VALUE "<project>\hdl\temp.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="1878"
+ENDFILE
+VALUE "<project>\hdl\WatchDog.vhd,hdl"
+STATE="utd"
+TIME="1773415379"
+SIZE="1444"
+ENDFILE
+VALUE "<project>\synthesis\mainprogram.edn,syn_edn"
+STATE="utd"
+TIME="1773688791"
+SIZE="2357248"
+ENDFILE
+VALUE "<project>\synthesis\mainprogram.so,so"
+STATE="utd"
+TIME="1773688791"
+SIZE="228"
+ENDFILE
+VALUE "<project>\synthesis\mainprogram_sdc.sdc,syn_sdc"
+STATE="utd"
+TIME="1773688791"
+SIZE="508"
+ENDFILE
+VALUE "<project>\synthesis\mainprogram_syn.prj,prj"
+STATE="utd"
+TIME="1773688791"
+SIZE="2444"
+ENDFILE
+VALUE "<project>\synthesis\synwork\layer0.so,so"
+STATE="utd"
+TIME="1773686042"
+SIZE="159"
+ENDFILE
+ENDLIST
+LIST UsedFile
+ENDLIST
+LIST NewModulesInfo
+LIST "mainprogram::work"
+FILE "<project>\hdl\mainprogram.vhd,hdl"
+LIST ProjectState5.1
+LIST Impl1
+LiberoState=Post_Synthesis
+ideSYNTHESIS(<project>\synthesis\mainprogram.edn,syn_edn)=StateSuccess
+LIST FlowOptions
+UsePhySynth=FALSE
+UseSynth=TRUE
+UseFhbAutoInst=FALSE
+ENDLIST
+Used_File_List
+ENDUsed_File_List
+ENDLIST
+ENDLIST
+LIST PinReports
+VALUE "<project>\designer\impl1\mainprogram_report_pin_byname.txt,log"
+VALUE "<project>\designer\impl1\mainprogram_report_pin_bynumber.txt,log"
+ENDLIST
+ENDLIST
+ENDLIST
+LIST AssociatedStimulus
+ENDLIST
+LIST Other_Association
+ENDLIST
+LIST SimulationOptions
+UseAutomaticDoFile=true
+IncludeWaveDo=false
+Type=max
+RunTime=1000ns
+Resolution=1ps
+VsimOpt=
+EntityName=testbench
+TopInstanceName=<top>_0
+DoFileName=
+DoFileName2=wave.do
+DoFileParams=
+DisplayDUTWave=false
+LogAllSignals=false
+DisablePulseFiltering=false
+DumpVCD=false
+VCDFileName=power.vcd
+VHDL2008=false
+Verilog2001=false
+SystemVerilog=false
+TimeUnit=1
+TimeUnitBase=ns
+Precision=100
+PrecisionBase=ps
+ENDLIST
+LIST ModelSimLibPath
+UseCustomPath=FALSE
+LibraryPath=
+ENDLIST
+LIST GlobalFlowOptions
+GenerateHDLAfterSynthesis=FALSE
+GenerateHDLAfterPhySynthesis=FALSE
+RunDRCAfterSynthesis=FALSE
+AutoCheckConstraints=TRUE
+UpdateModelSimIni=TRUE
+NoIOMode=FALSE
+PeriInitStandalone=FALSE
+EnableViewDraw=FALSE
+UpdateViewDrawIni=TRUE
+GenerateHDLFromSchematic=TRUE
+VmNetlistFlowOn=FALSE
+EnableDesignSeparationOn=FALSE
+EnableSETMitigationOn=FALSE
+DisplayFanoutLimit=10
+AbortFlowOnPDCErrorsOn=TRUE
+AbortFlowOnSDCErrorsOn=TRUE
+InstantiateInSmartDesign=TRUE
+FlashProInputFile=pdb
+SmartGenCompileReport=T
+ENDLIST
+LIST PhySynthesisOptions
+ENDLIST
+LIST Profiles
+NAME="SoftConsole"
+FUNCTION="SoftwareIDE"
+TOOL="SoftConsole"
+LOCATION="eclipse.exe"
+PARAM=""
+BATCH=0
+LICENSE=""
+IS32BIT="1"
+EndProfile
+NAME="Synplify Pro ME"
+FUNCTION="Synthesis"
+TOOL="Synplify Pro ME"
+LOCATION="C:\Microsemi\Libero_SoC_v11.9\SynplifyPro\bin\synplify_pro.exe"
+PARAM="-licensetype synplifypro_actel -batch -log synplify.log"
+BATCH=1
+LICENSE=""
+IS32BIT="1"
+EndProfile
+NAME="ModelSim ME"
+FUNCTION="Simulation"
+TOOL="ModelSim"
+LOCATION="C:\Microsemi\Libero_SoC_v11.9\Modelsim\win32acoem\modelsim.exe"
+PARAM=""
+BATCH=0
+LICENSE=""
+IS32BIT="1"
+EndProfile
+NAME="FPExpress"
+FUNCTION="Program"
+TOOL="FlashPro"
+LOCATION="C:\Microsemi\Libero_SoC_v11.9\Designer\bin\FPExpress.exe"
+PARAM=""
+BATCH=0
+LICENSE=""
+IS32BIT="1"
+EndProfile
+NAME="Identify Debugger"
+FUNCTION="IdentifyDebugger"
+TOOL="Identify Debugger"
+LOCATION="C:\Microsemi\Libero_SoC_v11.9\Identify\bin\identify_debugger.exe"
+PARAM=""
+BATCH=0
+LICENSE=""
+IS32BIT="1"
+EndProfile
+ENDLIST
+LIST ProjectState5.1
+LIST "mainprogram::work"
+LIST Impl1
+LiberoState=Post_Synthesis
+ideSYNTHESIS(<project>\synthesis\mainprogram.edn,syn_edn)=StateSuccess
+LIST FlowOptions
+UsePhySynth=FALSE
+UseSynth=TRUE
+UseFhbAutoInst=FALSE
+ENDLIST
+Used_File_List
+ENDUsed_File_List
+ENDLIST
+ENDLIST
+ENDLIST
+LIST ExcludePackageForSimulation
+ENDLIST
+LIST ExcludePackageForSynthesis
+ENDLIST
+LIST IncludeModuleForSimulation
+ENDLIST
+LIST CDBOrder
+ENDLIST
+LIST UserCustomizedFileList
+ENDLIST
+LIST OpenedFileList
+ORIENTATION;HORIZONTAL
+StartPage;StartPage;0
+ACTIVEVIEW;StartPage
+ENDLIST
+LIST ModuleSubBlockList
+LIST "ClockMaster::work","hdl\ClockMaster.vhd","FALSE","FALSE"
+ENDLIST
+LIST "divider::work","hdl\divider.vhd","FALSE","FALSE"
+ENDLIST
+LIST "HeartBeat::work","hdl\HeartBeat.vhd","FALSE","FALSE"
+ENDLIST
+LIST "IODebounce::work","hdl\IODebounce.vhd","FALSE","FALSE"
+ENDLIST
+LIST "mainprogram::work","hdl\mainprogram.vhd","FALSE","FALSE"
+SUBBLOCK "Max144::work","hdl\Max144.vhd","FALSE","FALSE"
+SUBBLOCK "PWMS1::work","hdl\PWMs1.vhd","FALSE","FALSE"
+SUBBLOCK "WatchDog::work","hdl\WatchDog.vhd","FALSE","FALSE"
+SUBBLOCK "ClockMaster::work","hdl\ClockMaster.vhd","FALSE","FALSE"
+SUBBLOCK "divider::work","hdl\divider.vhd","FALSE","FALSE"
+SUBBLOCK "IODebounce::work","hdl\IODebounce.vhd","FALSE","FALSE"
+SUBBLOCK "piso::work","hdl\piso.vhd","FALSE","FALSE"
+SUBBLOCK "revision::work","hdl\revsion.vhd","FALSE","FALSE"
+SUBBLOCK "sipo::work","hdl\sipo.vhd","FALSE","FALSE"
+ENDLIST
+LIST "Max144::work","hdl\Max144.vhd","FALSE","FALSE"
+ENDLIST
+LIST "piso::work","hdl\piso.vhd","FALSE","FALSE"
+ENDLIST
+LIST "PWM::work","hdl\PWM.vhd","FALSE","FALSE"
+ENDLIST
+LIST "PWMS1::work","hdl\PWMs1.vhd","FALSE","FALSE"
+ENDLIST
+LIST "revision::work","hdl\revsion.vhd","FALSE","FALSE"
+ENDLIST
+LIST "sipo::work","hdl\sipo.vhd","FALSE","FALSE"
+ENDLIST
+LIST "WatchDog::work","hdl\WatchDog.vhd","FALSE","FALSE"
+ENDLIST
+ENDLIST
+LIST ActiveTestBenchList
+ENDLIST
+LIST IOTabList
+ENDLIST
+LIST FPTabList
+ENDLIST
+LIST TimingTabList
+ENDLIST
+LIST FDCTabList
+ENDLIST

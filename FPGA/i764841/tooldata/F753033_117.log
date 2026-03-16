@@ -1,0 +1,16 @@
+Project Name: F753033_117
+Location: C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117
+Description: 
+Preferred HDL Type: VHDL
+
+#-----------------------------------------------------
+                  Device Details
+#-----------------------------------------------------
+
+Part Number    : AGLN250V5-VQ100
+Family         : IGLOO
+Die            : AGLN250V5
+Package        : 100 VQFP
+Speed          : STD
+Core Voltage   : 1.5
+Range          : COM

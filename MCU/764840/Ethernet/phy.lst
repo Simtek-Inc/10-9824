@@ -1,0 +1,3397 @@
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 1   
+
+
+C51 COMPILER V8.06, COMPILATION OF MODULE PHY
+OBJECT MODULE PLACED IN phy.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE src\ethernet\phy.c LARGE OMF2 ROM(D16M) OPTIMIZE(0,SPEED) BROWSE INTVECTOR(
+                    -0X6020) INCDIR(.\src\cpu\;.\src\ethernet;.\src\swdma\;.\src\mstimer\;.\src\uart\;.\src\main\;.\src\tcpip\;.\src\hsur\;.\
+                    -src\gs2e\;.\src\debug\;.\src\dhcp;.\src\dns\;.\src\adapter\;.\src\pppoe\;.\src\console;.\src\telnet;.\src\smtp;.\src\htt
+                    -p;.\src\web_page;.\src\si2c;.\src\eeprom;.\src\ping;.\src\fpga;.\src\menu;.\src\spi) DEFINE(RuntimeCodeAt24KH) VARBANKIN
+                    -G DEBUG CODE LISTINCLUDE SYMBOLS PRINT(.\phy.lst) OBJECT(phy.obj)
+
+line level    source
+
+   1          //=============================================================================
+   2          //     Copyright (c) 2006       ASIX Electronic Corporation      All rights reserved.
+   3          //
+   4          //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5          //
+   6          //     The copyright notice above does not evidence any actual or intended
+   7          //     publication of such source code.
+   8          //=============================================================================
+   9          // Module Name: phy.c
+  10          // Purpose:  
+  11          // Author:
+  12          // Date:
+  13          // Notes:
+  14          // $Log: phy.c,v $
+  15          // Revision 1.1.1.1  2006/06/20 05:50:28  borbin
+  16          // no message
+  17          //=============================================================================
+  18          
+  19          // INCLUDE FILE DECLARATIONS //
+  20          #include "reg80390.h"
+   1      =1  //--------------------------------------------------------------------------
+   2      =1  // AX110XX.H
+   3      =1  //
+   4      =1  // Header file for the AX110XX.
+   5      =1  // Copyright (c) 2001 Keil Software, Inc.  All rights reserved.
+   6      =1  //--------------------------------------------------------------------------
+   7      =1  //
+   8      =1  // --------------------------------------------------------------------------*/
+   9      =1  // Make sure that this file gets included only once.
+  10      =1  // --------------------------------------------------------------------------*/
+  11      =1  #ifndef AX110XX_HEADER_FILE
+  12      =1  #define AX110XX_HEADER_FILE             1
+  13      =1  // --------------------------------------------------------------------------*/
+  14      =1  // Byte Registers
+  15      =1  // --------------------------------------------------------------------------*/
+  16      =1  sfr     P0                      = 0x80;// Port 0
+  17      =1  sfr     SP                      = 0x81;// Stack Pointer
+  18      =1  sfr     DPL0            = 0x82;// Data Pointer 0 Low Byte
+  19      =1  sfr     DPH0            = 0x83;// Data Pointer 0 High Byte
+  20      =1  sfr     DPL                     = 0x82;// Data Pointer 0 Low Byte
+  21      =1  sfr     DPH                     = 0x83;// Data Pointer 0 High Byte
+  22      =1  sfr     DPL1            = 0x84;// Data Pointer 1 Low Byte
+  23      =1  sfr     DPH1            = 0x85;// Data Pointer 1 High Byte
+  24      =1  sfr     DPS                     = 0x86;// Data Pointers Select Register
+  25      =1  sfr     PCON            = 0x87;// Power Configuration Register
+  26      =1  sfr TCON                = 0x88;// Timer 0,1 Configuration Register
+  27      =1  sfr TMOD                = 0x89;// Timer 0,1 Control Mode Register
+  28      =1  sfr TL0                 = 0x8A;// Timer 0 Low Byte Counter
+  29      =1  sfr TL1                 = 0x8B;// Timer 1 Low Byte Counter
+  30      =1  sfr TH0                 = 0x8C;// Timer 0 High Byte Counter
+  31      =1  sfr TH1                 = 0x8D;// Timer 1 High Byte Counter
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 2   
+
+  32      =1  sfr CKCON               = 0x8E;// Clock Control Register
+  33      =1  sfr CSREPR              = 0x8F;// Software Reset and External Program RAM Select Register
+  34      =1  
+  35      =1  sfr P1                  = 0x90;// Port 1
+  36      =1  sfr EIF                 = 0x91;// Extended Interrupt Flag Register
+  37      =1  sfr WTST                = 0x92;// Program Wait States Register
+  38      =1  sfr DPX0                = 0x93;// Data Pointer Extended Register 0
+  39      =1  sfr DPX                 = 0x93;// Data Pointer Extended Register 0
+  40      =1  sfr     SDSTSR          = 0x94;// Software Timer and Software DMA complete interrupt status
+  41      =1  sfr DPX1                = 0x95;// Data Pointer Extended Register 1
+  42      =1  sfr I2CCIR              = 0x96;// I2C Command Index Register
+  43      =1  sfr I2CDR               = 0x97;// I2C Data Register
+  44      =1  sfr SCON0               = 0x98;// UART 0 Configuration Register
+  45      =1  sfr SBUF0               = 0x99;// UART 0 Buffer Register
+  46      =1  sfr DBAR                = 0x9A;// DMA Bus Arbitration Register
+  47      =1  sfr DCIR                = 0x9B;// DMA Command Index Register
+  48      =1  sfr DDR                 = 0x9C;// DMA Data Register
+  49      =1  sfr ACON                = 0x9D;// Address Control Register
+  50      =1  sfr PISSR1              = 0x9E;// Peripheral Interrupt Status Summary Register 1
+  51      =1  sfr PISSR2              = 0x9F;// Peripheral Interrupt Status Summary Register 2
+  52      =1  
+  53      =1  sfr P2                  = 0xA0;// Port 2
+  54      =1  // Local Bus Master Mode //
+  55      =1  sfr LMSR                = 0xA1;// Local Bus Mode Setup Register
+  56      =1  sfr LCR                 = 0xA2;// Local Bus Command Register
+  57      =1  sfr LSR                 = 0xA3;// Local Bus Status Register
+  58      =1  sfr LDALR               = 0xA4;// Local Bus Device Address Low Register
+  59      =1  sfr LDAHR               = 0xA5;// Local Bus Device Address High Register
+  60      =1  sfr LDCSR               = 0xA6;// Local Bus Device Chip Select Register
+  61      =1  // Local Bus Slave Mode //
+  62      =1  sfr LSAIER              = 0xA1;// Local Bus Slave mode Action and Interrupt Enable Register
+  63      =1  sfr LSCR                = 0xA2;// Local Bus Slave mode Command Register
+  64      =1  sfr LSSR                = 0xA3;// Local Bus Slave mode Status Register
+  65      =1  sfr XMWLR               = 0xA4;// External Master Write-read Low Register
+  66      =1  sfr XMWHR               = 0xA5;// External Master Write-read High Register
+  67      =1  sfr XMRLR               = 0xA6;// External Master Read-only Low Register
+  68      =1  sfr XMRHR               = 0xA7;// External Master Read-only High Register
+  69      =1  
+  70      =1  sfr IE                  = 0xA8;// Interrupt Enable register
+  71      =1  sfr LDLR                = 0xA9;// Local Bus Data Low Register
+  72      =1  sfr LDHR                = 0xAA;// Local Bus Data High Register
+  73      =1  sfr DMALR               = 0xAB;// Local Bus DMA Address Low Register
+  74      =1  sfr DMAMR               = 0xAC;// Local Bus DMA Address Medium Register
+  75      =1  sfr DMAHR               = 0xAD;// Local Bus DMA Address High Register
+  76      =1  sfr TCIR                = 0xAE;// TOE Command Index Register
+  77      =1  sfr     TDR                     = 0xAF;// TOE Data Register
+  78      =1  
+  79      =1  sfr P3                  = 0xB0;// Port 3
+  80      =1  sfr CCAPL0      = 0xB1;// PCA Module 0 Compare/Capture Low Byte Register
+  81      =1  sfr CCAPL1      = 0xB2;// PCA Module 1 Compare/Capture Low Byte Register
+  82      =1  sfr CCAPL2      = 0xB3;// PCA Module 2 Compare/Capture Low Byte Register
+  83      =1  sfr CCAPL3      = 0xB4;// PCA Module 3 Compare/Capture Low Byte Register
+  84      =1  sfr CCAPL4      = 0xB5;// PCA Module 4 Compare/Capture Low Byte Register
+  85      =1  sfr MCIR                = 0xB6;// MAC Command Index Register
+  86      =1  sfr MDR                 = 0xB7;// MAC Data Register
+  87      =1  sfr IP                  = 0xB8;// Interrupt Priority Register
+  88      =1  sfr CCAPH0      = 0xB9;// PCA Module 0 Compare/Capture High Byte Register
+  89      =1  sfr CCAPH1      = 0xBA;// PCA Module 1 Compare/Capture High Byte Register
+  90      =1  sfr CCAPH2      = 0xBB;// PCA Module 2 Compare/Capture High Byte Register
+  91      =1  sfr CCAPH3      = 0xBC;// PCA Module 3 Compare/Capture High Byte Register
+  92      =1  sfr CCAPH4      = 0xBD;// PCA Module 4 Compare/Capture High Byte Register
+  93      =1  sfr EPCR                = 0xBE;// Ethernet PHY Command Index Register
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 3   
+
+  94      =1  sfr EPDR                = 0xBF;// Ethernet PHY Data Register
+  95      =1  
+  96      =1  sfr SCON1               = 0xC0;// UART 1 Configuration Register
+  97      =1  sfr SBUF1               = 0xC1;// UART 1 Buffer Register
+  98      =1  sfr CMOD                = 0xC2;// PCA Timer/Counter Mode Register
+  99      =1  sfr CCON                = 0xC3;// PCA Timer/Counter Control Register
+ 100      =1  sfr CL                  = 0xC4;// PCA Timer/Counter Low
+ 101      =1  sfr CH                  = 0xC5;// PCA Timer/Counter High
+ 102      =1  sfr T2CON               = 0xC8;// Timer 2 Configuration Register
+ 103      =1  sfr T2IF                = 0xC9;// Timer 2 Interrupt Flags
+ 104      =1  sfr RLDL                = 0xCA;// Timer 2 Reload Low Byte
+ 105      =1  sfr RLDH                = 0xCB;// Timer 2 Reload High Byte
+ 106      =1  sfr TL2                 = 0xCC;// Timer 2 Low Byte Counter
+ 107      =1  sfr TH2                 = 0xCD;// Timer 2 High Byte Counter
+ 108      =1  sfr SPICIR              = 0xCE;// SPI Command Index Register
+ 109      =1  sfr SPIDR               = 0xCF;// SPI Data Register
+ 110      =1  
+ 111      =1  sfr PSW                 = 0xD0;// Program Status Word
+ 112      =1  sfr CCAPM0              = 0xD1;// PCA Compare/Capture Module Mode Register 0
+ 113      =1  sfr CCAPM1              = 0xD2;// PCA Compare/Capture Module Mode Register 1
+ 114      =1  sfr CCAPM2              = 0xD3;// PCA Compare/Capture Module Mode Register 2
+ 115      =1  sfr CCAPM3              = 0xD4;// PCA Compare/Capture Module Mode Register 3
+ 116      =1  sfr CCAPM4              = 0xD5;// PCA Compare/Capture Module Mode Register 4
+ 117      =1  sfr OWCIR               = 0xD6;// OneWire Command Index Register
+ 118      =1  sfr OWDR                = 0xD7;// OneWire Data Register
+ 119      =1  sfr WDCON               = 0xD8;// Watchdog Configuration
+ 120      =1  sfr CANCIR              = 0xDE;// CAN Bus Command Index Register
+ 121      =1  sfr CANDR               = 0xDF;// CAN Bus Data Register
+ 122      =1  
+ 123      =1  sfr ACC                 = 0xE0;// Accumulator
+ 124      =1  
+ 125      =1  // UART2 registers //
+ 126      =1  sfr     UR2_DLL         = 0xE1;// High Speed UART2 Divisor Latch Low Register
+ 127      =1  sfr     UR2_THR         = 0xE1;// High Speed UART2 Transmit Holding Register for Writing
+ 128      =1  sfr     UR2_RBR         = 0xE1;// High Speed UART2 Receive Buffer Register for Reading
+ 129      =1  sfr     UR2_DLH         = 0xE2;// High Speed UART2 Divisor Latch High Register
+ 130      =1  sfr     UR2_IER         = 0xE2;// High Speed UART2 Interrupt Enable Register
+ 131      =1  sfr     UR2_FCR         = 0xE3;// High Speed UART2 FIFO Control Register for Writing
+ 132      =1  sfr     UR2_IIR         = 0xE3;// High Speed UART2 Interrupt Identification Register for Reading
+ 133      =1  sfr     UR2_LCR         = 0xE4;// High Speed UART2 Line Control Register
+ 134      =1  sfr     UR2_MCR         = 0xE5;// High Speed UART2 Modem Control Register
+ 135      =1  sfr     UR2_LSR         = 0xE6;// High Speed UART2 Line Status Register
+ 136      =1  sfr     UR2_MSR         = 0xE7;// High Speed UART2 Modem Status Register
+ 137      =1  
+ 138      =1  sfr EIE                 = 0xE8;// External Interrupt Enable
+ 139      =1  sfr STATUS              = 0xE9;// Status Register
+ 140      =1  sfr MXAX                = 0xEA;// MOVX @Ri Extended Register
+ 141      =1  sfr TA                  = 0xEB;// Timed Access Protection
+ 142      =1  
+ 143      =1  sfr B                   = 0xF0;// B Working Register
+ 144      =1  sfr EIP                 = 0xF8;// Extended Interrupt Priority Register
+ 145      =1  sfr MD0                 = 0xF9;// MDU Data 0
+ 146      =1  sfr MD1                 = 0xFA;// MDU Data 1
+ 147      =1  sfr MD2                 = 0xFB;// MDU Data 2
+ 148      =1  sfr MD3                 = 0xFC;// MDU Data 3
+ 149      =1  sfr MD4                 = 0xFD;// MDU Data 4
+ 150      =1  sfr MD5                 = 0xFE;// MDU Data 5
+ 151      =1  sfr ARCON               = 0xFF;// MDU Control Register
+ 152      =1  //--------------------------------------------------------------------------
+ 153      =1  // P0 (0x80) Bit Registers
+ 154      =1  //--------------------------------------------------------------------------
+ 155      =1  sbit P0_0               = 0x80;
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 4   
+
+ 156      =1  sbit P0_1               = 0x81;
+ 157      =1  sbit P0_2               = 0x82;
+ 158      =1  sbit P0_3               = 0x83;
+ 159      =1  sbit P0_4               = 0x84;
+ 160      =1  sbit P0_5               = 0x85;
+ 161      =1  sbit P0_6               = 0x86;
+ 162      =1  sbit P0_7               = 0x87;
+ 163      =1  //--------------------------------------------------------------------------
+ 164      =1  // DPS (0x86) Bit Values
+ 165      =1  //--------------------------------------------------------------------------
+ 166      =1  #define SEL_    0x01
+ 167      =1  #define TSL_    0x20
+ 168      =1  #define ID0_    0x40
+ 169      =1  #define ID1_    0x80
+ 170      =1  //--------------------------------------------------------------------------
+ 171      =1  // PCON (0x87) Bit Values
+ 172      =1  //--------------------------------------------------------------------------
+ 173      =1  #define PMM_    0x01
+ 174      =1  #define STOP_   0x02
+ 175      =1  #define SWB_    0x04
+ 176      =1  #define PWE_    0x10
+ 177      =1  #define SMOD1_  0x40
+ 178      =1  #define SMOD2_  0x80
+ 179      =1  //--------------------------------------------------------------------------
+ 180      =1  // TCON (0x88) Bit Registers
+ 181      =1  //--------------------------------------------------------------------------
+ 182      =1  sbit    IT0             = 0x88;
+ 183      =1  sbit    IE0             = 0x89;
+ 184      =1  sbit    IT1             = 0x8A;
+ 185      =1  sbit    IE1             = 0x8B;
+ 186      =1  sbit    TR0             = 0x8C;
+ 187      =1  sbit    TF0             = 0x8D;
+ 188      =1  sbit    TR1             = 0x8E;
+ 189      =1  sbit    TF1             = 0x8F;
+ 190      =1  //--------------------------------------------------------------------------
+ 191      =1  // TMOD (0x89) Bit Values
+ 192      =1  //--------------------------------------------------------------------------
+ 193      =1  #define T0_M0_          0x01
+ 194      =1  #define T0_M1_          0x02
+ 195      =1  #define T0_CT_          0x04
+ 196      =1  #define T0_GATE_        0x08
+ 197      =1  #define T1_M0_          0x10
+ 198      =1  #define T1_M1_          0x20
+ 199      =1  #define T1_CT_          0x40
+ 200      =1  #define T1_GATE_        0x80
+ 201      =1  
+ 202      =1  #define T1_MASK_        0xF0
+ 203      =1  #define T0_MASK_        0x0F
+ 204      =1  //--------------------------------------------------------------------------
+ 205      =1  // CKCON (0x8E) Bit Values
+ 206      =1  //--------------------------------------------------------------------------
+ 207      =1  #define MD0_    0x01
+ 208      =1  #define MD1_    0x02
+ 209      =1  #define MD2_    0x04
+ 210      =1  #define T0M_    0x08
+ 211      =1  #define T1M_    0x10
+ 212      =1  #define T2M_    0x20
+ 213      =1  #define WD0_    0x40
+ 214      =1  #define WD1_    0x80
+ 215      =1  //--------------------------------------------------------------------------
+ 216      =1  // CSREPR (0x8F) Bit Values
+ 217      =1  //--------------------------------------------------------------------------
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 5   
+
+ 218      =1  #define SW_RST                          0x01
+ 219      =1  #define SW_RBT                          0x02
+ 220      =1  #define FARM                            0x04
+ 221      =1  #define FAES                            0x08
+ 222      =1  #define PMS                                     0x10
+ 223      =1  #define SCS_100M                        0xC0
+ 224      =1  #define SCS_75M                         0x80
+ 225      =1  #define SCS_50M                         0x40
+ 226      =1  #define SCS_25M                         0x00
+ 227      =1  //--------------------------------------------------------------------------
+ 228      =1  // P1 (0x90) Bit Registers
+ 229      =1  //--------------------------------------------------------------------------
+ 230      =1  sbit P1_0               = 0x90;
+ 231      =1  sbit P1_1               = 0x91;
+ 232      =1  sbit P1_2               = 0x92;
+ 233      =1  sbit P1_3               = 0x93;
+ 234      =1  sbit P1_4               = 0x94;
+ 235      =1  sbit P1_5               = 0x95;
+ 236      =1  sbit P1_6               = 0x96;
+ 237      =1  sbit P1_7               = 0x97;
+ 238      =1  //--------------------------------------------------------------------------
+ 239      =1  // EIF (0x91) Bit Values
+ 240      =1  //--------------------------------------------------------------------------
+ 241      =1  #define INT2F           0x01
+ 242      =1  #define INT3F           0x02
+ 243      =1  #define INT4F           0x04
+ 244      =1  #define INT5F           0x08
+ 245      =1  #define INT6F           0x10
+ 246      =1  //--------------------------------------------------------------------------
+ 247      =1  // SCON0 (0x98) Bit Registers
+ 248      =1  //--------------------------------------------------------------------------
+ 249      =1  sbit RI0                        = 0x98;
+ 250      =1  sbit TI0                        = 0x99;
+ 251      =1  sbit RB08                       = 0x9A;
+ 252      =1  sbit TB08                       = 0x9B;
+ 253      =1  sbit REN0                       = 0x9C;
+ 254      =1  sbit SM02                       = 0x9D;
+ 255      =1  sbit SM01                       = 0x9E;
+ 256      =1  sbit SM00                       = 0x9F;
+ 257      =1  //--------------------------------------------------------------------------
+ 258      =1  // DBAR (0x9A) Bit Values
+ 259      =1  //--------------------------------------------------------------------------
+ 260      =1  #define BUS_REQ                         0x01
+ 261      =1  #define BUS_GRANT                       0x80
+ 262      =1  //--------------------------------------------------------------------------
+ 263      =1  // ACON (0x9D) Bit Values
+ 264      =1  //--------------------------------------------------------------------------
+ 265      =1  #define FLAT_MODE                       0x02
+ 266      =1  #define LARGE_MODE                      0x00
+ 267      =1  //--------------------------------------------------------------------------
+ 268      =1  // PISSR1 (0x9E) Bit Values
+ 269      =1  //--------------------------------------------------------------------------
+ 270      =1  #define LB_INT_STU                      0x01
+ 271      =1  #define LB_EXT_INT_STU          0x02
+ 272      =1  #define ETH_INT_STU                     0x04
+ 273      =1  #define TOE_INT_STU                     0x08
+ 274      =1  #define OW_INT_STU                      0x10
+ 275      =1  #define SPI_INT_STU                     0x20
+ 276      =1  #define I2C_INT_STU                     0x40
+ 277      =1  #define CAN_INT_STU                     0x80
+ 278      =1  //--------------------------------------------------------------------------
+ 279      =1  // PISSR2 (0x9F) Bit Values
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 6   
+
+ 280      =1  //--------------------------------------------------------------------------
+ 281      =1  #define UART2_INT_STU           0x01
+ 282      =1  //--------------------------------------------------------------------------
+ 283      =1  // P2 (0xA0) Bit Registers
+ 284      =1  //--------------------------------------------------------------------------
+ 285      =1  sbit P2_0               = 0xA0;
+ 286      =1  sbit P2_1               = 0xA1;
+ 287      =1  sbit P2_2               = 0xA2;
+ 288      =1  sbit P2_3               = 0xA3;
+ 289      =1  sbit P2_4               = 0xA4;
+ 290      =1  sbit P2_5               = 0xA5;
+ 291      =1  sbit P2_6               = 0xA6;
+ 292      =1  sbit P2_7               = 0xA7;
+ 293      =1  //--------------------------------------------------------------------------
+ 294      =1  // IE (0xA8) Bit Registers
+ 295      =1  //--------------------------------------------------------------------------
+ 296      =1  sbit EX0                    = 0xA8;                                                       // 1=Enable Exte
+             -rnal interrupt 0
+ 297      =1  sbit ET0                    = 0xA9;                                                       // 1=Enable Time
+             -r 0 interrupt
+ 298      =1  sbit EX1                    = 0xAA;                                                       // 1=Enable Exte
+             -rnal interrupt 1
+ 299      =1  sbit ET1                    = 0xAB;                                                       // 1=Enable Time
+             -r 1 interrupt
+ 300      =1  sbit ES0                    = 0xAC;                                                       // 1=Enable Seri
+             -al port 0 interrupt
+ 301      =1  sbit ET2                    = 0xAD;                                                       // 1=Enable Time
+             -r 2 interrupt
+ 302      =1  sbit ES1                    = 0xAE;                                                       // 1=Enable Seri
+             -al port 1 interrupt
+ 303      =1  sbit EA                     = 0xAF;                                                       // 0=Disabe all 
+             -interrupts
+ 304      =1  //--------------------------------------------------------------------------
+ 305      =1  // P3 (0xB0) Bit Registers (Mnemonics & Ports)
+ 306      =1  //--------------------------------------------------------------------------
+ 307      =1  sbit P3_0               = 0xB0;
+ 308      =1  sbit P3_1               = 0xB1;
+ 309      =1  sbit P3_2               = 0xB2;
+ 310      =1  sbit P3_3               = 0xB3;
+ 311      =1  sbit P3_4               = 0xB4;
+ 312      =1  sbit P3_5               = 0xB5;
+ 313      =1  sbit P3_6               = 0xB6;
+ 314      =1  sbit P3_7               = 0xB7;
+ 315      =1  
+ 316      =1  sbit RXD                    = 0xB0;                                                       // Serial data i
+             -nput
+ 317      =1  sbit TXD                    = 0xB1;                                                       // Serial data o
+             -utput
+ 318      =1  sbit INT0                   = 0xB2;                                                       // External inte
+             -rrupt 0
+ 319      =1  sbit INT1                   = 0xB3;                                                       // External inte
+             -rrupt 1
+ 320      =1  sbit T0                     = 0xB4;                                                       // Timer 0 exter
+             -nal input
+ 321      =1  sbit T1                     = 0xB5;                                                       // Timer 1 exter
+             -nal input
+ 322      =1  sbit WR                     = 0xB6;                                                       // External data
+             - memory write strobe
+ 323      =1  sbit RD                     = 0xB7;                                                       // External data
+             - memory read strobe
+ 324      =1  //--------------------------------------------------------------------------
+ 325      =1  // IP (0xB8) Bit Registers
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 7   
+
+ 326      =1  //--------------------------------------------------------------------------
+ 327      =1  sbit PX0                = 0xB8;
+ 328      =1  sbit PT0                = 0xB9;
+ 329      =1  sbit PX1                = 0xBA;
+ 330      =1  sbit PT1                = 0xBB;
+ 331      =1  sbit PS0                = 0xBC;
+ 332      =1  sbit PT2                = 0xBD;
+ 333      =1  sbit PS1                = 0xBE;
+ 334      =1  //--------------------------------------------------------------------------
+ 335      =1  // SCON1 (0xC0) Bit Registers
+ 336      =1  //--------------------------------------------------------------------------
+ 337      =1  sbit RI1                = 0xC0;
+ 338      =1  sbit TI1                = 0xC1;
+ 339      =1  sbit RB18               = 0xC2;
+ 340      =1  sbit TB18               = 0xC3;
+ 341      =1  sbit REN1               = 0xC4;
+ 342      =1  sbit SM12               = 0xC5;
+ 343      =1  sbit SM11               = 0xC6;
+ 344      =1  sbit SM10               = 0xC7;
+ 345      =1  //--------------------------------------------------------------------------
+ 346      =1  // CMOM (0xC2) Bit Values
+ 347      =1  //--------------------------------------------------------------------------
+ 348      =1  #define PCA_ECF                 0x01
+ 349      =1  #define PCA_T0_OF               0x08
+ 350      =1  #define PCA_EXT_CLK             0x0E
+ 351      =1  #define PCA_GATE_OFF    0x80
+ 352      =1  //--------------------------------------------------------------------------
+ 353      =1  // CCON (0xC3) Bit Values
+ 354      =1  //--------------------------------------------------------------------------
+ 355      =1  #define PCA_CCF0                0x01
+ 356      =1  #define PCA_CCF1                0x02
+ 357      =1  #define PCA_CCF2                0x04
+ 358      =1  #define PCA_CCF3                0x08
+ 359      =1  #define PCA_CCF4                0x10
+ 360      =1  #define PCA_CR                  0x40
+ 361      =1  #define PCA_CF                  0x80
+ 362      =1  //--------------------------------------------------------------------------
+ 363      =1  // T2CON (0xC8) Bit Registers
+ 364      =1  //--------------------------------------------------------------------------
+ 365      =1  sbit CPRL2              = 0xC8;
+ 366      =1  sbit CT2                = 0xC9;
+ 367      =1  sbit TR2                = 0xCA;
+ 368      =1  sbit EXEN2              = 0xCB;
+ 369      =1  sbit TCLK               = 0xCC;
+ 370      =1  sbit RCLK               = 0xCD;
+ 371      =1  sbit EXF2               = 0xCE;
+ 372      =1  sbit TF2                = 0xCF;
+ 373      =1  //--------------------------------------------------------------------------
+ 374      =1  // PSW (0xD0) Bit Registers
+ 375      =1  //--------------------------------------------------------------------------
+ 376      =1  sbit P                  = 0xD0;
+ 377      =1  sbit F1                 = 0xD1;
+ 378      =1  sbit OV                 = 0xD2;
+ 379      =1  sbit RS0                = 0xD3;
+ 380      =1  sbit RS1                = 0xD4;
+ 381      =1  sbit F0                 = 0xD5;
+ 382      =1  sbit AC                 = 0xD6;
+ 383      =1  sbit CY                 = 0xD7;
+ 384      =1  //--------------------------------------------------------------------------
+ 385      =1  // CCAPM0-4 (0xD1-0xD5) Bit Values
+ 386      =1  //--------------------------------------------------------------------------
+ 387      =1  #define ECCFs           0x01
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 8   
+
+ 388      =1  #define PWMs            0x02
+ 389      =1  #define TOGs            0x04
+ 390      =1  #define MATs            0x08
+ 391      =1  #define CAPNs           0x10
+ 392      =1  #define CAPPs           0x20
+ 393      =1  #define ECOMs           0x40
+ 394      =1  #define CEXs            0x80
+ 395      =1  //--------------------------------------------------------------------------
+ 396      =1  // PSW (0xD8) Bit Registers
+ 397      =1  //--------------------------------------------------------------------------
+ 398      =1  sbit RWT                = 0xD8;
+ 399      =1  sbit EWT                = 0xD9;
+ 400      =1  sbit WTRF               = 0xDA;
+ 401      =1  sbit WDIF               = 0xDB;
+ 402      =1  
+ 403      =1  //--------------------------------------------------------------------------
+ 404      =1  // Interrupt Vectors:
+ 405      =1  // Interrupt Address = (Number * 8) + 3
+ 406      =1  //--------------------------------------------------------------------------
+ 407      =1  #define IE0_VECTOR            0                                                           // 0x03 External
+             - Interrupt 0
+ 408      =1  #define TF0_VECTOR            1                                                           // 0x0B Timer 0
+ 409      =1  #define IE1_VECTOR            2                                                           // 0x13 External
+             - Interrupt
+ 410      =1  #define TF1_VECTOR            3                                                           // 0x1B Timer 1
+ 411      =1  #define SIO_VECTOR            4                                                           // 0x23 Serial p
+             -ort
+ 412      =1  //--------------------------------------------------------------------------
+ 413      =1  // UR2_IER (0xE2) Bit Values
+ 414      =1  //--------------------------------------------------------------------------
+ 415      =1  #define UR2_RDI_ENB             0x01
+ 416      =1  #define UR2_THRI_ENB    0x02
+ 417      =1  #define UR2_RLSI_ENB    0x04
+ 418      =1  #define UR2_MSI_ENB             0x08
+ 419      =1  //--------------------------------------------------------------------------
+ 420      =1  // UR2_IIR (0xE3) Bit Values
+ 421      =1  //--------------------------------------------------------------------------
+ 422      =1  #define UR2_NONE_INTR           0x01
+ 423      =1  #define UR2_RLS_INTR            0x06
+ 424      =1  #define UR2_RD_TRIG_INTR        0x04
+ 425      =1  #define UR2_RD_TI_INTR          0x0C
+ 426      =1  #define UR2_THRE_INTR           0x02
+ 427      =1  #define UR2_MS_INTR                     0x00
+ 428      =1  //--------------------------------------------------------------------------
+ 429      =1  // UR2_FCR (0xE3) Bit Values
+ 430      =1  //--------------------------------------------------------------------------
+ 431      =1  #define UR2_FIFO_MODE   0x01
+ 432      =1  #define UR2_RXFIFO_RST  0x02
+ 433      =1  #define UR2_TXFIFO_RST  0x04
+ 434      =1  #define UR2_TRIG_01             0x00
+ 435      =1  #define UR2_TRIG_04             0x40
+ 436      =1  #define UR2_TRIG_08             0x80
+ 437      =1  #define UR2_TRIG_14             0xC0
+ 438      =1  //--------------------------------------------------------------------------
+ 439      =1  // UR2_LCR (0xE4) Bit Values
+ 440      =1  //--------------------------------------------------------------------------
+ 441      =1  #define UR2_CHAR_5                      0x00
+ 442      =1  #define UR2_CHAR_6                      0x01
+ 443      =1  #define UR2_CHAR_7                      0x02
+ 444      =1  #define UR2_CHAR_8                      0x03
+ 445      =1  #define UR2_STOP_10                     0x00
+ 446      =1  #define UR2_STOP_15                     0x04
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 9   
+
+ 447      =1  #define UR2_PARITY_ENB          0x08
+ 448      =1  #define UR2_EVEN_PARITY         0x10
+ 449      =1  #define UR2_STICK_PARITY        0x20
+ 450      =1  #define UR2_BREAK_ENB           0x40
+ 451      =1  #define UR2_DLAB_ENB            0x80
+ 452      =1  //--------------------------------------------------------------------------
+ 453      =1  // UR2_MCR (0xE5) Bit Values
+ 454      =1  //--------------------------------------------------------------------------
+ 455      =1  #define UR2_DTR                         0x01
+ 456      =1  #define UR2_RTS                         0x02
+ 457      =1  #define UR2_OUT1                        0x04
+ 458      =1  #define UR2_OUT2                        0x08
+ 459      =1  #define UR2_LOOPBACK            0x10
+ 460      =1  #define UR2_RS485_RECEIVE       0x40
+ 461      =1  #define UR2_RS485_DRIVE         0x80
+ 462      =1  //--------------------------------------------------------------------------
+ 463      =1  // UR2_LSR (0xE6) Bit Values
+ 464      =1  //--------------------------------------------------------------------------
+ 465      =1  #define UR2_DR                          0x01
+ 466      =1  #define UR2_OE                          0x02
+ 467      =1  #define UR2_PE                          0x04
+ 468      =1  #define UR2_FE                          0x08
+ 469      =1  #define UR2_BI                          0x10
+ 470      =1  #define UR2_THRE                        0x20
+ 471      =1  #define UR2_TEMT                        0x40
+ 472      =1  #define UR2_FRAME_ERR           0x80
+ 473      =1  //--------------------------------------------------------------------------
+ 474      =1  // UR2_MSR (0xE7) Bit Values
+ 475      =1  //--------------------------------------------------------------------------
+ 476      =1  #define UR2_DCTS                        0x01
+ 477      =1  #define UR2_DDSR                        0x02
+ 478      =1  #define UR2_TERI                        0x04
+ 479      =1  #define UR2_DDCD                        0x08
+ 480      =1  #define UR2_CTS                         0x10
+ 481      =1  #define UR2_DSR                         0x20
+ 482      =1  #define UR2_RI                          0x40
+ 483      =1  #define UR2_DCD                         0x80
+ 484      =1  //--------------------------------------------------------------------------
+ 485      =1  // EIE (0xE8) Bit Registers
+ 486      =1  //--------------------------------------------------------------------------
+ 487      =1  sbit EINT2              = 0xE8;
+ 488      =1  sbit EINT3              = 0xE9;
+ 489      =1  sbit EINT4              = 0xEA;
+ 490      =1  sbit EINT5              = 0xEB;
+ 491      =1  sbit EINT6              = 0xEC;
+ 492      =1  sbit EWDI               = 0xED;
+ 493      =1  //--------------------------------------------------------------------------
+ 494      =1  // EIP (0xF8) Bit Registers
+ 495      =1  //--------------------------------------------------------------------------
+ 496      =1  sbit PINT2              = 0xF8;
+ 497      =1  sbit PINT3              = 0xF9;
+ 498      =1  sbit PINT4              = 0xFA;
+ 499      =1  sbit PINT5              = 0xFB;
+ 500      =1  sbit PINT6              = 0xFC;
+ 501      =1  sbit PWDI               = 0xFD;
+ 502      =1  //--------------------------------------------------------------------------
+ 503      =1  //--------------------------------------------------------------------------
+ 504      =1  #endif
+  21          #include "phy.h"
+   1      =1  //=============================================================================
+   2      =1  //     Copyright (c) 2006       ASIX Electronic Corporation      All rights reserved.
+   3      =1  //
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 10  
+
+   4      =1  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =1  //
+   6      =1  //     The copyright notice above does not evidence any actual or intended
+   7      =1  //     publication of such source code.
+   8      =1  //=============================================================================
+   9      =1  // Module Name:phy.h
+  10      =1  // Purpose:
+  11      =1  // Author:
+  12      =1  // Date:
+  13      =1  // Notes:
+  14      =1  // $Log: phy.h,v $
+  15      =1  // Revision 1.1.1.1  2006/06/20 05:50:28  borbin
+  16      =1  // no message
+  17      =1  //
+  18      =1  //=============================================================================
+  19      =1  
+  20      =1  #ifndef __PHY_H__
+  21      =1  #define __PHY_H__
+  22      =1  
+  23      =1  
+  24      =1  // INCLUDE FILE DECLARATIONS //
+  25      =1  #include "types.h"
+   1      =2  //----------------------------------------------------------------------------------------
+   2      =2  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =2  //
+   6      =2  //     The copyright notice above does not evidence any actual or intended
+   7      =2  //     publication of such source code.
+   8      =2  //----------------------------------------------------------------------------------------
+   9      =2  // Module Name : types.h
+  10      =2  // Purpose     : Definition of type.
+  11      =2  // Author      : Robin Lee
+  12      =2  // Date        : 2005-12-28
+  13      =2  // Notes       : None.
+  14      =2  // $Log: types.h,v $
+  15      =2  //----------------------------------------------------------------------------------------
+  16      =2  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =2  // no message
+  18      =2  //----------------------------------------------------------------------------------------
+  19      =2  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =2  // no message
+  21      =2  //----------------------------------------------------------------------------------------
+  22      =2  
+  23      =2  #ifndef TYPES_H
+  24      =2  #define TYPES_H
+  25      =2  
+  26      =2  typedef unsigned short int          bool;                                                 // boolean
+  27      =2  typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+  28      =2  typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+  29      =2  typedef short int                   sint;                                                 // 16-bit signed
+  30      =2  typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+  31      =2  typedef unsigned short int          word;                                                 // 16-bit unsign
+             -ed
+  32      =2  
+  33      =2  #ifndef NULL
+  34      =2    #define NULL ((void *) 0L)
+  35      =2  #endif
+  36      =2  
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 11  
+
+  37      =2  #define TRUE                  1
+  38      =2  #define FALSE                 0
+  39      =2  #define ON                    1
+  40      =2  #define OFF                   0
+  41      =2  #define Client                1
+  42      =2  #define Server                0
+  43      =2  
+  44      =2  // Bit Definitions for Bitwise Operation //
+  45      =2  #define BIT0            0x01
+  46      =2  #define BIT1            0x02
+  47      =2  #define BIT2            0x04
+  48      =2  #define BIT3            0x08
+  49      =2  #define BIT4            0x10
+  50      =2  #define BIT5            0x20
+  51      =2  #define BIT6            0x40
+  52      =2  #define BIT7            0x80
+  53      =2  #define BIT8            0x0100
+  54      =2  #define BIT9            0x0200
+  55      =2  #define BIT10           0x0400
+  56      =2  #define BIT11           0x0800
+  57      =2  #define BIT12           0x1000
+  58      =2  #define BIT13           0x2000
+  59      =2  #define BIT14           0x4000
+  60      =2  #define BIT15           0x8000
+  61      =2  #define BIT16           0x00010000
+  62      =2  #define BIT17           0x00020000
+  63      =2  #define BIT18           0x00040000
+  64      =2  #define BIT19           0x00080000
+  65      =2  #define BIT20           0x00100000
+  66      =2  #define BIT21           0x00200000
+  67      =2  #define BIT22           0x00400000
+  68      =2  #define BIT23           0x00800000
+  69      =2  #define BIT24           0x01000000
+  70      =2  #define BIT25           0x02000000
+  71      =2  #define BIT26           0x04000000
+  72      =2  #define BIT27           0x08000000
+  73      =2  #define BIT28           0x10000000
+  74      =2  #define BIT29           0x20000000
+  75      =2  #define BIT30           0x40000000
+  76      =2  #define BIT31           0x80000000
+  77      =2  
+  78      =2  #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+  79      =2  #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+  80      =2  
+  81      =2  #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+  82      =2  #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+  83      =2  #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+  84      =2  #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+  85      =2   
+  86      =2  // Keil compiler user define //
+  87      =2  #define     KEIL_CPL
+  88      =2  
+  89      =2  #ifdef KEIL_CPL
+  90      =2   #define XDATA    xdata
+  91      =2   #define IDATA    idata
+  92      =2   #define BDATA    bdata
+  93      =2   #define CODE     code
+  94      =2   #define FAR      far
+  95      =2  #else
+           =2  #define XDATA
+           =2  #define IDATA
+           =2  #define BDATA
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 12  
+
+           =2  #define CODE
+           =2  #define FAR
+           =2 #endif
+ 102      =2  
+ 103      =2  // Serial interface command direction //
+ 104      =2  #define     SI_WR                   BIT0
+ 105      =2  #define     SI_RD                   BIT1
+ 106      =2  
+ 107      =2  #define     FLASH_WR_ENB            (PCON |= PWE_)
+ 108      =2  #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+ 109      =2  
+ 110      =2  #endif  // end of TYPES_H //
+  26      =1  
+  27      =1  // internal phy id address //
+  28      =1  #define PHY_ADDRESS                                     0x10
+  29      =1  #define PHY_INTERNAL                            0
+  30      =1  #define PHY_EXTERNAL                            1
+  31      =1  
+  32      =1  // network type //
+  33      =1  #define AUTO_NEGOTIATION                        0
+  34      =1  #define FIXED_100_FULL                          1
+  35      =1  #define FIXED_100_HALF                          2
+  36      =1  #define FIXED_10_FULL                           3
+  37      =1  #define FIXED_10_HALF                           4
+  38      =1  #define FORCE_EMBEDDED_PHY_10_HALF      5
+  39      =1  
+  40      =1  // NAMING CONSTANT DECLARATIONS //
+  41      =1  // SFR 0xBE definitions //
+  42      =1  #define PHY_READ_REG                            BIT7
+  43      =1  #define PHY_ACCESS_GO                           BIT6
+  44      =1  #define PHY_CMD_ABORT                           0xFF
+  45      =1  
+  46      =1  // MII register definitions //
+  47      =1  #define MII_PHY_CONTROL                         0x00    // control reg
+  48      =1  #define MII_PHY_STATUS                          0x01    // status reg
+  49      =1  #define MII_PHY_OUI                                     0x02    // most of the OUI bits
+  50      =1  #define MII_PHY_MODEL                           0x03    // model/rev bits, and rest of OUI
+  51      =1  #define MII_PHY_ANAR                            0x04    // AN advertisement reg
+  52      =1  #define MII_PHY_ANLPAR                          0x05    // AN Link Partner
+  53      =1  #define MII_PHY_ANER                            0x06    // AN expansion reg
+  54      =1  
+  55      =1  // Bit definitions: MII Control //
+  56      =1  #define CONTROL_RESET                           0x8000  // reset bit in control reg
+  57      =1  #define CONTROL_LOOPBACK                        0x4000  // loopback bit in control reg
+  58      =1  #define CONTROL_10MB                            0x0000  // 10 Mbit
+  59      =1  #define CONTROL_100MB                           0x2000  // 100Mbit
+  60      =1  #define CONTROL_ENABLE_AUTO                     0x1000  // autonegotiate enable
+  61      =1  #define CONTROL_POWER_DOWN                      0x0800
+  62      =1  #define CONTROL_ISOLATE                         0x0400  // islolate bit
+  63      =1  #define CONTROL_START_AUTO                      0x0200  // restart autonegotiate
+  64      =1  #define CONTROL_FULL_DUPLEX                     0x0100
+  65      =1  
+  66      =1  // Bit definitions: Auto-Negotiation Advertisement //
+  67      =1  #define ANAR_PAUSE                                      0x0400  // support pause packets
+  68      =1  #define ANAR_100T4                                      0x0200  // support 100BT4
+  69      =1  #define ANAR_100TXFD                            0x0100  // support 100BTX full duplex
+  70      =1  #define ANAR_100TX                                      0x0080  // support 100BTX half duplex
+  71      =1  #define ANAR_10TFD                                      0x0040  // support 10BT full duplex
+  72      =1  #define ANAR_10T                                        0x0020  // support 10BT half duplex
+  73      =1  #define ANAR_SELECTOR_FIELD                     0x001F  // selector field.
+  74      =1  #define ANAR_SELECTOR_8023                      0x0001
+  75      =1  
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 13  
+
+  76      =1  // Bit definitions: Auto-Negotiation Link Partner Ability //
+  77      =1  #define ANLPAR_PAUSE                            0x0400  // support pause packets
+  78      =1  #define ANLPAR_100T4                            0x0200  // support 100BT4
+  79      =1  #define ANLPAR_100TXFD                          0x0100  // support 100BTX full duplex
+  80      =1  #define ANLPAR_100TX                            0x0080  // support 100BTX half duplex
+  81      =1  #define ANLPAR_10TFD                            0x0040  // support 10BT full duplex
+  82      =1  #define ANLPAR_10T                                      0x0020  // support 10BT half duplex
+  83      =1  
+  84      =1  // TYPE DECLARATIONS //
+  85      =1  //---------------------------------------------------------------
+  86      =1  typedef struct _PHY_INFORMATION
+  87      =1  {
+  88      =1          byte    PhyAddr;
+  89      =1          byte    PhyType;
+  90      =1  
+  91      =1  } PHY_INFO;
+  92      =1  
+  93      =1  // EXPORTED SUBPROGRAM SPECIFICATIONS //
+  94      =1  //---------------------------------------------------------------
+  95      =1  void PHY_Init(byte);
+  96      =1  uint PHY_CheckMediaType(void);
+  97      =1  void PHY_PowerUp(void);
+  98      =1  void PHY_WatchDog(void);
+  99      =1  void phy_WriteReg(byte regaddr, uint value);
+ 100      =1  
+ 101      =1  #endif // End of __PHY_H__ //
+ 102      =1  // End of phy.h //
+  22          #include "stoe.h"
+   1      =1  //=============================================================================
+   2      =1  //     Copyright (c) 2006       ASIX Electronic Corporation      All rights reserved.
+   3      =1  //
+   4      =1  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =1  //
+   6      =1  //     The copyright notice above does not evidence any actual or intended
+   7      =1  //     publication of such source code.
+   8      =1  //=============================================================================
+   9      =1  // Module Name: stoe.h
+  10      =1  // Purpose:
+  11      =1  // Author:
+  12      =1  // Date:
+  13      =1  // Notes:
+  14      =1  // $Log: stoe.h,v $
+  15      =1  // Revision 1.1.1.1  2006/06/20 05:50:28  borbin
+  16      =1  // no message
+  17      =1  //=============================================================================
+  18      =1  
+  19      =1  #ifndef __STOE_H__
+  20      =1  #define __STOE_H__
+  21      =1  
+  22      =1  
+  23      =1  // INCLUDE FILE DECLARATIONS //
+  24      =1  #include "types.h"
+   1      =2  //----------------------------------------------------------------------------------------
+   2      =2  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =2  //
+   6      =2  //     The copyright notice above does not evidence any actual or intended
+   7      =2  //     publication of such source code.
+   8      =2  //----------------------------------------------------------------------------------------
+   9      =2  // Module Name : types.h
+  10      =2  // Purpose     : Definition of type.
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 14  
+
+  11      =2  // Author      : Robin Lee
+  12      =2  // Date        : 2005-12-28
+  13      =2  // Notes       : None.
+  14      =2  // $Log: types.h,v $
+  15      =2  //----------------------------------------------------------------------------------------
+  16      =2  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =2  // no message
+  18      =2  //----------------------------------------------------------------------------------------
+  19      =2  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =2  // no message
+  21      =2  //----------------------------------------------------------------------------------------
+  22      =2  
+  23      =2  #ifndef TYPES_H
+           =2 #define TYPES_H
+           =2 
+           =2 typedef unsigned short int          bool;                                                 // boolean
+           =2 typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+           =2 typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+           =2 typedef short int                   sint;                                                 // 16-bit signed
+           =2 typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+           =2 typedef unsigned short int          word;                                                 // 16-bit unsign
+             -ed
+           =2 
+           =2 #ifndef NULL
+           =2   #define NULL ((void *) 0L)
+           =2 #endif
+           =2 
+           =2 #define TRUE                  1
+           =2 #define FALSE                 0
+           =2 #define ON                    1
+           =2 #define OFF                   0
+           =2 #define Client                1
+           =2 #define Server                0
+           =2 
+           =2 // Bit Definitions for Bitwise Operation //
+           =2 #define BIT0            0x01
+           =2 #define BIT1            0x02
+           =2 #define BIT2            0x04
+           =2 #define BIT3            0x08
+           =2 #define BIT4            0x10
+           =2 #define BIT5            0x20
+           =2 #define BIT6            0x40
+           =2 #define BIT7            0x80
+           =2 #define BIT8            0x0100
+           =2 #define BIT9            0x0200
+           =2 #define BIT10           0x0400
+           =2 #define BIT11           0x0800
+           =2 #define BIT12           0x1000
+           =2 #define BIT13           0x2000
+           =2 #define BIT14           0x4000
+           =2 #define BIT15           0x8000
+           =2 #define BIT16           0x00010000
+           =2 #define BIT17           0x00020000
+           =2 #define BIT18           0x00040000
+           =2 #define BIT19           0x00080000
+           =2 #define BIT20           0x00100000
+           =2 #define BIT21           0x00200000
+           =2 #define BIT22           0x00400000
+           =2 #define BIT23           0x00800000
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 15  
+
+           =2 #define BIT24           0x01000000
+           =2 #define BIT25           0x02000000
+           =2 #define BIT26           0x04000000
+           =2 #define BIT27           0x08000000
+           =2 #define BIT28           0x10000000
+           =2 #define BIT29           0x20000000
+           =2 #define BIT30           0x40000000
+           =2 #define BIT31           0x80000000
+           =2 
+           =2 #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+           =2 #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+           =2 
+           =2 #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+           =2 #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+           =2 #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+           =2 #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+           =2  
+           =2 // Keil compiler user define //
+           =2 #define     KEIL_CPL
+           =2 
+           =2 #ifdef KEIL_CPL
+           =2  #define XDATA    xdata
+           =2  #define IDATA    idata
+           =2  #define BDATA    bdata
+           =2  #define CODE     code
+           =2  #define FAR      far
+           =2 #else
+           =2  #define XDATA
+           =2  #define IDATA
+           =2  #define BDATA
+           =2  #define CODE
+           =2  #define FAR
+           =2 #endif
+           =2 
+           =2 // Serial interface command direction //
+           =2 #define     SI_WR                   BIT0
+           =2 #define     SI_RD                   BIT1
+           =2 
+           =2 #define     FLASH_WR_ENB            (PCON |= PWE_)
+           =2 #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+           =2 
+           =2 #endif  // end of TYPES_H //
+  25      =1  #include "stoe_cfg.h"
+   1      =2  //========================================================================================
+   2      =2  //     Copyright (c) 2006     ASIX Electronic Corporation      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =2  //
+   6      =2  //     The copyright notice above does not evidence any actual or intended
+   7      =2  //     publication of such source code.
+   8      =2  //========================================================================================
+   9      =2  // Module Name    : stoe_cfg.h
+  10      =2  // Purpose        : 
+  11      =2  // Author         :
+  12      =2  // Date           :
+  13      =2  // Notes          :
+  14      =2  // $Log           : stoe_cfg.h,v $
+  15      =2  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  16      =2  // Revision 1.2      2006/07/25 05:32:12  borbin
+  17      =2  // no message
+  18      =2  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  19      =2  // Revision 1.1.1.1  2006/06/20 05:50:28  borbin
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 16  
+
+  20      =2  // no message
+  21      =2  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  22      =2  //========================================================================================
+  23      =2  //
+  24      =2  #ifndef __STOE_CFG_H__
+  25      =2  #define __STOE_CFG_H__
+  26      =2  //          INCLUDE FILE DECLARATIONS                                                     //
+  27      =2  //----------------------------------------------------------------------------------------
+  28      =2  #define PAGES_OF_XMIT                           8                                         // pages. 2k // 
+             -//16     // pages, 4k //
+  29      =2  #define PAGES_OF_RCV                            16                                        // pages. 4k // 
+             -//24  // pages, 6k //
+  30      =2  //----------------------------------------------------------------------------------------
+  31      =2  #define STOE_ARP_TIMEOUT                        16                                        // hardware arp 
+             -table timeout is 128 sec. //
+  32      =2  //----------------------------------------------------------------------------------------
+  33      =2  //          NAMING CONSTANT DECLARATIONS                                                  //
+  34      =2  //----------------------------------------------------------------------------------------
+  35      =2  #define STOE_HW_CHECKSUN_DISABLE                0                                         //    0: disable
+             - stoe checksum offload engine //
+  36      =2  #define STOE_HW_CHECKSUN_ENABLE                 1                                         //    1: enable 
+             -stoe checksum offload engine. //
+  37      =2  #define STOE_CHECKSUM_OFFLOAD                   (STOE_HW_CHECKSUN_ENABLE)                 //
+  38      =2  //----------------------------------------------------------------------------------------
+  39      =2  #endif                                    //    End of __STOE_CFG_H__         //
+  40      =2  // End of stoe_cfg.h //
+  26      =1  #include "mac.h"
+   1      =2  //----------------------------------------------------------------------------------------
+   2      =2  //     Copyright (c) 2006     ASIX Electronic Corporation      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =2  //
+   6      =2  //     The copyright notice above does not evidence any actual or intended
+   7      =2  //     publication of such source code.
+   8      =2  //----------------------------------------------------------------------------------------
+   9      =2  // Module Name: mac.h
+  10      =2  // Purpose:
+  11      =2  // Author:
+  12      =2  // Date:
+  13      =2  // Notes:
+  14      =2  // $Log: mac.h,v $
+  15      =2  //----------------------------------------------------------------------------------------
+  16      =2  // Revision 1.1.1.1  2006/06/20 05:50:28  borbin
+  17      =2  // no message
+  18      =2  //----------------------------------------------------------------------------------------
+  19      =2  
+  20      =2  #ifndef __MAC_H__
+  21      =2  #define __MAC_H__
+  22      =2  
+  23      =2  // INCLUDE FILE DECLARATIONS //
+  24      =2  #include "types.h"
+   1      =3  //----------------------------------------------------------------------------------------
+   2      =3  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =3  //
+   4      =3  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =3  //
+   6      =3  //     The copyright notice above does not evidence any actual or intended
+   7      =3  //     publication of such source code.
+   8      =3  //----------------------------------------------------------------------------------------
+   9      =3  // Module Name : types.h
+  10      =3  // Purpose     : Definition of type.
+  11      =3  // Author      : Robin Lee
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 17  
+
+  12      =3  // Date        : 2005-12-28
+  13      =3  // Notes       : None.
+  14      =3  // $Log: types.h,v $
+  15      =3  //----------------------------------------------------------------------------------------
+  16      =3  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =3  // no message
+  18      =3  //----------------------------------------------------------------------------------------
+  19      =3  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =3  // no message
+  21      =3  //----------------------------------------------------------------------------------------
+  22      =3  
+  23      =3  #ifndef TYPES_H
+           =3 #define TYPES_H
+           =3 
+           =3 typedef unsigned short int          bool;                                                 // boolean
+           =3 typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+           =3 typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+           =3 typedef short int                   sint;                                                 // 16-bit signed
+           =3 typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+           =3 typedef unsigned short int          word;                                                 // 16-bit unsign
+             -ed
+           =3 
+           =3 #ifndef NULL
+           =3   #define NULL ((void *) 0L)
+           =3 #endif
+           =3 
+           =3 #define TRUE                  1
+           =3 #define FALSE                 0
+           =3 #define ON                    1
+           =3 #define OFF                   0
+           =3 #define Client                1
+           =3 #define Server                0
+           =3 
+           =3 // Bit Definitions for Bitwise Operation //
+           =3 #define BIT0            0x01
+           =3 #define BIT1            0x02
+           =3 #define BIT2            0x04
+           =3 #define BIT3            0x08
+           =3 #define BIT4            0x10
+           =3 #define BIT5            0x20
+           =3 #define BIT6            0x40
+           =3 #define BIT7            0x80
+           =3 #define BIT8            0x0100
+           =3 #define BIT9            0x0200
+           =3 #define BIT10           0x0400
+           =3 #define BIT11           0x0800
+           =3 #define BIT12           0x1000
+           =3 #define BIT13           0x2000
+           =3 #define BIT14           0x4000
+           =3 #define BIT15           0x8000
+           =3 #define BIT16           0x00010000
+           =3 #define BIT17           0x00020000
+           =3 #define BIT18           0x00040000
+           =3 #define BIT19           0x00080000
+           =3 #define BIT20           0x00100000
+           =3 #define BIT21           0x00200000
+           =3 #define BIT22           0x00400000
+           =3 #define BIT23           0x00800000
+           =3 #define BIT24           0x01000000
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 18  
+
+           =3 #define BIT25           0x02000000
+           =3 #define BIT26           0x04000000
+           =3 #define BIT27           0x08000000
+           =3 #define BIT28           0x10000000
+           =3 #define BIT29           0x20000000
+           =3 #define BIT30           0x40000000
+           =3 #define BIT31           0x80000000
+           =3 
+           =3 #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+           =3 #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+           =3 
+           =3 #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+           =3 #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+           =3 #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+           =3 #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+           =3  
+           =3 // Keil compiler user define //
+           =3 #define     KEIL_CPL
+           =3 
+           =3 #ifdef KEIL_CPL
+           =3  #define XDATA    xdata
+           =3  #define IDATA    idata
+           =3  #define BDATA    bdata
+           =3  #define CODE     code
+           =3  #define FAR      far
+           =3 #else
+           =3  #define XDATA
+           =3  #define IDATA
+           =3  #define BDATA
+           =3  #define CODE
+           =3  #define FAR
+           =3 #endif
+           =3 
+           =3 // Serial interface command direction //
+           =3 #define     SI_WR                   BIT0
+           =3 #define     SI_RD                   BIT1
+           =3 
+           =3 #define     FLASH_WR_ENB            (PCON |= PWE_)
+           =3 #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+           =3 
+           =3 #endif  // end of TYPES_H //
+  25      =2  #include "stoe_cfg.h"
+   1      =3  //========================================================================================
+   2      =3  //     Copyright (c) 2006     ASIX Electronic Corporation      All rights reserved.
+   3      =3  //
+   4      =3  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =3  //
+   6      =3  //     The copyright notice above does not evidence any actual or intended
+   7      =3  //     publication of such source code.
+   8      =3  //========================================================================================
+   9      =3  // Module Name    : stoe_cfg.h
+  10      =3  // Purpose        : 
+  11      =3  // Author         :
+  12      =3  // Date           :
+  13      =3  // Notes          :
+  14      =3  // $Log           : stoe_cfg.h,v $
+  15      =3  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  16      =3  // Revision 1.2      2006/07/25 05:32:12  borbin
+  17      =3  // no message
+  18      =3  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  19      =3  // Revision 1.1.1.1  2006/06/20 05:50:28  borbin
+  20      =3  // no message
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 19  
+
+  21      =3  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  22      =3  //========================================================================================
+  23      =3  //
+  24      =3  #ifndef __STOE_CFG_H__
+           =3 #define __STOE_CFG_H__
+           =3 //          INCLUDE FILE DECLARATIONS                                                     //
+           =3 //----------------------------------------------------------------------------------------
+           =3 #define PAGES_OF_XMIT                           8                                         // pages. 2k // 
+             -//16     // pages, 4k //
+           =3 #define PAGES_OF_RCV                            16                                        // pages. 4k // 
+             -//24  // pages, 6k //
+           =3 //----------------------------------------------------------------------------------------
+           =3 #define STOE_ARP_TIMEOUT                        16                                        // hardware arp 
+             -table timeout is 128 sec. //
+           =3 //----------------------------------------------------------------------------------------
+           =3 //          NAMING CONSTANT DECLARATIONS                                                  //
+           =3 //----------------------------------------------------------------------------------------
+           =3 #define STOE_HW_CHECKSUN_DISABLE                0                                         //    0: disable
+             - stoe checksum offload engine //
+           =3 #define STOE_HW_CHECKSUN_ENABLE                 1                                         //    1: enable 
+             -stoe checksum offload engine. //
+           =3 #define STOE_CHECKSUM_OFFLOAD                   (STOE_HW_CHECKSUN_ENABLE)                 //
+           =3 //----------------------------------------------------------------------------------------
+           =3 #endif                                    //    End of __STOE_CFG_H__         //
+  40      =3  // End of stoe_cfg.h //
+  26      =2  
+  27      =2  // NAMING CONSTANT DECLARATIONS //
+  28      =2  #define MAC_RCV_PROMISCUOUS                             1
+  29      =2  #define MAC_RCV_ALL_MULTICAST                   2
+  30      =2  #define MAC_RCV_BROADCAST                               4
+  31      =2  #define MAC_RCV_MULTICAST                               8
+  32      =2  
+  33      =2  #define MAC_PRIMARY_PHY_LINK_WAKEUP             1                
+  34      =2  #define MAC_MAGIC_PACKET_WAKEUP                 2
+  35      =2  #define MAC_EXTERNAL_PIN_WAKEUP                 4
+  36      =2  #define MAC_MS_FRAME_WAKEUP                             8
+  37      =2  
+  38      =2  // MAC register definitions //
+  39      =2  #define MAC_SRAM_CMD_REG                                0x00
+  40      =2  #define MAC_SRAM_DATA_REG                               0x02
+  41      =2  #define MAC_RX_CTL_REG                                  0x0A
+  42      =2  #define MAC_IPG_CTL_REG                                 0x0C
+  43      =2  #define MAC_ADDR_REG                                    0x10
+  44      =2  #define MAC_MULTICASE_REG                               0x16
+  45      =2  #define MAC_TEST_REG                                    0x1E
+  46      =2  #define MAC_MEDIUM_STATUS_MODE_REG              0x20
+  47      =2  #define MAC_PHY_CTL_REG                                 0x22
+  48      =2  #define MAC_WAKEUP_INT_ENABLE_REG               0x24
+  49      =2  #define MAC_LINK_CHANGE_INT_ENABLE_REG  0x26
+  50      =2  #define MAC_WAKEUP_LINK_INT_STATUS_REG  0x28
+  51      =2  #define MAC_WAKEUP_FRAME_COMMAND                0x30
+  52      =2  #define MAC_WAKEUP_FRAME_MASK0                  0x32
+  53      =2  #define MAC_WAKEUP_FRAME_CRC0                   0x36
+  54      =2  #define MAC_WAKEUP_FRAME_OFFSET0                0x38
+  55      =2  #define MAC_WAKEUP_FRAME_LAST_BYTE0             0x3a
+  56      =2  #define MAC_WAKEUP_FRAME_MASK1                  0x40
+  57      =2  #define MAC_WAKEUP_FRAME_CRC1                   0x44
+  58      =2  #define MAC_WAKEUP_FRAME_OFFSET1                0x46
+  59      =2  #define MAC_WAKEUP_FRAME_LAST_BYTE1             0x48
+  60      =2  #define MAC_CMD_ABORT                                   0xFF
+  61      =2  
+  62      =2  // Bit definitions: MAC_RX_CTL_REG //
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 20  
+
+  63      =2  #define PACKET_TYPE_PROMISCOUS                  BIT0
+  64      =2  #define PACKET_TYPE_ALL_MULTI                   BIT1
+  65      =2  #define PACKET_TYPE_RCV_CRC_ERROR               BIT2
+  66      =2  #define PACKET_TYPE_BROADCAST                   BIT3
+  67      =2  #define PACKET_TYPE_MULTICAST                   BIT4
+  68      =2  #define PACKET_TYPE_UNICAST_MATCH               BIT5
+  69      =2  #define START_OPERATION                                 BIT7
+  70      =2  
+  71      =2  // Bit definitions: MAC_MEDIUM_STATUS_MODE_REG //
+  72      =2  #define MEDIUM_SUPER_MAC                                BIT0
+  73      =2  #define MEDIUM_STOP_BACKPRESSURE                BIT1
+  74      =2  #define MEDIUM_ENABLE_RECEIVE                   BIT2
+  75      =2  #define MEDIUM_CHECK_ONLY_TYPE_PAUSE    BIT3
+  76      =2  #define MEDIUM_ENABLE_TX_FLOWCTRL               BIT4
+  77      =2  #define MEDIUM_FULL_DUPLEX_MODE                 BIT5
+  78      =2  #define MEDIUM_MII_100M_MODE                    BIT6
+  79      =2  #define MEDIUM_ENABLE_RX_FLOWCTRL               BIT7
+  80      =2  
+  81      =2  // Bit definitions: MAC_PHY_CTL_REG //
+  82      =2  #define PHY_SELECT_EXTERNAL_PHY                 0
+  83      =2  #define PHY_SELECT_EMBEDDED                             BIT0
+  84      =2  #define PHY_AUTO_SELECT                                 BIT1
+  85      =2  #define PHY_INTERNAL_PHY_OPERA_STATE    BIT2
+  86      =2  
+  87      =2  // Bit definitions: MAC_WAKEUP_INT_ENABLE_REG //
+  88      =2  #define WAKEUP_BY_PRIMARY_LINK_UP               BIT0
+  89      =2  #define WAKEUP_BY_SECONDARY_LINK_UP             BIT2
+  90      =2  #define WAKEUP_BY_MAGIC_PACKET                  BIT4
+  91      =2  #define WAKEUP_BY_EXTER_PIN_TRIG                BIT5
+  92      =2  #define WAKEUP_BY_MICROSOFT_FRAME               BIT6
+  93      =2  
+  94      =2  // Bit definitions: MAC_LINK_CHANGE_INT_ENABLE_REG //
+  95      =2  #define PRIMARY_LINK_CHANGE_ENABLE              BIT0
+  96      =2  #define SECOND_LINK_CHANGE_ENABLE               BIT2
+  97      =2  
+  98      =2  // Bit definitions: MAC_WAKEUP_LINK_INT_STATUS_REG //
+  99      =2  #define STATUS_PRIMARY_LINK_CHANGE              BIT0
+ 100      =2  #define STATUS_PRIMARY_IS_LINK_UP               BIT1
+ 101      =2  #define STATUS_SECOND_LINK_CHANGE               BIT2
+ 102      =2  #define STATUS_SECOND_IS_LINK_UP                BIT3
+ 103      =2  #define STATUS_RCV_MAGIC_PKT                    BIT4
+ 104      =2  #define STATUS_TRIG_EXTER_PIN_TRIG              BIT5
+ 105      =2  #define STATUS_MICROSOFT_FRAME                  BIT6
+ 106      =2  
+ 107      =2  // Bit definitions: WUF_WAKEUP_FRAME_COMMAND, 0x30 //
+ 108      =2  #define WAKEUP_FRAME_FILTER0_ENABLE             BIT0
+ 109      =2  #define WAKEUP_FRAME_FILTER0_UNI_ENABLE BIT1
+ 110      =2  #define WAKEUP_FRAME_FILTER1_ENABLE             BIT2
+ 111      =2  #define WAKEUP_FRAME_FILTER1_UNI_ENABLE BIT3
+ 112      =2  #define WAKEUP_FRAME_CASCADE_ENABLE             BIT4
+ 113      =2  
+ 114      =2  // wakeup frame Mode //
+ 115      =2  #define WUF_ONLY_USE_FILTER0                    0
+ 116      =2  #define WUF_ONLY_USE_FILTER1                    1
+ 117      =2  #define WUF_ONLY_FILTER0_MACADDR                2
+ 118      =2  #define WUF_ONLY_FILTER1_MACADDR                3
+ 119      =2  #define WUF_BOTH_FILTERS                                4
+ 120      =2  #define WUF_BOTH_FILTERS_MACADDR                6
+ 121      =2  #define WUF_CASCADE                                             8
+ 122      =2  #define WUF_CASCADE_MACADDR                             10
+ 123      =2  
+ 124      =2  // TYPE DECLARATIONS //
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 21  
+
+ 125      =2  //----------------------------------------------------------------------------------------
+ 126      =2  typedef struct _MAC_INFORMATION
+ 127      =2  {
+ 128      =2  // definition for NetworkType member. //
+ 129      =2  #define MAC_AUTO_NEGOTIATION                    0
+ 130      =2  #define MAC_LINK_100M_SPEED                             100
+ 131      =2  #define MAC_LINK_10M_SPEED                              10
+ 132      =2  #define MAC_LINK_FULL_DUPLEX                    0x80
+ 133      =2  #define MAC_FORCE_ENBEDDED_PHY_10_HALF  0x4A
+ 134      =2  
+ 135      =2          byte    LinkSpeed;
+ 136      =2          byte    FullDuplex;
+ 137      =2        byte  MediumLinkType;   // map to mac register MAC_MEDIUM_STATUS_MODE_REG //
+ 138      =2          byte    NetworkType;
+ 139      =2          byte    InterruptMask;
+ 140      =2  
+ 141      =2  } MAC_INFO;
+ 142      =2  
+ 143      =2  //----------------------------------------------------------------------------------------
+ 144      =2  typedef struct _MAC_WAKEUP_FRAME
+ 145      =2  {
+ 146      =2        byte  Mode;       // see above wakeup frame Mode //
+ 147      =2        byte  Offset0;    // filter0 offset //
+ 148      =2        byte  Offset1;    // filter1 offset //
+ 149      =2        ulong Mask0;      // filter0 mask //
+ 150      =2        ulong Mask1;      // filter1 mask //
+ 151      =2        byte* Pframe;     // point to the first byte of wakeup frame (destination address) //
+ 152      =2          byte    Length;
+ 153      =2  
+ 154      =2  } MAC_WUF;
+ 155      =2  
+ 156      =2  // GLOBAL VARIABLES //
+ 157      =2  
+ 158      =2  // EXPORTED SUBPROGRAM SPECIFICATIONS //
+ 159      =2  //----------------------------------------------------------------------------------------
+ 160      =2  void MAC_Init(byte);
+ 161      =2  void MAC_Start(void);
+ 162      =2  void mac_StopOperate(void);
+ 163      =2  void mac_InterruptDisable(void);
+ 164      =2  byte* MAC_GetMacAddr(void);
+ 165      =2  void MAC_SetMacAddr(byte*);
+ 166      =2  void MAC_SetRxFilter(byte);
+ 167      =2  void  MAC_SetInterruptFlag(void);
+ 168      =2  byte  MAC_GetInterruptFlag(void);
+ 169      =2  void  MAC_ProcessInterrupt(void);
+ 170      =2  byte  MAC_ProcessInterruptExt(void);
+ 171      =2  void  MAC_MultiFilter(byte*, byte);
+ 172      =2  
+ 173      =2  #endif // __MAC_H__ //
+ 174      =2  
+ 175      =2  // End of mac.h //
+  27      =1  #include "phy.h"
+   1      =2  //=============================================================================
+   2      =2  //     Copyright (c) 2006       ASIX Electronic Corporation      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =2  //
+   6      =2  //     The copyright notice above does not evidence any actual or intended
+   7      =2  //     publication of such source code.
+   8      =2  //=============================================================================
+   9      =2  // Module Name:phy.h
+  10      =2  // Purpose:
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 22  
+
+  11      =2  // Author:
+  12      =2  // Date:
+  13      =2  // Notes:
+  14      =2  // $Log: phy.h,v $
+  15      =2  // Revision 1.1.1.1  2006/06/20 05:50:28  borbin
+  16      =2  // no message
+  17      =2  //
+  18      =2  //=============================================================================
+  19      =2  
+  20      =2  #ifndef __PHY_H__
+           =2 #define __PHY_H__
+           =2 
+           =2 
+           =2 // INCLUDE FILE DECLARATIONS //
+           =2 #include "types.h"
+           =2 
+           =2 // internal phy id address //
+           =2 #define PHY_ADDRESS                                     0x10
+           =2 #define PHY_INTERNAL                            0
+           =2 #define PHY_EXTERNAL                            1
+           =2 
+           =2 // network type //
+           =2 #define AUTO_NEGOTIATION                        0
+           =2 #define FIXED_100_FULL                          1
+           =2 #define FIXED_100_HALF                          2
+           =2 #define FIXED_10_FULL                           3
+           =2 #define FIXED_10_HALF                           4
+           =2 #define FORCE_EMBEDDED_PHY_10_HALF      5
+           =2 
+           =2 // NAMING CONSTANT DECLARATIONS //
+           =2 // SFR 0xBE definitions //
+           =2 #define PHY_READ_REG                            BIT7
+           =2 #define PHY_ACCESS_GO                           BIT6
+           =2 #define PHY_CMD_ABORT                           0xFF
+           =2 
+           =2 // MII register definitions //
+           =2 #define MII_PHY_CONTROL                         0x00    // control reg
+           =2 #define MII_PHY_STATUS                          0x01    // status reg
+           =2 #define MII_PHY_OUI                                     0x02    // most of the OUI bits
+           =2 #define MII_PHY_MODEL                           0x03    // model/rev bits, and rest of OUI
+           =2 #define MII_PHY_ANAR                            0x04    // AN advertisement reg
+           =2 #define MII_PHY_ANLPAR                          0x05    // AN Link Partner
+           =2 #define MII_PHY_ANER                            0x06    // AN expansion reg
+           =2 
+           =2 // Bit definitions: MII Control //
+           =2 #define CONTROL_RESET                           0x8000  // reset bit in control reg
+           =2 #define CONTROL_LOOPBACK                        0x4000  // loopback bit in control reg
+           =2 #define CONTROL_10MB                            0x0000  // 10 Mbit
+           =2 #define CONTROL_100MB                           0x2000  // 100Mbit
+           =2 #define CONTROL_ENABLE_AUTO                     0x1000  // autonegotiate enable
+           =2 #define CONTROL_POWER_DOWN                      0x0800
+           =2 #define CONTROL_ISOLATE                         0x0400  // islolate bit
+           =2 #define CONTROL_START_AUTO                      0x0200  // restart autonegotiate
+           =2 #define CONTROL_FULL_DUPLEX                     0x0100
+           =2 
+           =2 // Bit definitions: Auto-Negotiation Advertisement //
+           =2 #define ANAR_PAUSE                                      0x0400  // support pause packets
+           =2 #define ANAR_100T4                                      0x0200  // support 100BT4
+           =2 #define ANAR_100TXFD                            0x0100  // support 100BTX full duplex
+           =2 #define ANAR_100TX                                      0x0080  // support 100BTX half duplex
+           =2 #define ANAR_10TFD                                      0x0040  // support 10BT full duplex
+           =2 #define ANAR_10T                                        0x0020  // support 10BT half duplex
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 23  
+
+           =2 #define ANAR_SELECTOR_FIELD                     0x001F  // selector field.
+           =2 #define ANAR_SELECTOR_8023                      0x0001
+           =2 
+           =2 // Bit definitions: Auto-Negotiation Link Partner Ability //
+           =2 #define ANLPAR_PAUSE                            0x0400  // support pause packets
+           =2 #define ANLPAR_100T4                            0x0200  // support 100BT4
+           =2 #define ANLPAR_100TXFD                          0x0100  // support 100BTX full duplex
+           =2 #define ANLPAR_100TX                            0x0080  // support 100BTX half duplex
+           =2 #define ANLPAR_10TFD                            0x0040  // support 10BT full duplex
+           =2 #define ANLPAR_10T                                      0x0020  // support 10BT half duplex
+           =2 
+           =2 // TYPE DECLARATIONS //
+           =2 //---------------------------------------------------------------
+           =2 typedef struct _PHY_INFORMATION
+           =2 {
+           =2         byte    PhyAddr;
+           =2         byte    PhyType;
+           =2 
+           =2 } PHY_INFO;
+           =2 
+           =2 // EXPORTED SUBPROGRAM SPECIFICATIONS //
+           =2 //---------------------------------------------------------------
+           =2 void PHY_Init(byte);
+           =2 uint PHY_CheckMediaType(void);
+           =2 void PHY_PowerUp(void);
+           =2 void PHY_WatchDog(void);
+           =2 void phy_WriteReg(byte regaddr, uint value);
+           =2 
+           =2 #endif // End of __PHY_H__ //
+ 102      =2  // End of phy.h //
+  28      =1  
+  29      =1  
+  30      =1  // NAMING CONSTANT DECLARATIONS //
+  31      =1  #define MAX_ETHERNET_LEN                1514
+  32      =1  #define MAC_ADDRESS_LEN                 6
+  33      =1  #define ETH_HEADER_LEN                  14
+  34      =1  #define VLAN_HEADER_LEN                 4
+  35      =1  #define SNAP_LEN                                8
+  36      =1  
+  37      =1  #define MAX_FRAME_SIZE                  (MAX_ETHERNET_LEN + VLAN_HEADER_LEN)
+  38      =1  
+  39      =1  #define PAGE_SIZE                               256
+  40      =1  
+  41      =1  // STOE header //
+  42      =1  #define MAC_TX_RX_HEADER                6
+  43      =1  
+  44      =1  // calculate BDP start address //
+  45      =1  #define STOE_SOCKET_BUFFER_SIZE ((PAGES_OF_XMIT + PAGES_OF_RCV + 1) * PAGE_SIZE)
+  46      =1  #define DEFAULT_STACK_BOUNDARY  0x8000  // 32 K //
+  47      =1  #define STOE_BDP_START_ADDR             (DEFAULT_STACK_BOUNDARY - STOE_SOCKET_BUFFER_SIZE)
+  48      =1  #define STOE_RCV_BUF_SIZE               (PAGES_OF_RCV * PAGE_SIZE)
+  49      =1  #define STOE_XMIT_BUF_SIZE              (PAGES_OF_XMIT * PAGE_SIZE)
+  50      =1  
+  51      =1  // STOE register definitions //
+  52      =1  #define STOE_L2_CTL_REG                 0x00
+  53      =1  #define STOE_RX_VLAN_TAG_REG            0x02
+  54      =1  #define STOE_TX_VLAN_TAG_REG            0x04
+  55      =1  #define STOE_ARP_CMD_REG                0x06
+  56      =1  #define STOE_ARP_ADDR_REG               0x07
+  57      =1  #define STOE_ARP_DATA_REG               0x08
+  58      =1  #define STOE_ARP_TIMEOUT_REG            0x0E
+  59      =1  #define STOE_IP_ADDR_REG                0x10
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 24  
+
+  60      =1  #define STOE_SUBNET_MASK_REG            0x14
+  61      =1  #define STOE_GATEWAY_IP_REG             0x18
+  62      =1  #define STOE_CHKSUM_STATUS_REG  0x1C
+  63      =1  #define STOE_L4_CTL_REG                 0x20
+  64      =1  #define STOE_L4_CMD_REG                 0x21
+  65      =1  #define STOE_L4_BDP_PNT_REG             0x22
+  66      =1  #define STOE_L4_DMA_GAP_REG             0x24
+  67      =1  #define STOE_INT_STATUS_REG             0x30
+  68      =1  #define STOE_INT_MASK_REG               0x31
+  69      =1  
+  70      =1  // Bit definitions: STOE_L2_CTL_REG      //
+  71      =1  #define RX_VLAN_ENABLE                  BIT0
+  72      =1  #define RX_TRANSPARENT                  BIT1
+  73      =1  #define RX_START_OPERA                  BIT3
+  74      =1  #define TX_VLAN_ENABLE                  BIT4
+  75      =1  #define TX_TRANSPARENT                  BIT5
+  76      =1  #define TX_SNAP_ENABLE                  BIT6
+  77      =1  #define TX_START_OPERA                  BIT7
+  78      =1  
+  79      =1  // Bit definitions: STOE_ARP_CMD_REG //
+  80      =1  #define ARP_CACHE_CMD_READ              BIT0
+  81      =1  #define ARP_CACHE_CMD_GO                BIT1
+  82      =1  
+  83      =1  // Bit definitions: STOE_L4_CTL_REG      //
+  84      =1  #define DROP_CHKSUMERR_PKT              BIT0
+  85      =1  #define ENABLE_XMIT_CHKSUM              BIT1
+  86      =1  #define ENABLE_RCV_CROSS                BIT2
+  87      =1  #define ENABLE_XMIT_CROSS               BIT3 
+  88      =1  
+  89      =1  // Bit definitions: STOE_L4_CMD_REG      //
+  90      =1  #define RESUME_PKT_RCV                  BIT0
+  91      =1  #define XMIT_PACKET                     BIT4
+  92      =1  
+  93      =1  // Bit definitions: STOE_STATUS_REG      //
+  94      =1  // Bit definitions: STOE_INT_MASK_REG //
+  95      =1  #define ARP_HASH_COLLISION              BIT0
+  96      =1  #define RCV_PACKET                      BIT1
+  97      =1  #define RCV_BUF_RING_FULL               BIT2
+  98      =1  #define ARP_CACHE_NOT_FIND              BIT4
+  99      =1  #define XMIT_EMPTY_BUF                  BIT5
+ 100      =1  #define XMIT_COMPLETE                   BIT6
+ 101      =1  #define STOE_DEFAULT_INT_MASK   (RCV_BUF_RING_FULL | RCV_PACKET)
+ 102      =1  
+ 103      =1  // TYPE DECLARATIONS //
+ 104      =1  //---------------------------------------------------------------
+ 105      =1  typedef struct _LOCAL_STATION
+ 106      =1  {
+ 107      =1          // MAC address //
+ 108      =1          byte    PermStaAddr[MAC_ADDRESS_LEN];
+ 109      =1          byte    CurrStaAddr[MAC_ADDRESS_LEN];
+ 110      =1  
+ 111      =1          // IP address //
+ 112      =1          ulong   StationIP;
+ 113      =1          ulong   SubnetMask;
+ 114      =1          ulong   Gateway;
+ 115      =1          ulong   DefaultIP;
+ 116      =1          ulong   DefaultMask;
+ 117      =1          ulong   DefaultGateway;
+ 118      =1  
+ 119      =1  } LOCAL_STATION;
+ 120      =1  
+ 121      =1  //---------------------------------------------------------------
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 25  
+
+ 122      =1  typedef struct _PACKET_INFORMATION
+ 123      =1  {
+ 124      =1          byte XDATA*     PBuf;
+ 125      =1          byte XDATA*     PIpHeader;
+ 126      =1          byte XDATA*     PTUIHeader;     // TCP Header, Udp Header, or ICMP IGMP Header //
+ 127      =1          byte XDATA*     PData;
+ 128      =1  
+ 129      =1          uint            TotalLen;
+ 130      =1          uint            IpTotalLen;
+ 131      =1          uint            TUITotalLen;
+ 132      =1          uint            DataLen;
+ 133      =1          byte            Protocol;
+ 134      =1          byte            IpHeaderLen;
+ 135      =1          byte            TcpHeaderLen;
+ 136      =1          byte            SocketId;
+ 137      =1          byte            Pages;
+ 138      =1  
+ 139      =1  } PACKET_INFORMATION;
+ 140      =1  
+ 141      =1  //---------------------------------------------------------------
+ 142      =1  typedef struct _BUF_DESC_PAGE
+ 143      =1  {
+ 144      =1  #define RX_DESCRIPTOR_SIZE                      128
+ 145      =1  #define RX_DESCRIPTOR_HEADER_SIZE       12
+ 146      =1  #define RX_RESERVED_BUFFER_SIZE         (RX_DESCRIPTOR_SIZE - RX_DESCRIPTOR_HEADER_SIZE -       \
+ 147      =1                                                                          sizeof (LOCAL_STATION) - sizeof (PHY_INFO) -            \
+ 148      =1                                                                          sizeof (MAC_INFO))
+ 149      =1  
+ 150      =1          // hardware RX descriptor header //
+ 151      =1          byte    BDP_ID;
+ 152      =1          byte    Pad0;
+ 153      =1          uint    RSPP;
+ 154      =1          uint    REPP;
+ 155      =1          uint    RHPR;
+ 156      =1          uint    RTPR;
+ 157      =1          byte    RFP;
+ 158      =1          byte    Pad1;
+ 159      =1  
+ 160      =1          LOCAL_STATION   NetStation;
+ 161      =1          PHY_INFO                PhyInfo;
+ 162      =1          MAC_INFO                MacInfo;
+ 163      =1  
+ 164      =1          byte    RcvReserved[RX_RESERVED_BUFFER_SIZE];
+ 165      =1  
+ 166      =1          // hardware TX descriptor header //
+ 167      =1          uint    TSPP;
+ 168      =1          uint    TEPP;
+ 169      =1          uint    THPR;
+ 170      =1          uint    TTPR;
+ 171      =1          byte    TFP;
+ 172      =1          byte    Pad2;
+ 173      =1  
+ 174      =1          uint    VSPP;
+ 175      =1  
+ 176      =1          byte XDATA*     RcvStartAddr;
+ 177      =1          byte XDATA*     RcvEndAddr;
+ 178      =1          byte XDATA*     XmtStartAddr;
+ 179      =1          byte XDATA*     XmtEndAddr;
+ 180      =1  
+ 181      =1          PACKET_INFORMATION      STOE_TxInform;
+ 182      =1          PACKET_INFORMATION      STOE_RxInform;
+ 183      =1  
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 26  
+
+ 184      =1  } BUF_DESC_PAGE;
+ 185      =1  
+ 186      =1  //---------------------------------------------------------------
+ 187      =1  typedef struct _STOE_FRAME_HEADER
+ 188      =1  {
+ 189      =1          uint    NPR;
+ 190      =1          uint    Length;
+ 191      =1          byte    Protocol;
+ 192      =1          byte    DataOffset;
+ 193      =1          byte    Packet;
+ 194      =1  
+ 195      =1  } STOE_FRAME_HEADER;
+ 196      =1  
+ 197      =1  // GLOBAL VARIABLES //
+ 198      =1  extern LOCAL_STATION XDATA*     PNetStation;
+ 199      =1  extern BUF_DESC_PAGE XDATA* PBDP;
+ 200      =1  extern void (*STOE_RcvCallback)(byte XDATA*, uint, byte);
+ 201      =1  
+ 202      =1  // EXPORTED SUBPROGRAM SPECIFICATIONS //
+ 203      =1  //---------------------------------------------------------------
+ 204      =1  void STOE_Init(byte);
+ 205      =1  void STOE_Start(void);
+ 206      =1  void stoe_StopOperate(void);
+ 207      =1  
+ 208      =1  // MACRO DECLARATIONS //
+ 209      =1  #define STOE_GetIPAddr()                (PNetStation->StationIP)
+ 210      =1  #define STOE_GetSubnetMask()    (PNetStation->SubnetMask)
+ 211      =1  #define STOE_GetGateway()               (PNetStation->Gateway)
+ 212      =1  
+ 213      =1  void STOE_SetIPAddr(ulong);
+ 214      =1  void STOE_SetSubnetMask(ulong);
+ 215      =1  void STOE_SetGateway(ulong);
+ 216      =1  void STOE_WaitHwReleaseRcvBuf(void);
+ 217      =1  void STOE_ProcessInterrupt(void);
+ 218      =1  void STOE_Send(byte XDATA*, uint, byte);
+ 219      =1  byte XDATA* STOE_AssignSendBuf(uint);
+ 220      =1  byte XDATA* STOE_CopyCode2TPBR(byte XDATA*, byte*, uint);
+ 221      =1  byte STOE_CHECK_MAC(ulong *ip_addr);
+ 222      =1  
+ 223      =1  #endif // End of __STOE_H__ //
+ 224      =1  // End of stoe.h //
+  23          #include "delay.h"
+   1      =1  /*
+   2      =1   ******************************************************************************
+   3      =1   *     Copyright (c) 2006       ASIX Electronic Corporation      All rights reserved.
+   4      =1   *
+   5      =1   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6      =1   *
+   7      =1   *     The copyright notice above does not evidence any actual or intended
+   8      =1   *     publication of such source code.
+   9      =1   ******************************************************************************
+  10      =1   */
+  11      =1  /*=============================================================================
+  12      =1   * Module Name:delay.h
+  13      =1   * Purpose:
+  14      =1   * Author:
+  15      =1   * Date:
+  16      =1   * Notes:
+  17      =1   * $Log: delay.h,v $
+  18      =1   * Revision 1.1.1.1  2006/06/20 05:50:28  borbin
+  19      =1   * no message
+  20      =1   *
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 27  
+
+  21      =1   * Revision 1.1.1.1  2006/02/23 00:55:10  borbin
+  22      =1   * no message
+  23      =1   *
+  24      =1   *=============================================================================
+  25      =1   */
+  26      =1  
+  27      =1  #ifndef __DELAY_H__
+  28      =1  #define __DELAY_H__
+  29      =1  
+  30      =1  /* INCLUDE FILE DECLARATIONS */
+  31      =1  #include "types.h"
+   1      =2  //----------------------------------------------------------------------------------------
+   2      =2  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =2  //
+   4      =2  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =2  //
+   6      =2  //     The copyright notice above does not evidence any actual or intended
+   7      =2  //     publication of such source code.
+   8      =2  //----------------------------------------------------------------------------------------
+   9      =2  // Module Name : types.h
+  10      =2  // Purpose     : Definition of type.
+  11      =2  // Author      : Robin Lee
+  12      =2  // Date        : 2005-12-28
+  13      =2  // Notes       : None.
+  14      =2  // $Log: types.h,v $
+  15      =2  //----------------------------------------------------------------------------------------
+  16      =2  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =2  // no message
+  18      =2  //----------------------------------------------------------------------------------------
+  19      =2  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =2  // no message
+  21      =2  //----------------------------------------------------------------------------------------
+  22      =2  
+  23      =2  #ifndef TYPES_H
+           =2 #define TYPES_H
+           =2 
+           =2 typedef unsigned short int          bool;                                                 // boolean
+           =2 typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+           =2 typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+           =2 typedef short int                   sint;                                                 // 16-bit signed
+           =2 typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+           =2 typedef unsigned short int          word;                                                 // 16-bit unsign
+             -ed
+           =2 
+           =2 #ifndef NULL
+           =2   #define NULL ((void *) 0L)
+           =2 #endif
+           =2 
+           =2 #define TRUE                  1
+           =2 #define FALSE                 0
+           =2 #define ON                    1
+           =2 #define OFF                   0
+           =2 #define Client                1
+           =2 #define Server                0
+           =2 
+           =2 // Bit Definitions for Bitwise Operation //
+           =2 #define BIT0            0x01
+           =2 #define BIT1            0x02
+           =2 #define BIT2            0x04
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 28  
+
+           =2 #define BIT3            0x08
+           =2 #define BIT4            0x10
+           =2 #define BIT5            0x20
+           =2 #define BIT6            0x40
+           =2 #define BIT7            0x80
+           =2 #define BIT8            0x0100
+           =2 #define BIT9            0x0200
+           =2 #define BIT10           0x0400
+           =2 #define BIT11           0x0800
+           =2 #define BIT12           0x1000
+           =2 #define BIT13           0x2000
+           =2 #define BIT14           0x4000
+           =2 #define BIT15           0x8000
+           =2 #define BIT16           0x00010000
+           =2 #define BIT17           0x00020000
+           =2 #define BIT18           0x00040000
+           =2 #define BIT19           0x00080000
+           =2 #define BIT20           0x00100000
+           =2 #define BIT21           0x00200000
+           =2 #define BIT22           0x00400000
+           =2 #define BIT23           0x00800000
+           =2 #define BIT24           0x01000000
+           =2 #define BIT25           0x02000000
+           =2 #define BIT26           0x04000000
+           =2 #define BIT27           0x08000000
+           =2 #define BIT28           0x10000000
+           =2 #define BIT29           0x20000000
+           =2 #define BIT30           0x40000000
+           =2 #define BIT31           0x80000000
+           =2 
+           =2 #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+           =2 #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+           =2 
+           =2 #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+           =2 #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+           =2 #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+           =2 #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+           =2  
+           =2 // Keil compiler user define //
+           =2 #define     KEIL_CPL
+           =2 
+           =2 #ifdef KEIL_CPL
+           =2  #define XDATA    xdata
+           =2  #define IDATA    idata
+           =2  #define BDATA    bdata
+           =2  #define CODE     code
+           =2  #define FAR      far
+           =2 #else
+           =2  #define XDATA
+           =2  #define IDATA
+           =2  #define BDATA
+           =2  #define CODE
+           =2  #define FAR
+           =2 #endif
+           =2 
+           =2 // Serial interface command direction //
+           =2 #define     SI_WR                   BIT0
+           =2 #define     SI_RD                   BIT1
+           =2 
+           =2 #define     FLASH_WR_ENB            (PCON |= PWE_)
+           =2 #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+           =2 
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 29  
+
+           =2 #endif  // end of TYPES_H //
+  32      =1  
+  33      =1  /* NAMING CONSTANT DECLARATIONS */
+  34      =1  
+  35      =1  /* GLOBAL VARIABLES */
+  36      =1  
+  37      =1  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+  38      =1  void DELAY_Init(void);
+  39      =1  void DELAY_Ms(uint);
+  40      =1  void DELAY_Us(uint);
+  41      =1  
+  42      =1  
+  43      =1  #endif /* End of __DELAY_H__ */
+  44      =1  
+  45      =1  
+  46      =1  /* End of timer.h */
+  24          #include <intrins.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  INTRINS.H
+   3      =1  
+   4      =1  Intrinsic functions for C51.
+   5      =1  Copyright (c) 1988-2004 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+   8      =1  
+   9      =1  #ifndef __INTRINS_H__
+  10      =1  #define __INTRINS_H__
+  11      =1  
+  12      =1  extern void          _nop_     (void);
+  13      =1  extern bit           _testbit_ (bit);
+  14      =1  extern unsigned char _cror_    (unsigned char, unsigned char);
+  15      =1  extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  16      =1  extern unsigned long _lror_    (unsigned long, unsigned char);
+  17      =1  extern unsigned char _crol_    (unsigned char, unsigned char);
+  18      =1  extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  19      =1  extern unsigned long _lrol_    (unsigned long, unsigned char);
+  20      =1  extern unsigned char _chkfloat_(float);
+  21      =1  extern void          _push_    (unsigned char _sfr);
+  22      =1  extern void          _pop_     (unsigned char _sfr);
+  23      =1  
+  24      =1  #endif
+  25      =1  
+  25          
+  26          // LOCAL VARIABLES DECLARATIONS //
+  27          static uint XDATA phy_Control = 0;
+  28          static byte XDATA phy_NetworkType;
+  29          
+  30          //-----------------------------------------------------------------------------
+  31          // name    : phy_ReadReg
+  32          // purpose : Read PHY register.
+  33          // params  :
+  34          // returns :
+  35          // note    :
+  36          // ----------------------------------------------------------------------------
+  37          void phy_ReadReg(byte regaddr, uint XDATA* pvalue)
+  38          {
+  39   1              byte    temp, isr;
+  40   1      
+  41   1              isr = EA;
+  42   1              EA = 0;
+  43   1              _nop_();
+  44   1              // abort command //
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 30  
+
+  45   1              EPCR = 0xff;
+  46   1      
+  47   1              EPCR = regaddr;
+  48   1              EPCR = (PBDP->PhyInfo.PhyAddr + PHY_ACCESS_GO + PHY_READ_REG);
+  49   1      
+  50   1              temp = EPCR;
+  51   1              temp = EPCR;
+  52   1              while (temp & PHY_ACCESS_GO)
+  53   1              {
+  54   2                      DELAY_Us(1);
+  55   2                      temp = EPCR;
+  56   2                      temp = EPCR;
+  57   2      
+  58   2              } // End of while //
+  59   1      
+  60   1              *pvalue = EPDR;
+  61   1              temp = EPDR;
+  62   1              EA = isr;
+  63   1              *pvalue += ((uint)temp << 8);
+  64   1      
+  65   1      } // End of phy_ReadReg //
+  66          
+  67          //-----------------------------------------------------------------------------
+  68          // name    : phy_WriteReg
+  69          // purpose : Set PHY register.
+  70          // params  :
+  71          // returns :
+  72          // note    :
+  73          // ----------------------------------------------------------------------------
+  74          void phy_WriteReg(byte regaddr, uint value)
+  75          {
+  76   1              byte    temp, isr;
+  77   1      
+  78   1              isr = EA;
+  79   1              EA = 0;
+  80   1              _nop_();
+  81   1              // abort command //
+  82   1              EPCR = 0xff;
+  83   1      
+  84   1              EPDR = (byte)value;
+  85   1              EPDR = (byte)(value >> 8);
+  86   1              EPCR = regaddr;
+  87   1              EPCR = (PBDP->PhyInfo.PhyAddr + PHY_ACCESS_GO);
+  88   1      
+  89   1              temp = EPCR;
+  90   1              temp = EPCR;
+  91   1              while (temp & PHY_ACCESS_GO)
+  92   1              {
+  93   2                      DELAY_Us(1);
+  94   2                      temp = EPCR;
+  95   2                      temp = EPCR;
+  96   2      
+  97   2              } // End of File //
+  98   1              EA = isr;
+  99   1      
+ 100   1      } // End of phy_WriteReg //
+ 101          
+ 102          //-----------------------------------------------------------------------------
+ 103          // name    : PHY_Init
+ 104          // Purpose : Initial some registers and variables of PHY.
+ 105          // Params  : network_type -0 : auto- negotiation
+ 106          //                                                -1 : fixed 100 full speed.
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 31  
+
+ 107          //                                                -2 : fixed 100 half speed.
+ 108          //                                                -3 : fixed 10 full speed.
+ 109          //                                                -4 : fixed 10 half speed.
+ 110          // returns :
+ 111          // note    :
+ 112          // ----------------------------------------------------------------------------
+ 113          void PHY_Init(byte network_type)
+ 114          {
+ 115   1              uint XDATA      phyctrl, phyanar, tempshort;
+ 116   1      
+ 117   1              phy_NetworkType = network_type;
+ 118   1      
+ 119   1              // use internal phy //
+ 120   1              PBDP->PhyInfo.PhyAddr = PHY_ADDRESS;
+ 121   1              PBDP->PhyInfo.PhyType = PHY_INTERNAL;
+ 122   1      
+ 123   1              // software reset //
+ 124   1              phy_WriteReg(MII_PHY_CONTROL, CONTROL_RESET);
+ 125   1      
+ 126   1              // read phy reg-2, reg-0 to make sure embedded phy is ready //
+ 127   1              while (1)
+ 128   1              {
+ 129   2                      phy_ReadReg(MII_PHY_OUI, &tempshort);
+ 130   2                      if (tempshort == 0x003B)
+ 131   2                              break;
+ 132   2              }
+ 133   1      
+ 134   1              while (1)
+ 135   1              {
+ 136   2                      phy_ReadReg(MII_PHY_CONTROL, &phyctrl);
+ 137   2                      if ((phyctrl == 0x3100) || (phyctrl == 0x3000) || (phyctrl == 0x1100) ||
+ 138   2                              (phyctrl == 0x1000))
+ 139   2                                      break;
+ 140   2              }
+ 141   1      
+ 142   1              switch (network_type)
+ 143   1              {
+ 144   2              default:
+ 145   2              case AUTO_NEGOTIATION:
+ 146   2                      phyctrl |= (CONTROL_100MB | CONTROL_FULL_DUPLEX);
+ 147   2                      phyanar = ANAR_SELECTOR_8023 + (ANAR_PAUSE | ANAR_100TXFD | ANAR_100TX |
+ 148   2                              ANAR_10TFD | ANAR_10T);
+ 149   2                      break;
+ 150   2              case FIXED_100_FULL:
+ 151   2                      phyctrl |= (CONTROL_100MB | CONTROL_FULL_DUPLEX);
+ 152   2                      phyanar = ANAR_SELECTOR_8023 + (ANAR_PAUSE | ANAR_100TXFD);
+ 153   2                      break;
+ 154   2              case FIXED_100_HALF:
+ 155   2                      phyctrl |= CONTROL_100MB;
+ 156   2                      phyanar = ANAR_SELECTOR_8023 + (ANAR_PAUSE | ANAR_100TX);
+ 157   2                      break;
+ 158   2              case FIXED_10_FULL:
+ 159   2                      phyctrl |= CONTROL_FULL_DUPLEX;
+ 160   2                      phyanar = ANAR_SELECTOR_8023 + (ANAR_PAUSE | ANAR_10TFD);
+ 161   2                      break;
+ 162   2              case FIXED_10_HALF:
+ 163   2                      phyanar = ANAR_SELECTOR_8023 + (ANAR_PAUSE | ANAR_10T);
+ 164   2                      break;
+ 165   2              }
+ 166   1      
+ 167   1              // set phy register 0 & 4 to start negotitation //
+ 168   1              phy_WriteReg(MII_PHY_ANAR, phyanar);
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 32  
+
+ 169   1              phyctrl |= (CONTROL_ENABLE_AUTO | CONTROL_START_AUTO);
+ 170   1              phy_WriteReg(MII_PHY_CONTROL, phyctrl);
+ 171   1              phy_Control = phyctrl;
+ 172   1      
+ 173   1      } // End of PHY_Init() //
+ 174          
+ 175          // ----------------------------------------------------------------------------
+ 176          // name    : PHY_CheckMediaType
+ 177          // purpose :
+ 178          // params  :
+ 179          // returns :
+ 180          // note    :
+ 181          // ----------------------------------------------------------------------------
+ 182          uint PHY_CheckMediaType(void)
+ 183          {
+ 184   1              uint XDATA      phylinkstatus = 0;
+ 185   1              uint XDATA      tempshort;
+ 186   1      
+ 187   1              while (!phylinkstatus)
+ 188   1              {
+ 189   2                      phy_ReadReg(MII_PHY_STATUS, &phylinkstatus);
+ 190   2                      phylinkstatus &= BIT5;
+ 191   2              }
+ 192   1              DELAY_Ms(10);
+ 193   1      
+ 194   1              // read phy register 0 for internal phy //
+ 195   1              phy_ReadReg(MII_PHY_CONTROL, &tempshort);
+ 196   1      
+ 197   1              if ((tempshort & CONTROL_100MB) && (tempshort & CONTROL_FULL_DUPLEX))
+ 198   1                      phylinkstatus = ANLPAR_100TXFD;
+ 199   1              else if (tempshort & CONTROL_100MB)
+ 200   1                      phylinkstatus = ANLPAR_100TX;
+ 201   1              else if (tempshort & CONTROL_FULL_DUPLEX)
+ 202   1                      phylinkstatus = ANLPAR_10TFD;
+ 203   1              else
+ 204   1                      phylinkstatus = ANLPAR_10T;
+ 205   1              return phylinkstatus;
+ 206   1      
+ 207   1      } // End of PHY_CheckMediaType() //
+ 208          
+ 209          // ----------------------------------------------------------------------------
+ 210          // name    : PHY_Reset
+ 211          // purpose :
+ 212          // params  :
+ 213          // returns :
+ 214          // note    :
+ 215          // ----------------------------------------------------------------------------
+ 216          void phy_Restart(void)
+ 217          {
+ 218   1              phy_WriteReg(MII_PHY_CONTROL, CONTROL_POWER_DOWN);
+ 219   1      
+ 220   1              MAC_Init(phy_NetworkType);
+ 221   1      
+ 222   1      } // End of PHY_Reset() //
+ 223          
+ 224          // ----------------------------------------------------------------------------
+ 225          // name    : PHY_PowerUp
+ 226          // purpose : set phy to power up
+ 227          // params  :
+ 228          // returns :
+ 229          // note    :
+ 230          // ----------------------------------------------------------------------------
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 33  
+
+ 231          void PHY_PowerUp(void)
+ 232          {
+ 233   1              PBDP->PhyInfo.PhyAddr = PHY_ADDRESS;
+ 234   1      
+ 235   1              phy_WriteReg(MII_PHY_CONTROL, 0);
+ 236   1      
+ 237   1      } // End of PHY_PowerUp() //
+ 238          
+ 239          // ----------------------------------------------------------------------------
+ 240          // name    : PHY_WatchDog
+ 241          // purpose : If ethernet is un-link, restart the phy to make sure it work right
+ 242          // params  :
+ 243          // returns :
+ 244          // note    :
+ 245          // ----------------------------------------------------------------------------
+ 246          void PHY_WatchDog(void)
+ 247          {
+ 248   1              if (!PBDP->MacInfo.LinkSpeed)
+ 249   1                      phy_Restart();
+ 250   1      
+ 251   1      } // End of PHY_WatchDog() //
+ 252          
+ 253          // End of phy.c //
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 34  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _phy_ReadReg (BEGIN)
+                                           ; SOURCE LINE # 37
+0000 90000000    R     MOV     DPTR,#regaddr
+0004 EF                MOV     A,R7
+0005 F0                MOVX    @DPTR,A
+0006 90000000    R     MOV     DPTR,#pvalue
+000A EC                MOV     A,R4
+000B F0                MOVX    @DPTR,A
+000C A3                INC     DPTR
+000D ED                MOV     A,R5
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 38
+                                           ; SOURCE LINE # 41
+000F A2AF              MOV     C,EA
+0011 E4                CLR     A
+0012 33                RLC     A
+0013 FF                MOV     R7,A
+0014 90000000    R     MOV     DPTR,#isr
+0018 EF                MOV     A,R7
+0019 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 42
+001A C2AF              CLR     EA
+                                           ; SOURCE LINE # 43
+001C 00                NOP     
+                                           ; SOURCE LINE # 45
+001D 75BEFF            MOV     EPCR,#0FFH
+                                           ; SOURCE LINE # 47
+0020 90000000    R     MOV     DPTR,#regaddr
+0024 E0                MOVX    A,@DPTR
+0025 FF                MOV     R7,A
+0026 8FBE              MOV     EPCR,R7
+                                           ; SOURCE LINE # 48
+0028 90000000    E     MOV     DPTR,#PBDP
+002C E0                MOVX    A,@DPTR
+002D FE                MOV     R6,A
+002E A3                INC     DPTR
+002F E0                MOVX    A,@DPTR
+0030 FF                MOV     R7,A
+0031 8F82              MOV     DPL,R7
+0033 8E83              MOV     DPH,R6
+0035 759300      E     MOV     DPX,#?C?XDATASEG
+0038 E582              MOV     A,DPL
+003A 2430              ADD     A,#030H
+003C F582              MOV     DPL,A
+003E E583              MOV     A,DPH
+0040 3400              ADDC    A,#00H
+0042 F583              MOV     DPH,A
+0044 759300      E     MOV     DPX,#?C?XDATASEG
+0047 E0                MOVX    A,@DPTR
+0048 FF                MOV     R7,A
+0049 EF                MOV     A,R7
+004A 2440              ADD     A,#040H
+004C FF                MOV     R7,A
+004D EF                MOV     A,R7
+004E 2480              ADD     A,#080H
+0050 F5BE              MOV     EPCR,A
+                                           ; SOURCE LINE # 50
+0052 90000000    R     MOV     DPTR,#temp
+0056 E5BE              MOV     A,EPCR
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 35  
+
+0058 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 51
+0059 90000000    R     MOV     DPTR,#temp
+005D E5BE              MOV     A,EPCR
+005F F0                MOVX    @DPTR,A
+0060         ?C0001:
+                                           ; SOURCE LINE # 52
+0060 90000000    R     MOV     DPTR,#temp
+0064 E0                MOVX    A,@DPTR
+0065 FF                MOV     R7,A
+0066 EF                MOV     A,R7
+0067 30E618            JNB     ACC.6,?C0002
+                                           ; SOURCE LINE # 53
+                                           ; SOURCE LINE # 54
+006A 7F01              MOV     R7,#01H
+006C 7E00              MOV     R6,#00H
+006E 12000000    E     LCALL   _DELAY_Us
+                                           ; SOURCE LINE # 55
+0072 90000000    R     MOV     DPTR,#temp
+0076 E5BE              MOV     A,EPCR
+0078 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 56
+0079 90000000    R     MOV     DPTR,#temp
+007D E5BE              MOV     A,EPCR
+007F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 58
+0080 80DE              SJMP    ?C0001
+0082         ?C0002:
+                                           ; SOURCE LINE # 60
+0082 AFBF              MOV     R7,EPDR
+0084 7E00              MOV     R6,#00H
+0086 90000000    R     MOV     DPTR,#pvalue
+008A E0                MOVX    A,@DPTR
+008B FC                MOV     R4,A
+008C A3                INC     DPTR
+008D E0                MOVX    A,@DPTR
+008E FD                MOV     R5,A
+008F 8D82              MOV     DPL,R5
+0091 8C83              MOV     DPH,R4
+0093 759300      E     MOV     DPX,#?C?XDATASEG
+0096 EE                MOV     A,R6
+0097 F0                MOVX    @DPTR,A
+0098 A3                INC     DPTR
+0099 EF                MOV     A,R7
+009A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 61
+009B 90000000    R     MOV     DPTR,#temp
+009F E5BF              MOV     A,EPDR
+00A1 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 62
+00A2 90000000    R     MOV     DPTR,#isr
+00A6 E0                MOVX    A,@DPTR
+00A7 FF                MOV     R7,A
+00A8 EF                MOV     A,R7
+00A9 24FF              ADD     A,#0FFH
+00AB 92AF              MOV     EA,C
+                                           ; SOURCE LINE # 63
+00AD 90000000    R     MOV     DPTR,#temp
+00B1 E0                MOVX    A,@DPTR
+00B2 FF                MOV     R7,A
+00B3 7E00              MOV     R6,#00H
+00B5 EF                MOV     A,R7
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 36  
+
+00B6 7F00              MOV     R7,#00H
+00B8 FE                MOV     R6,A
+00B9 90000000    R     MOV     DPTR,#pvalue
+00BD E0                MOVX    A,@DPTR
+00BE FC                MOV     R4,A
+00BF A3                INC     DPTR
+00C0 E0                MOVX    A,@DPTR
+00C1 FD                MOV     R5,A
+00C2 8D82              MOV     DPL,R5
+00C4 8C83              MOV     DPH,R4
+00C6 759300      E     MOV     DPX,#?C?XDATASEG
+00C9 EE                MOV     A,R6
+00CA 8FF0              MOV     B,R7
+00CC 12000000    E     LCALL   ?C?IILDX
+                                           ; SOURCE LINE # 65
+00D0         ?C0003:
+00D0 22                RET     
+             ; FUNCTION _phy_ReadReg (END)
+
+             ; FUNCTION _phy_WriteReg (BEGIN)
+                                           ; SOURCE LINE # 74
+0000 90000000    R     MOV     DPTR,#regaddr
+0004 EF                MOV     A,R7
+0005 F0                MOVX    @DPTR,A
+0006 90000000    R     MOV     DPTR,#value
+000A EC                MOV     A,R4
+000B F0                MOVX    @DPTR,A
+000C A3                INC     DPTR
+000D ED                MOV     A,R5
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 75
+                                           ; SOURCE LINE # 78
+000F A2AF              MOV     C,EA
+0011 E4                CLR     A
+0012 33                RLC     A
+0013 FF                MOV     R7,A
+0014 90000000    R     MOV     DPTR,#isr
+0018 EF                MOV     A,R7
+0019 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 79
+001A C2AF              CLR     EA
+                                           ; SOURCE LINE # 80
+001C 00                NOP     
+                                           ; SOURCE LINE # 82
+001D 75BEFF            MOV     EPCR,#0FFH
+                                           ; SOURCE LINE # 84
+0020 90000000    R     MOV     DPTR,#value
+0024 E0                MOVX    A,@DPTR
+0025 FE                MOV     R6,A
+0026 A3                INC     DPTR
+0027 E0                MOVX    A,@DPTR
+0028 FF                MOV     R7,A
+0029 8FBF              MOV     EPDR,R7
+                                           ; SOURCE LINE # 85
+002B 90000000    R     MOV     DPTR,#value
+002F E0                MOVX    A,@DPTR
+0030 FE                MOV     R6,A
+0031 A3                INC     DPTR
+0032 E0                MOVX    A,@DPTR
+0033 FF                MOV     R7,A
+0034 EE                MOV     A,R6
+0035 FF                MOV     R7,A
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 37  
+
+0036 7E00              MOV     R6,#00H
+0038 8FBF              MOV     EPDR,R7
+                                           ; SOURCE LINE # 86
+003A 90000000    R     MOV     DPTR,#regaddr
+003E E0                MOVX    A,@DPTR
+003F FF                MOV     R7,A
+0040 8FBE              MOV     EPCR,R7
+                                           ; SOURCE LINE # 87
+0042 90000000    E     MOV     DPTR,#PBDP
+0046 E0                MOVX    A,@DPTR
+0047 FE                MOV     R6,A
+0048 A3                INC     DPTR
+0049 E0                MOVX    A,@DPTR
+004A FF                MOV     R7,A
+004B 8F82              MOV     DPL,R7
+004D 8E83              MOV     DPH,R6
+004F 759300      E     MOV     DPX,#?C?XDATASEG
+0052 E582              MOV     A,DPL
+0054 2430              ADD     A,#030H
+0056 F582              MOV     DPL,A
+0058 E583              MOV     A,DPH
+005A 3400              ADDC    A,#00H
+005C F583              MOV     DPH,A
+005E 759300      E     MOV     DPX,#?C?XDATASEG
+0061 E0                MOVX    A,@DPTR
+0062 FF                MOV     R7,A
+0063 EF                MOV     A,R7
+0064 2440              ADD     A,#040H
+0066 F5BE              MOV     EPCR,A
+                                           ; SOURCE LINE # 89
+0068 90000000    R     MOV     DPTR,#temp
+006C E5BE              MOV     A,EPCR
+006E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 90
+006F 90000000    R     MOV     DPTR,#temp
+0073 E5BE              MOV     A,EPCR
+0075 F0                MOVX    @DPTR,A
+0076         ?C0004:
+                                           ; SOURCE LINE # 91
+0076 90000000    R     MOV     DPTR,#temp
+007A E0                MOVX    A,@DPTR
+007B FF                MOV     R7,A
+007C EF                MOV     A,R7
+007D 30E618            JNB     ACC.6,?C0005
+                                           ; SOURCE LINE # 92
+                                           ; SOURCE LINE # 93
+0080 7F01              MOV     R7,#01H
+0082 7E00              MOV     R6,#00H
+0084 12000000    E     LCALL   _DELAY_Us
+                                           ; SOURCE LINE # 94
+0088 90000000    R     MOV     DPTR,#temp
+008C E5BE              MOV     A,EPCR
+008E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 95
+008F 90000000    R     MOV     DPTR,#temp
+0093 E5BE              MOV     A,EPCR
+0095 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 97
+0096 80DE              SJMP    ?C0004
+0098         ?C0005:
+                                           ; SOURCE LINE # 98
+0098 90000000    R     MOV     DPTR,#isr
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 38  
+
+009C E0                MOVX    A,@DPTR
+009D FF                MOV     R7,A
+009E EF                MOV     A,R7
+009F 24FF              ADD     A,#0FFH
+00A1 92AF              MOV     EA,C
+                                           ; SOURCE LINE # 100
+00A3         ?C0006:
+00A3 22                RET     
+             ; FUNCTION _phy_WriteReg (END)
+
+             ; FUNCTION _PHY_Init (BEGIN)
+                                           ; SOURCE LINE # 113
+0000 90000000    R     MOV     DPTR,#network_type
+0004 EF                MOV     A,R7
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 114
+                                           ; SOURCE LINE # 117
+0006 90000000    R     MOV     DPTR,#network_type
+000A E0                MOVX    A,@DPTR
+000B FF                MOV     R7,A
+000C 90000000    R     MOV     DPTR,#phy_NetworkType
+0010 EF                MOV     A,R7
+0011 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 120
+0012 90000000    E     MOV     DPTR,#PBDP
+0016 E0                MOVX    A,@DPTR
+0017 FE                MOV     R6,A
+0018 A3                INC     DPTR
+0019 E0                MOVX    A,@DPTR
+001A FF                MOV     R7,A
+001B 8F82              MOV     DPL,R7
+001D 8E83              MOV     DPH,R6
+001F 759300      E     MOV     DPX,#?C?XDATASEG
+0022 E582              MOV     A,DPL
+0024 2430              ADD     A,#030H
+0026 F582              MOV     DPL,A
+0028 E583              MOV     A,DPH
+002A 3400              ADDC    A,#00H
+002C F583              MOV     DPH,A
+002E 759300      E     MOV     DPX,#?C?XDATASEG
+0031 7410              MOV     A,#010H
+0033 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 121
+0034 90000000    E     MOV     DPTR,#PBDP
+0038 E0                MOVX    A,@DPTR
+0039 FE                MOV     R6,A
+003A A3                INC     DPTR
+003B E0                MOVX    A,@DPTR
+003C FF                MOV     R7,A
+003D 8F82              MOV     DPL,R7
+003F 8E83              MOV     DPH,R6
+0041 759300      E     MOV     DPX,#?C?XDATASEG
+0044 E582              MOV     A,DPL
+0046 2431              ADD     A,#031H
+0048 F582              MOV     DPL,A
+004A E583              MOV     A,DPH
+004C 3400              ADDC    A,#00H
+004E F583              MOV     DPH,A
+0050 759300      E     MOV     DPX,#?C?XDATASEG
+0053 E4                CLR     A
+0054 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 124
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 39  
+
+0055 7D00              MOV     R5,#00H
+0057 7C80              MOV     R4,#080H
+0059 7F00              MOV     R7,#00H
+005B 12000000    R     LCALL   _phy_WriteReg
+005F         ?C0007:
+                                           ; SOURCE LINE # 127
+                                           ; SOURCE LINE # 128
+                                           ; SOURCE LINE # 129
+005F 7C00        R     MOV     R4,#HIGH tempshort
+0061 7D00        R     MOV     R5,#LOW tempshort
+0063 7F02              MOV     R7,#02H
+0065 12000000    R     LCALL   _phy_ReadReg
+                                           ; SOURCE LINE # 130
+0069 90000000    R     MOV     DPTR,#tempshort
+006D E0                MOVX    A,@DPTR
+006E FE                MOV     R6,A
+006F A3                INC     DPTR
+0070 E0                MOVX    A,@DPTR
+0071 FF                MOV     R7,A
+0072 EF                MOV     A,R7
+0073 643B              XRL     A,#03BH
+0075 4E                ORL     A,R6
+0076 70E7              JNZ     ?C0007
+                                           ; SOURCE LINE # 131
+0078 8002              SJMP    ?C0010
+007A         ?C0009:
+                                           ; SOURCE LINE # 132
+007A 80E3              SJMP    ?C0007
+007C         ?C0008:
+007C         ?C0010:
+                                           ; SOURCE LINE # 134
+                                           ; SOURCE LINE # 135
+                                           ; SOURCE LINE # 136
+007C 7C00        R     MOV     R4,#HIGH phyctrl
+007E 7D00        R     MOV     R5,#LOW phyctrl
+0080 7F00              MOV     R7,#00H
+0082 12000000    R     LCALL   _phy_ReadReg
+                                           ; SOURCE LINE # 137
+0086 90000000    R     MOV     DPTR,#phyctrl
+008A E0                MOVX    A,@DPTR
+008B FE                MOV     R6,A
+008C A3                INC     DPTR
+008D E0                MOVX    A,@DPTR
+008E FF                MOV     R7,A
+008F EF                MOV     A,R7
+0090 6400              XRL     A,#00H
+0092 7003              JNZ     ?C0035
+0094 EE                MOV     A,R6
+0095 6431              XRL     A,#031H
+0097         ?C0035:
+0097 603B              JZ      ?C0011
+0099 90000000    R     MOV     DPTR,#phyctrl
+009D E0                MOVX    A,@DPTR
+009E FE                MOV     R6,A
+009F A3                INC     DPTR
+00A0 E0                MOVX    A,@DPTR
+00A1 FF                MOV     R7,A
+00A2 EF                MOV     A,R7
+00A3 6400              XRL     A,#00H
+00A5 7003              JNZ     ?C0036
+00A7 EE                MOV     A,R6
+00A8 6430              XRL     A,#030H
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 40  
+
+00AA         ?C0036:
+00AA 6028              JZ      ?C0011
+00AC 90000000    R     MOV     DPTR,#phyctrl
+00B0 E0                MOVX    A,@DPTR
+00B1 FE                MOV     R6,A
+00B2 A3                INC     DPTR
+00B3 E0                MOVX    A,@DPTR
+00B4 FF                MOV     R7,A
+00B5 EF                MOV     A,R7
+00B6 6400              XRL     A,#00H
+00B8 7003              JNZ     ?C0037
+00BA EE                MOV     A,R6
+00BB 6411              XRL     A,#011H
+00BD         ?C0037:
+00BD 6015              JZ      ?C0011
+00BF 90000000    R     MOV     DPTR,#phyctrl
+00C3 E0                MOVX    A,@DPTR
+00C4 FE                MOV     R6,A
+00C5 A3                INC     DPTR
+00C6 E0                MOVX    A,@DPTR
+00C7 FF                MOV     R7,A
+00C8 EF                MOV     A,R7
+00C9 B400B0            CJNE    A,#00H,?C0010
+00CC EE                MOV     A,R6
+00CD B410AC            CJNE    A,#010H,?C0010
+00D0         ?C0013:
+                                           ; SOURCE LINE # 139
+00D0 8002              SJMP    ?C0011
+00D2         ?C0012:
+                                           ; SOURCE LINE # 140
+00D2 80A8              SJMP    ?C0010
+00D4         ?C0011:
+                                           ; SOURCE LINE # 142
+00D4 90000000    R     MOV     DPTR,#network_type
+00D8 E0                MOVX    A,@DPTR
+00D9 FF                MOV     R7,A
+00DA EF                MOV     A,R7
+00DB 12000000    E     LCALL   ?C?CCASE
+00DF 0000        R     DW      ?C0016
+00E1 00                DB      00H
+00E2 0000        R     DW      ?C0017
+00E4 01                DB      01H
+00E5 0000        R     DW      ?C0018
+00E7 02                DB      02H
+00E8 0000        R     DW      ?C0019
+00EA 03                DB      03H
+00EB 0000        R     DW      ?C0020
+00ED 04                DB      04H
+00EE 0000              DW      00H
+00F0 0000        R     DW      ?C0016
+                                           ; SOURCE LINE # 143
+                                           ; SOURCE LINE # 144
+00F2         ?C0015:
+                                           ; SOURCE LINE # 145
+00F2         ?C0016:
+                                           ; SOURCE LINE # 146
+00F2 90000000    R     MOV     DPTR,#phyctrl
+00F6 E0                MOVX    A,@DPTR
+00F7 FE                MOV     R6,A
+00F8 A3                INC     DPTR
+00F9 E0                MOVX    A,@DPTR
+00FA FF                MOV     R7,A
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 41  
+
+00FB EE                MOV     A,R6
+00FC 4421              ORL     A,#021H
+00FE FE                MOV     R6,A
+00FF 90000000    R     MOV     DPTR,#phyctrl
+0103 EE                MOV     A,R6
+0104 F0                MOVX    @DPTR,A
+0105 A3                INC     DPTR
+0106 EF                MOV     A,R7
+0107 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 147
+0108 90000000    R     MOV     DPTR,#phyanar
+010C 7405              MOV     A,#05H
+010E F0                MOVX    @DPTR,A
+010F A3                INC     DPTR
+0110 74E1              MOV     A,#0E1H
+0112 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 149
+0113 8074              SJMP    ?C0014
+                                           ; SOURCE LINE # 150
+0115         ?C0017:
+                                           ; SOURCE LINE # 151
+0115 90000000    R     MOV     DPTR,#phyctrl
+0119 E0                MOVX    A,@DPTR
+011A FE                MOV     R6,A
+011B A3                INC     DPTR
+011C E0                MOVX    A,@DPTR
+011D FF                MOV     R7,A
+011E EE                MOV     A,R6
+011F 4421              ORL     A,#021H
+0121 FE                MOV     R6,A
+0122 90000000    R     MOV     DPTR,#phyctrl
+0126 EE                MOV     A,R6
+0127 F0                MOVX    @DPTR,A
+0128 A3                INC     DPTR
+0129 EF                MOV     A,R7
+012A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 152
+012B 90000000    R     MOV     DPTR,#phyanar
+012F 7405              MOV     A,#05H
+0131 F0                MOVX    @DPTR,A
+0132 A3                INC     DPTR
+0133 7401              MOV     A,#01H
+0135 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 153
+0136 8051              SJMP    ?C0014
+                                           ; SOURCE LINE # 154
+0138         ?C0018:
+                                           ; SOURCE LINE # 155
+0138 90000000    R     MOV     DPTR,#phyctrl
+013C E0                MOVX    A,@DPTR
+013D FE                MOV     R6,A
+013E A3                INC     DPTR
+013F E0                MOVX    A,@DPTR
+0140 FF                MOV     R7,A
+0141 EE                MOV     A,R6
+0142 4420              ORL     A,#020H
+0144 FE                MOV     R6,A
+0145 90000000    R     MOV     DPTR,#phyctrl
+0149 EE                MOV     A,R6
+014A F0                MOVX    @DPTR,A
+014B A3                INC     DPTR
+014C EF                MOV     A,R7
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 42  
+
+014D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 156
+014E 90000000    R     MOV     DPTR,#phyanar
+0152 7404              MOV     A,#04H
+0154 F0                MOVX    @DPTR,A
+0155 A3                INC     DPTR
+0156 7481              MOV     A,#081H
+0158 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 157
+0159 802E              SJMP    ?C0014
+                                           ; SOURCE LINE # 158
+015B         ?C0019:
+                                           ; SOURCE LINE # 159
+015B 90000000    R     MOV     DPTR,#phyctrl
+015F E0                MOVX    A,@DPTR
+0160 FE                MOV     R6,A
+0161 A3                INC     DPTR
+0162 E0                MOVX    A,@DPTR
+0163 FF                MOV     R7,A
+0164 EE                MOV     A,R6
+0165 4401              ORL     A,#01H
+0167 FE                MOV     R6,A
+0168 90000000    R     MOV     DPTR,#phyctrl
+016C EE                MOV     A,R6
+016D F0                MOVX    @DPTR,A
+016E A3                INC     DPTR
+016F EF                MOV     A,R7
+0170 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 160
+0171 90000000    R     MOV     DPTR,#phyanar
+0175 7404              MOV     A,#04H
+0177 F0                MOVX    @DPTR,A
+0178 A3                INC     DPTR
+0179 7441              MOV     A,#041H
+017B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 161
+017C 800B              SJMP    ?C0014
+                                           ; SOURCE LINE # 162
+017E         ?C0020:
+                                           ; SOURCE LINE # 163
+017E 90000000    R     MOV     DPTR,#phyanar
+0182 7404              MOV     A,#04H
+0184 F0                MOVX    @DPTR,A
+0185 A3                INC     DPTR
+0186 7421              MOV     A,#021H
+0188 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 164
+                                           ; SOURCE LINE # 165
+0189         ?C0014:
+                                           ; SOURCE LINE # 168
+0189 90000000    R     MOV     DPTR,#phyanar
+018D E0                MOVX    A,@DPTR
+018E FC                MOV     R4,A
+018F A3                INC     DPTR
+0190 E0                MOVX    A,@DPTR
+0191 FD                MOV     R5,A
+0192 7F04              MOV     R7,#04H
+0194 12000000    R     LCALL   _phy_WriteReg
+                                           ; SOURCE LINE # 169
+0198 90000000    R     MOV     DPTR,#phyctrl
+019C E0                MOVX    A,@DPTR
+019D FE                MOV     R6,A
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 43  
+
+019E A3                INC     DPTR
+019F E0                MOVX    A,@DPTR
+01A0 FF                MOV     R7,A
+01A1 EE                MOV     A,R6
+01A2 4412              ORL     A,#012H
+01A4 FE                MOV     R6,A
+01A5 90000000    R     MOV     DPTR,#phyctrl
+01A9 EE                MOV     A,R6
+01AA F0                MOVX    @DPTR,A
+01AB A3                INC     DPTR
+01AC EF                MOV     A,R7
+01AD F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 170
+01AE 90000000    R     MOV     DPTR,#phyctrl
+01B2 E0                MOVX    A,@DPTR
+01B3 FC                MOV     R4,A
+01B4 A3                INC     DPTR
+01B5 E0                MOVX    A,@DPTR
+01B6 FD                MOV     R5,A
+01B7 7F00              MOV     R7,#00H
+01B9 12000000    R     LCALL   _phy_WriteReg
+                                           ; SOURCE LINE # 171
+01BD 90000000    R     MOV     DPTR,#phyctrl
+01C1 E0                MOVX    A,@DPTR
+01C2 FE                MOV     R6,A
+01C3 A3                INC     DPTR
+01C4 E0                MOVX    A,@DPTR
+01C5 FF                MOV     R7,A
+01C6 90000000    R     MOV     DPTR,#phy_Control
+01CA EE                MOV     A,R6
+01CB F0                MOVX    @DPTR,A
+01CC A3                INC     DPTR
+01CD EF                MOV     A,R7
+01CE F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 173
+01CF         ?C0021:
+01CF 22                RET     
+             ; FUNCTION _PHY_Init (END)
+
+             ; FUNCTION PHY_CheckMediaType (BEGIN)
+                                           ; SOURCE LINE # 182
+                                           ; SOURCE LINE # 183
+                                           ; SOURCE LINE # 184
+0000 90000000    R     MOV     DPTR,#phylinkstatus
+0004 E4                CLR     A
+0005 F0                MOVX    @DPTR,A
+0006 A3                INC     DPTR
+0007 E4                CLR     A
+0008 F0                MOVX    @DPTR,A
+0009         ?C0022:
+                                           ; SOURCE LINE # 187
+0009 90000000    R     MOV     DPTR,#phylinkstatus
+000D E0                MOVX    A,@DPTR
+000E FE                MOV     R6,A
+000F A3                INC     DPTR
+0010 E0                MOVX    A,@DPTR
+0011 FF                MOV     R7,A
+0012 EF                MOV     A,R7
+0013 4E                ORL     A,R6
+0014 7024              JNZ     ?C0023
+                                           ; SOURCE LINE # 188
+                                           ; SOURCE LINE # 189
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 44  
+
+0016 7C00        R     MOV     R4,#HIGH phylinkstatus
+0018 7D00        R     MOV     R5,#LOW phylinkstatus
+001A 7F01              MOV     R7,#01H
+001C 12000000    R     LCALL   _phy_ReadReg
+                                           ; SOURCE LINE # 190
+0020 90000000    R     MOV     DPTR,#phylinkstatus
+0024 E0                MOVX    A,@DPTR
+0025 FE                MOV     R6,A
+0026 A3                INC     DPTR
+0027 E0                MOVX    A,@DPTR
+0028 FF                MOV     R7,A
+0029 7E00              MOV     R6,#00H
+002B EF                MOV     A,R7
+002C 5420              ANL     A,#020H
+002E FF                MOV     R7,A
+002F 90000000    R     MOV     DPTR,#phylinkstatus
+0033 EE                MOV     A,R6
+0034 F0                MOVX    @DPTR,A
+0035 A3                INC     DPTR
+0036 EF                MOV     A,R7
+0037 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 191
+0038 80CF              SJMP    ?C0022
+003A         ?C0023:
+                                           ; SOURCE LINE # 192
+003A 7F0A              MOV     R7,#0AH
+003C 7E00              MOV     R6,#00H
+003E 12000000    E     LCALL   _DELAY_Ms
+                                           ; SOURCE LINE # 195
+0042 7C00        R     MOV     R4,#HIGH tempshort
+0044 7D00        R     MOV     R5,#LOW tempshort
+0046 7F00              MOV     R7,#00H
+0048 12000000    R     LCALL   _phy_ReadReg
+                                           ; SOURCE LINE # 197
+004C 90000000    R     MOV     DPTR,#tempshort
+0050 E0                MOVX    A,@DPTR
+0051 FE                MOV     R6,A
+0052 A3                INC     DPTR
+0053 E0                MOVX    A,@DPTR
+0054 FF                MOV     R7,A
+0055 EE                MOV     A,R6
+0056 30E519            JNB     ACC.5,?C0024
+0059 90000000    R     MOV     DPTR,#tempshort
+005D E0                MOVX    A,@DPTR
+005E FE                MOV     R6,A
+005F A3                INC     DPTR
+0060 E0                MOVX    A,@DPTR
+0061 FF                MOV     R7,A
+0062 EE                MOV     A,R6
+0063 30E00C            JNB     ACC.0,?C0024
+                                           ; SOURCE LINE # 198
+0066 90000000    R     MOV     DPTR,#phylinkstatus
+006A 7401              MOV     A,#01H
+006C F0                MOVX    @DPTR,A
+006D A3                INC     DPTR
+006E E4                CLR     A
+006F F0                MOVX    @DPTR,A
+0070 803C              SJMP    ?C0025
+0072         ?C0024:
+                                           ; SOURCE LINE # 199
+0072 90000000    R     MOV     DPTR,#tempshort
+0076 E0                MOVX    A,@DPTR
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 45  
+
+0077 FE                MOV     R6,A
+0078 A3                INC     DPTR
+0079 E0                MOVX    A,@DPTR
+007A FF                MOV     R7,A
+007B EE                MOV     A,R6
+007C 30E50C            JNB     ACC.5,?C0026
+                                           ; SOURCE LINE # 200
+007F 90000000    R     MOV     DPTR,#phylinkstatus
+0083 E4                CLR     A
+0084 F0                MOVX    @DPTR,A
+0085 A3                INC     DPTR
+0086 7480              MOV     A,#080H
+0088 F0                MOVX    @DPTR,A
+0089 8023              SJMP    ?C0025
+008B         ?C0026:
+                                           ; SOURCE LINE # 201
+008B 90000000    R     MOV     DPTR,#tempshort
+008F E0                MOVX    A,@DPTR
+0090 FE                MOV     R6,A
+0091 A3                INC     DPTR
+0092 E0                MOVX    A,@DPTR
+0093 FF                MOV     R7,A
+0094 EE                MOV     A,R6
+0095 30E00C            JNB     ACC.0,?C0028
+                                           ; SOURCE LINE # 202
+0098 90000000    R     MOV     DPTR,#phylinkstatus
+009C E4                CLR     A
+009D F0                MOVX    @DPTR,A
+009E A3                INC     DPTR
+009F 7440              MOV     A,#040H
+00A1 F0                MOVX    @DPTR,A
+00A2 800A              SJMP    ?C0025
+00A4         ?C0028:
+                                           ; SOURCE LINE # 204
+00A4 90000000    R     MOV     DPTR,#phylinkstatus
+00A8 E4                CLR     A
+00A9 F0                MOVX    @DPTR,A
+00AA A3                INC     DPTR
+00AB 7420              MOV     A,#020H
+00AD F0                MOVX    @DPTR,A
+00AE         ?C0029:
+00AE         ?C0027:
+00AE         ?C0025:
+                                           ; SOURCE LINE # 205
+00AE 90000000    R     MOV     DPTR,#phylinkstatus
+00B2 E0                MOVX    A,@DPTR
+00B3 FE                MOV     R6,A
+00B4 A3                INC     DPTR
+00B5 E0                MOVX    A,@DPTR
+00B6 FF                MOV     R7,A
+                                           ; SOURCE LINE # 207
+00B7         ?C0030:
+00B7 22                RET     
+             ; FUNCTION PHY_CheckMediaType (END)
+
+             ; FUNCTION phy_Restart (BEGIN)
+                                           ; SOURCE LINE # 216
+                                           ; SOURCE LINE # 217
+                                           ; SOURCE LINE # 218
+0000 7D00              MOV     R5,#00H
+0002 7C08              MOV     R4,#08H
+0004 7F00              MOV     R7,#00H
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 46  
+
+0006 12000000    R     LCALL   _phy_WriteReg
+                                           ; SOURCE LINE # 220
+000A 90000000    R     MOV     DPTR,#phy_NetworkType
+000E E0                MOVX    A,@DPTR
+000F FF                MOV     R7,A
+0010 12000000    E     LCALL   _MAC_Init
+                                           ; SOURCE LINE # 222
+0014         ?C0031:
+0014 22                RET     
+             ; FUNCTION phy_Restart (END)
+
+             ; FUNCTION PHY_PowerUp (BEGIN)
+                                           ; SOURCE LINE # 231
+                                           ; SOURCE LINE # 232
+                                           ; SOURCE LINE # 233
+0000 90000000    E     MOV     DPTR,#PBDP
+0004 E0                MOVX    A,@DPTR
+0005 FE                MOV     R6,A
+0006 A3                INC     DPTR
+0007 E0                MOVX    A,@DPTR
+0008 FF                MOV     R7,A
+0009 8F82              MOV     DPL,R7
+000B 8E83              MOV     DPH,R6
+000D 759300      E     MOV     DPX,#?C?XDATASEG
+0010 E582              MOV     A,DPL
+0012 2430              ADD     A,#030H
+0014 F582              MOV     DPL,A
+0016 E583              MOV     A,DPH
+0018 3400              ADDC    A,#00H
+001A F583              MOV     DPH,A
+001C 759300      E     MOV     DPX,#?C?XDATASEG
+001F 7410              MOV     A,#010H
+0021 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 235
+0022 7D00              MOV     R5,#00H
+0024 7C00              MOV     R4,#00H
+0026 7F00              MOV     R7,#00H
+0028 12000000    R     LCALL   _phy_WriteReg
+                                           ; SOURCE LINE # 237
+002C         ?C0032:
+002C 22                RET     
+             ; FUNCTION PHY_PowerUp (END)
+
+             ; FUNCTION PHY_WatchDog (BEGIN)
+                                           ; SOURCE LINE # 246
+                                           ; SOURCE LINE # 247
+                                           ; SOURCE LINE # 248
+0000 90000000    E     MOV     DPTR,#PBDP
+0004 E0                MOVX    A,@DPTR
+0005 FE                MOV     R6,A
+0006 A3                INC     DPTR
+0007 E0                MOVX    A,@DPTR
+0008 FF                MOV     R7,A
+0009 8F82              MOV     DPL,R7
+000B 8E83              MOV     DPH,R6
+000D 759300      E     MOV     DPX,#?C?XDATASEG
+0010 E582              MOV     A,DPL
+0012 2432              ADD     A,#032H
+0014 F582              MOV     DPL,A
+0016 E583              MOV     A,DPH
+0018 3400              ADDC    A,#00H
+001A F583              MOV     DPH,A
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 47  
+
+001C 759300      E     MOV     DPX,#?C?XDATASEG
+001F E0                MOVX    A,@DPTR
+0020 FF                MOV     R7,A
+0021 EF                MOV     A,R7
+0022 7004              JNZ     ?C0034
+                                           ; SOURCE LINE # 249
+0024 12000000    R     LCALL   phy_Restart
+0028         ?C0033:
+                                           ; SOURCE LINE # 251
+0028         ?C0034:
+0028 22                RET     
+             ; FUNCTION PHY_WatchDog (END)
+
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 48  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+TB08 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009BH  1
+PHY_INFO . . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  2
+  PhyAddr. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  PhyType. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+TB18 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C3H  1
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+SM00 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009FH  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+SM10 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C7H  1
+SM01 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009EH  1
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+SM11 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C6H  1
+SM02 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009DH  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+AC . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D6H  1
+SM12 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C5H  1
+T0 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B4H  1
+SPIDR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CFH  1
+T1 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B5H  1
+EA . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AFH  1
+OWCIR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D6H  1
+CH . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C5H  1
+DPH0 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0083H  1
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+DPH1 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0085H  1
+CL . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C4H  1
+P0_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0080H  1
+P1_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0090H  1
+P0_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0081H  1
+CCAPH0 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B9H  1
+DPL0 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0082H  1
+_DELAY_Ms. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+P2_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A0H  1
+P1_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0091H  1
+P0_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0082H  1
+CCAPH1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BAH  1
+DPL1 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0084H  1
+P3_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B0H  1
+P2_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A1H  1
+P1_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0092H  1
+P0_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0083H  1
+UR2_DLH. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E2H  1
+CCAPH2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BBH  1
+XMRHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A7H  1
+P3_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B1H  1
+P2_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A2H  1
+P1_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0093H  1
+P0_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0084H  1
+CCAPH3 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BCH  1
+P3_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B2H  1
+P2_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A3H  1
+P1_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0094H  1
+P0_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0085H  1
+TA . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00EBH  1
+CCAPH4 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BDH  1
+CCAPL0 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B1H  1
+STOE_FRAME_HEADER. . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  7
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 49  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  NPR. . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0000H  2
+  Length . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0002H  2
+  Protocol . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0004H  1
+  DataOffset . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0005H  1
+  Packet . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+EXF2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CEH  1
+RD . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B7H  1
+P3_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B3H  1
+P2_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A4H  1
+REN0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009CH  1
+P1_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0095H  1
+P0_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0086H  1
+UR2_FCR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E3H  1
+CCAPM0 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D1H  1
+T2IF . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C9H  1
+CCAPL1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B2H  1
+REN1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C4H  1
+P3_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B4H  1
+P2_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A5H  1
+P1_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0096H  1
+P0_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0087H  1
+UR2_DLL. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E1H  1
+CCAPM1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D2H  1
+CCAPL2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B3H  1
+XMRLR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A6H  1
+P3_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B5H  1
+P2_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A6H  1
+P1_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0097H  1
+CCAPM2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D3H  1
+CCAPL3 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B4H  1
+XMWHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A5H  1
+phy_Control. . . . . . . . . . . . . .  STATIC   XDATA  U_INT    0000H  2
+P3_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B6H  1
+P2_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A7H  1
+CCAPM3 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D4H  1
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+CCAPL4 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B5H  1
+_DELAY_Us. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+P3_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B7H  1
+CCAPM4 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D5H  1
+DBAR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009AH  1
+UR2_IER. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E2H  1
+CY . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D7H  1
+INT0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B2H  1
+UR2_LCR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E4H  1
+XMWLR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A4H  1
+phy_Restart. . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+INT1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B3H  1
+UR2_MCR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E5H  1
+DPX0 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0093H  1
+I2CCIR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0096H  1
+DPX1 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0095H  1
+UR2_IIR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E3H  1
+UR2_RBR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E1H  1
+ACON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009DH  1
+DCIR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009BH  1
+SP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0081H  1
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 50  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C3H  1
+CMOD . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C2H  1
+MAC_WUF. . . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  15
+  Mode . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Offset0. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  Offset1. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0002H  1
+  Mask0. . . . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0003H  4
+  Mask1. . . . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0007H  4
+  Pframe . . . . . . . . . . . . . . .  MEMBER   -----  PTR      000BH  3
+  Length . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000EH  1
+OV . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D2H  1
+PBDP . . . . . . . . . . . . . . . . .  EXTERN   XDATA  PTR      -----  2
+ulong. . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+PHY_PowerUp. . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+WR . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B6H  1
+UR2_THR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E1H  1
+EWDI . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00EDH  1
+WDIF . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00DBH  1
+RLDH . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CBH  1
+EPCR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BEH  1
+LDHR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AAH  1
+UR2_LSR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E6H  1
+EPDR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BFH  1
+MCIR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B6H  1
+RCLK . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CDH  1
+UR2_MSR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E7H  1
+bool . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+_MAC_WAKEUP_FRAME. . . . . . . . . . .  * TAG *  -----  STRUCT   -----  15
+  Mode . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Offset0. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  Offset1. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0002H  1
+  Mask0. . . . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0003H  4
+  Mask1. . . . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0007H  4
+  Pframe . . . . . . . . . . . . . . .  MEMBER   -----  PTR      000BH  3
+  Length . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000EH  1
+TCLK . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CCH  1
+RLDL . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CAH  1
+LDLR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A9H  1
+PCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0087H  1
+CANCIR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00DEH  1
+TCIR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AEH  1
+PWDI . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FDH  1
+LSCR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A2H  1
+TMOD . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0089H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+byte . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+PHY_CheckMediaType . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  phylinkstatus. . . . . . . . . . . .  AUTO     XDATA  U_INT    0000H  2
+  tempshort. . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0002H  2
+_BUF_DESC_PAGE . . . . . . . . . . . .  * TAG *  -----  STRUCT   -----  190
+  BDP_ID . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Pad0 . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  RSPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0002H  2
+  REPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0004H  2
+  RHPR . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0006H  2
+  RTPR . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0008H  2
+  RFP. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000AH  1
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 51  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  Pad1 . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000BH  1
+  NetStation . . . . . . . . . . . . .  MEMBER   -----  STRUCT   000CH  36
+  PhyInfo. . . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0030H  2
+  MacInfo. . . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0032H  5
+  RcvReserved. . . . . . . . . . . . .  MEMBER   -----  ARRAY    0037H  73
+  TSPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0080H  2
+  TEPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0082H  2
+  THPR . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0084H  2
+  TTPR . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0086H  2
+  TFP. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0088H  1
+  Pad2 . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0089H  1
+  VSPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    008AH  2
+  RcvStartAddr . . . . . . . . . . . .  MEMBER   -----  PTR      008CH  2
+  RcvEndAddr . . . . . . . . . . . . .  MEMBER   -----  PTR      008EH  2
+  XmtStartAddr . . . . . . . . . . . .  MEMBER   -----  PTR      0090H  2
+  XmtEndAddr . . . . . . . . . . . . .  MEMBER   -----  PTR      0092H  2
+  STOE_TxInform. . . . . . . . . . . .  MEMBER   -----  STRUCT   0094H  21
+  STOE_RxInform. . . . . . . . . . . .  MEMBER   -----  STRUCT   00A9H  21
+OWDR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D7H  1
+word . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+IE0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0089H  1
+IE1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008BH  1
+MXAX . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00EAH  1
+LMSR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A1H  1
+sint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+MD0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F9H  1
+B. . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F0H  1
+uint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+MD1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FAH  1
+LSAIER . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A1H  1
+MD2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FBH  1
+WTRF . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00DAH  1
+MD3. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FCH  1
+PISSR1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009EH  1
+MD4. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FDH  1
+LSSR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A3H  1
+PISSR2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009FH  1
+_PACKET_INFORMATION. . . . . . . . . .  * TAG *  -----  STRUCT   -----  21
+  PBuf . . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0000H  2
+  PIpHeader. . . . . . . . . . . . . .  MEMBER   -----  PTR      0002H  2
+  PTUIHeader . . . . . . . . . . . . .  MEMBER   -----  PTR      0004H  2
+  PData. . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0006H  2
+  TotalLen . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0008H  2
+  IpTotalLen . . . . . . . . . . . . .  MEMBER   -----  U_INT    000AH  2
+  TUITotalLen. . . . . . . . . . . . .  MEMBER   -----  U_INT    000CH  2
+  DataLen. . . . . . . . . . . . . . .  MEMBER   -----  U_INT    000EH  2
+  Protocol . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0010H  1
+  IpHeaderLen. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0011H  1
+  TcpHeaderLen . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0012H  1
+  SocketId . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0013H  1
+  Pages. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0014H  1
+MD5. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FEH  1
+phy_NetworkType. . . . . . . . . . . .  STATIC   XDATA  U_CHAR   0002H  1
+ACC. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E0H  1
+_MAC_Init. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+ES0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ACH  1
+CT2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C9H  1
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 52  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+ES1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AEH  1
+ET0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A9H  1
+ET1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ABH  1
+TF0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008DH  1
+ET2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ADH  1
+RI0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0098H  1
+TF1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008FH  1
+TF2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CFH  1
+RI1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C0H  1
+SPICIR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CEH  1
+TH0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008CH  1
+EX0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A8H  1
+TI0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0099H  1
+IT0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0088H  1
+TH1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008DH  1
+TI1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C1H  1
+EX1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AAH  1
+IT1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008AH  1
+TH2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CDH  1
+P. . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D0H  1
+TL0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008AH  1
+_phy_ReadReg . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  regaddr. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  pvalue . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0001H  2
+  temp . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0003H  1
+  isr. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0004H  1
+CSREPR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008FH  1
+TL1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008BH  1
+_LOCAL_STATION . . . . . . . . . . . .  * TAG *  -----  STRUCT   -----  36
+  PermStaAddr. . . . . . . . . . . . .  MEMBER   -----  ARRAY    0000H  6
+  CurrStaAddr. . . . . . . . . . . . .  MEMBER   -----  ARRAY    0006H  6
+  StationIP. . . . . . . . . . . . . .  MEMBER   -----  U_LONG   000CH  4
+  SubnetMask . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0010H  4
+  Gateway. . . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0014H  4
+  DefaultIP. . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0018H  4
+  DefaultMask. . . . . . . . . . . . .  MEMBER   -----  U_LONG   001CH  4
+  DefaultGateway . . . . . . . . . . .  MEMBER   -----  U_LONG   0020H  4
+TL2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CCH  1
+PS0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BCH  1
+EIE. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E8H  1
+WTST . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0092H  1
+PS1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BEH  1
+PT0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B9H  1
+EIF. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0091H  1
+RS0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D3H  1
+PT1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BBH  1
+I2CDR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0097H  1
+RS1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D4H  1
+PT2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BDH  1
+TR0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008CH  1
+TR1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008EH  1
+TR2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CAH  1
+PX0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B8H  1
+PX1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BAH  1
+DDR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009CH  1
+DPH. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0083H  1
+BUF_DESC_PAGE. . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  190
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 53  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  BDP_ID . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Pad0 . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  RSPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0002H  2
+  REPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0004H  2
+  RHPR . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0006H  2
+  RTPR . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0008H  2
+  RFP. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000AH  1
+  Pad1 . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000BH  1
+  NetStation . . . . . . . . . . . . .  MEMBER   -----  STRUCT   000CH  36
+  PhyInfo. . . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0030H  2
+  MacInfo. . . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0032H  5
+  RcvReserved. . . . . . . . . . . . .  MEMBER   -----  ARRAY    0037H  73
+  TSPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0080H  2
+  TEPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0082H  2
+  THPR . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0084H  2
+  TTPR . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0086H  2
+  TFP. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0088H  1
+  Pad2 . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0089H  1
+  VSPP . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    008AH  2
+  RcvStartAddr . . . . . . . . . . . .  MEMBER   -----  PTR      008CH  2
+  RcvEndAddr . . . . . . . . . . . . .  MEMBER   -----  PTR      008EH  2
+  XmtStartAddr . . . . . . . . . . . .  MEMBER   -----  PTR      0090H  2
+  XmtEndAddr . . . . . . . . . . . . .  MEMBER   -----  PTR      0092H  2
+  STOE_TxInform. . . . . . . . . . . .  MEMBER   -----  STRUCT   0094H  21
+  STOE_RxInform. . . . . . . . . . . .  MEMBER   -----  STRUCT   00A9H  21
+_MAC_INFORMATION . . . . . . . . . . .  * TAG *  -----  STRUCT   -----  5
+  LinkSpeed. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  FullDuplex . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  MediumLinkType . . . . . . . . . . .  MEMBER   -----  U_CHAR   0002H  1
+  NetworkType. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0003H  1
+  InterruptMask. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0004H  1
+EIP. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F8H  1
+MAC_INFO . . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  5
+  LinkSpeed. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  FullDuplex . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  MediumLinkType . . . . . . . . . . .  MEMBER   -----  U_CHAR   0002H  1
+  NetworkType. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0003H  1
+  InterruptMask. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0004H  1
+DPL. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0082H  1
+_phy_WriteReg. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  regaddr. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  value. . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0001H  2
+  temp . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0003H  1
+  isr. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0004H  1
+LCR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A2H  1
+SBUF0. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0099H  1
+SBUF1. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C1H  1
+EINT2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00E8H  1
+EXEN2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CBH  1
+MDR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B7H  1
+EINT3. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00E9H  1
+CPRL2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C8H  1
+SCON0. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+EINT4. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00EAH  1
+SCON1. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+SDSTSR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0094H  1
+PACKET_INFORMATION . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  21
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 54  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  PBuf . . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0000H  2
+  PIpHeader. . . . . . . . . . . . . .  MEMBER   -----  PTR      0002H  2
+  PTUIHeader . . . . . . . . . . . . .  MEMBER   -----  PTR      0004H  2
+  PData. . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0006H  2
+  TotalLen . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0008H  2
+  IpTotalLen . . . . . . . . . . . . .  MEMBER   -----  U_INT    000AH  2
+  TUITotalLen. . . . . . . . . . . . .  MEMBER   -----  U_INT    000CH  2
+  DataLen. . . . . . . . . . . . . . .  MEMBER   -----  U_INT    000EH  2
+  Protocol . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0010H  1
+  IpHeaderLen. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0011H  1
+  TcpHeaderLen . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0012H  1
+  SocketId . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0013H  1
+  Pages. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0014H  1
+EINT5. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00EBH  1
+STATUS . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E9H  1
+EINT6. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ECH  1
+T2CON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+DPS. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0086H  1
+PHY_WatchDog . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+_PHY_Init. . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  network_type . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  phyctrl. . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0001H  2
+  phyanar. . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0003H  2
+  tempshort. . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0005H  2
+CANDR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00DFH  1
+TDR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AFH  1
+LDAHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A5H  1
+DPX. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0093H  1
+DMAHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ADH  1
+PINT2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00F8H  1
+RXD. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B0H  1
+PINT3. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00F9H  1
+CKCON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008EH  1
+PINT4. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FAH  1
+EWT. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D9H  1
+TXD. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B1H  1
+LDALR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A4H  1
+PINT5. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FBH  1
+DMALR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ABH  1
+LSR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A3H  1
+LOCAL_STATION. . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  36
+  PermStaAddr. . . . . . . . . . . . .  MEMBER   -----  ARRAY    0000H  6
+  CurrStaAddr. . . . . . . . . . . . .  MEMBER   -----  ARRAY    0006H  6
+  StationIP. . . . . . . . . . . . . .  MEMBER   -----  U_LONG   000CH  4
+  SubnetMask . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0010H  4
+  Gateway. . . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0014H  4
+  DefaultIP. . . . . . . . . . . . . .  MEMBER   -----  U_LONG   0018H  4
+  DefaultMask. . . . . . . . . . . . .  MEMBER   -----  U_LONG   001CH  4
+  DefaultGateway . . . . . . . . . . .  MEMBER   -----  U_LONG   0020H  4
+PINT6. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FCH  1
+DMAMR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ACH  1
+ARCON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FFH  1
+_STOE_FRAME_HEADER . . . . . . . . . .  * TAG *  -----  STRUCT   -----  7
+  NPR. . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0000H  2
+  Length . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0002H  2
+  Protocol . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0004H  1
+  DataOffset . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0005H  1
+C51 COMPILER V8.06   PHY                                                                   03/13/2026 10:21:42 PAGE 55  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  Packet . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+F0 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D5H  1
+F1 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D1H  1
+LDCSR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A6H  1
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+RB08 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009AH  1
+WDCON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+_PHY_INFORMATION . . . . . . . . . . .  * TAG *  -----  STRUCT   -----  2
+  PhyAddr. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  PhyType. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+RWT. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D8H  1
+RB18 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C2H  1
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1128    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     24    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

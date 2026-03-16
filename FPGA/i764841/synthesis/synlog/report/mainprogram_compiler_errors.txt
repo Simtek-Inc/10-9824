@@ -1,0 +1,2 @@
+@E: CD297 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":56:6:56:17|Width mismatch, location has width 8, value 4
+

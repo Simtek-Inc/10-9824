@@ -1,0 +1,1024 @@
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE     1
+
+
+MACRO ASSEMBLER AX51 V3.02
+OBJECT MODULE PLACED IN CIRCUIT.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\AX51.EXE CIRCUIT.src PR(.\CIRCUIT.ls1) EP DEBUG MOD_CONT
+
+LOC    OBJ             LINE     SOURCE
+
+                          1     ; .\CIRCUIT.SRC generated from: src\main\CIRCUIT.C
+                          2     ; COMPILER INVOKED BY:
+                          3     ;        C:\Keil\C51\BIN\C51.EXE src\main\CIRCUIT.C LARGE OMF2 ROM(D16M) OPTIMIZE(0,SPEE
+                               D) BROWSE INTVECTOR(0X6020) INCDIR(.\src\cpu\;.\src\ethernet;.\src\swdma\;.\src\mstimer\;
+                               .\src\uart\;.\src\main\;.\src\tcpip\;.\src\hsur\;.\src\gs2e\;.\src\debug\;.\src\dhcp;.\sr
+                               c\dns\;.\src\adapter\;.\src\pppoe\;.\src\console;.\src\telnet;.\src\smtp;.\src\http;.\src
+                               \web_page;.\src\si2c;.\src\eeprom;.\src\ping;.\src\fpga;.\src\menu;.\src\spi) DEFINE(Runt
+                               imeCodeAt24KH) VARBANKING DEBUG CODE LISTINCLUDE SYMBOLS PRINT(.\CIRCUIT.lst) SRC(.\CIRCUIT.SRC)
+                          4     
+                          5     $mod_cont 
+                          6     $nomod51 
+                          7     
+                          8     NAME    CIRCUIT
+                          9     
+ 0098.3                  10     TB08    BIT     098H.3
+ 00C0.3                  11     TB18    BIT     0C0H.3
+ 0080                    12     P0      DATA    080H
+ 0098.7                  13     SM00    BIT     098H.7
+ 0090                    14     P1      DATA    090H
+ 00C0.7                  15     SM10    BIT     0C0H.7
+ 0098.6                  16     SM01    BIT     098H.6
+ 00A0                    17     P2      DATA    0A0H
+ 00C0.6                  18     SM11    BIT     0C0H.6
+ 0098.5                  19     SM02    BIT     098H.5
+ 00B0                    20     P3      DATA    0B0H
+ 00D0.6                  21     AC      BIT     0D0H.6
+ 00C0.5                  22     SM12    BIT     0C0H.5
+ 00B0.4                  23     T0      BIT     0B0H.4
+ 00CF                    24     SPIDR   DATA    0CFH
+ 00B0.5                  25     T1      BIT     0B0H.5
+ 00B0.5                  26     HI8045LOAD      BIT     0B0H.5
+ 00A8.7                  27     EA      BIT     0A8H.7
+ 00D6                    28     OWCIR   DATA    0D6H
+ 00C5                    29     CH      DATA    0C5H
+ 0083                    30     DPH0    DATA    083H
+ 00A8                    31     IE      DATA    0A8H
+ 0085                    32     DPH1    DATA    085H
+ 00C4                    33     CL      DATA    0C4H
+ 0080.0                  34     P0_0    BIT     080H.0
+ 0090.0                  35     P1_0    BIT     090H.0
+ 0080.1                  36     P0_1    BIT     080H.1
+ 00B9                    37     CCAPH0  DATA    0B9H
+ 0082                    38     DPL0    DATA    082H
+ 00A0.0                  39     P2_0    BIT     0A0H.0
+ 0090.1                  40     P1_1    BIT     090H.1
+ 0080.2                  41     P0_2    BIT     080H.2
+ 00BA                    42     CCAPH1  DATA    0BAH
+ 0084                    43     DPL1    DATA    084H
+ 00B0.0                  44     P3_0    BIT     0B0H.0
+ 00A0.1                  45     P2_1    BIT     0A0H.1
+ 0090.2                  46     P1_2    BIT     090H.2
+ 0080.3                  47     P0_3    BIT     080H.3
+ 00E2                    48     UR2_DLH DATA    0E2H
+ 00BB                    49     CCAPH2  DATA    0BBH
+ 00A7                    50     XMRHR   DATA    0A7H
+ 00B0.1                  51     P3_1    BIT     0B0H.1
+ 00A0.2                  52     P2_2    BIT     0A0H.2
+ 0090.3                  53     P1_3    BIT     090H.3
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE     2
+
+ 0080.4                  54     P0_4    BIT     080H.4
+ 00BC                    55     CCAPH3  DATA    0BCH
+ 00B0.2                  56     P3_2    BIT     0B0H.2
+ 00A0.3                  57     P2_3    BIT     0A0H.3
+ 0090.4                  58     P1_4    BIT     090H.4
+ 0080.5                  59     P0_5    BIT     080H.5
+ 00EB                    60     TA      DATA    0EBH
+ 00BD                    61     CCAPH4  DATA    0BDH
+ 00B1                    62     CCAPL0  DATA    0B1H
+ 00A0.3                  63     fpgadatain      BIT     0A0H.3
+ 00C8.6                  64     EXF2    BIT     0C8H.6
+ 00B0.7                  65     RD      BIT     0B0H.7
+ 00B0.3                  66     P3_3    BIT     0B0H.3
+ 00A0.4                  67     P2_4    BIT     0A0H.4
+ 0098.4                  68     REN0    BIT     098H.4
+ 0090.5                  69     P1_5    BIT     090H.5
+ 0080.6                  70     P0_6    BIT     080H.6
+ 00E3                    71     UR2_FCR DATA    0E3H
+ 00D1                    72     CCAPM0  DATA    0D1H
+ 00C9                    73     T2IF    DATA    0C9H
+ 00B2                    74     CCAPL1  DATA    0B2H
+ 00C0.4                  75     REN1    BIT     0C0H.4
+ 00B0.4                  76     P3_4    BIT     0B0H.4
+ 00A0.5                  77     P2_5    BIT     0A0H.5
+ 0090.6                  78     P1_6    BIT     090H.6
+ 0080.7                  79     P0_7    BIT     080H.7
+ 00E1                    80     UR2_DLL DATA    0E1H
+ 00D2                    81     CCAPM1  DATA    0D2H
+ 00B3                    82     CCAPL2  DATA    0B3H
+ 00A6                    83     XMRLR   DATA    0A6H
+ 00A0.1                  84     fpgadataout     BIT     0A0H.1
+ 00B0.5                  85     P3_5    BIT     0B0H.5
+ 00A0.6                  86     P2_6    BIT     0A0H.6
+ 0090.7                  87     P1_7    BIT     090H.7
+ 00D3                    88     CCAPM2  DATA    0D3H
+ 00B4                    89     CCAPL3  DATA    0B4H
+ 00A5                    90     XMWHR   DATA    0A5H
+ 00B0.6                  91     P3_6    BIT     0B0H.6
+ 00A0.7                  92     P2_7    BIT     0A0H.7
+ 00D4                    93     CCAPM3  DATA    0D4H
+ 00B8                    94     IP      DATA    0B8H
+ 00B5                    95     CCAPL4  DATA    0B5H
+ 00B0.7                  96     P3_7    BIT     0B0H.7
+ 00D5                    97     CCAPM4  DATA    0D5H
+ 009A                    98     DBAR    DATA    09AH
+ 00E2                    99     UR2_IER DATA    0E2H
+ 00D0.7                 100     CY      BIT     0D0H.7
+ 00B0.2                 101     INT0    BIT     0B0H.2
+ 00E4                   102     UR2_LCR DATA    0E4H
+ 00A4                   103     XMWLR   DATA    0A4H
+ 00B0.3                 104     INT1    BIT     0B0H.3
+ 00E5                   105     UR2_MCR DATA    0E5H
+ 0093                   106     DPX0    DATA    093H
+ 0096                   107     I2CCIR  DATA    096H
+ 0095                   108     DPX1    DATA    095H
+ 00E3                   109     UR2_IIR DATA    0E3H
+ 00E1                   110     UR2_RBR DATA    0E1H
+ 009D                   111     ACON    DATA    09DH
+ 009B                   112     DCIR    DATA    09BH
+ 0081                   113     SP      DATA    081H
+ 00C3                   114     CCON    DATA    0C3H
+ 00C2                   115     CMOD    DATA    0C2H
+ 00D0.2                 116     OV      BIT     0D0H.2
+ 0080.5                 117     ScopePin        BIT     080H.5
+ 00B0.6                 118     WR      BIT     0B0H.6
+ 00E1                   119     UR2_THR DATA    0E1H
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE     3
+
+ 00E8.5                 120     EWDI    BIT     0E8H.5
+ 00D8.3                 121     WDIF    BIT     0D8H.3
+ 00CB                   122     RLDH    DATA    0CBH
+ 00BE                   123     EPCR    DATA    0BEH
+ 00AA                   124     LDHR    DATA    0AAH
+ 00A0.5                 125     LogicRst        BIT     0A0H.5
+ 00E6                   126     UR2_LSR DATA    0E6H
+ 00BF                   127     EPDR    DATA    0BFH
+ 00B6                   128     MCIR    DATA    0B6H
+ 00C8.5                 129     RCLK    BIT     0C8H.5
+ 00E7                   130     UR2_MSR DATA    0E7H
+ 0080.7                 131     HrtBeat BIT     080H.7
+ 00C8.4                 132     TCLK    BIT     0C8H.4
+ 00CA                   133     RLDL    DATA    0CAH
+ 00A9                   134     LDLR    DATA    0A9H
+ 0087                   135     PCON    DATA    087H
+ 00DE                   136     CANCIR  DATA    0DEH
+ 00AE                   137     TCIR    DATA    0AEH
+ 00A0.0                 138     fpgaserialclock BIT     0A0H.0
+ 00F8.5                 139     PWDI    BIT     0F8H.5
+ 00A2                   140     LSCR    DATA    0A2H
+ 0089                   141     TMOD    DATA    089H
+ 0088                   142     TCON    DATA    088H
+ 00D7                   143     OWDR    DATA    0D7H
+ 0088.1                 144     IE0     BIT     088H.1
+ 00B0.3                 145     HI8045CLK       BIT     0B0H.3
+ 0088.3                 146     IE1     BIT     088H.3
+ 00EA                   147     MXAX    DATA    0EAH
+ 00A1                   148     LMSR    DATA    0A1H
+ 00B0.4                 149     HI8045DIN       BIT     0B0H.4
+ 00F9                   150     MD0     DATA    0F9H
+ 00F0                   151     B       DATA    0F0H
+ 00FA                   152     MD1     DATA    0FAH
+ 00A1                   153     LSAIER  DATA    0A1H
+ 00FB                   154     MD2     DATA    0FBH
+ 00D8.2                 155     WTRF    BIT     0D8H.2
+ 00FC                   156     MD3     DATA    0FCH
+ 009E                   157     PISSR1  DATA    09EH
+ 00FD                   158     MD4     DATA    0FDH
+ 00A3                   159     LSSR    DATA    0A3H
+ 009F                   160     PISSR2  DATA    09FH
+ 00FE                   161     MD5     DATA    0FEH
+ 00E0                   162     ACC     DATA    0E0H
+ 00A0.2                 163     fpgaserialload  BIT     0A0H.2
+ 00A8.4                 164     ES0     BIT     0A8H.4
+ 00C8.1                 165     CT2     BIT     0C8H.1
+ 00A8.6                 166     ES1     BIT     0A8H.6
+ 00A8.1                 167     ET0     BIT     0A8H.1
+ 00A8.3                 168     ET1     BIT     0A8H.3
+ 0088.5                 169     TF0     BIT     088H.5
+ 00A8.5                 170     ET2     BIT     0A8H.5
+ 0098.0                 171     RI0     BIT     098H.0
+ 0088.7                 172     TF1     BIT     088H.7
+ 00C8.7                 173     TF2     BIT     0C8H.7
+ 00C0.0                 174     RI1     BIT     0C0H.0
+ 00CE                   175     SPICIR  DATA    0CEH
+ 008C                   176     TH0     DATA    08CH
+ 00A8.0                 177     EX0     BIT     0A8H.0
+ 0098.1                 178     TI0     BIT     098H.1
+ 0088.0                 179     IT0     BIT     088H.0
+ 008D                   180     TH1     DATA    08DH
+ 00C0.1                 181     TI1     BIT     0C0H.1
+ 00A8.2                 182     EX1     BIT     0A8H.2
+ 0088.2                 183     IT1     BIT     088H.2
+ 00CD                   184     TH2     DATA    0CDH
+ 00D0.0                 185     P       BIT     0D0H.0
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE     4
+
+ 00E0.0                 186     A_0     BIT     0E0H.0
+ 008A                   187     TL0     DATA    08AH
+ 00E0.1                 188     A_1     BIT     0E0H.1
+ 008F                   189     CSREPR  DATA    08FH
+ 008B                   190     TL1     DATA    08BH
+ 00E0.2                 191     A_2     BIT     0E0H.2
+ 00CC                   192     TL2     DATA    0CCH
+ 00E0.3                 193     A_3     BIT     0E0H.3
+ 00B8.4                 194     PS0     BIT     0B8H.4
+ 00E8                   195     EIE     DATA    0E8H
+ 0092                   196     WTST    DATA    092H
+ 00E0.4                 197     A_4     BIT     0E0H.4
+ 00B8.6                 198     PS1     BIT     0B8H.6
+ 00B8.1                 199     PT0     BIT     0B8H.1
+ 0091                   200     EIF     DATA    091H
+ 00E0.5                 201     A_5     BIT     0E0H.5
+ 00D0.3                 202     RS0     BIT     0D0H.3
+ 00B8.3                 203     PT1     BIT     0B8H.3
+ 0097                   204     I2CDR   DATA    097H
+ 00E0.6                 205     A_6     BIT     0E0H.6
+ 00D0.4                 206     RS1     BIT     0D0H.4
+ 00B8.5                 207     PT2     BIT     0B8H.5
+ 0088.4                 208     TR0     BIT     088H.4
+ 00E0.7                 209     A_7     BIT     0E0H.7
+ 0088.6                 210     TR1     BIT     088H.6
+ 00C8.2                 211     TR2     BIT     0C8H.2
+ 00B8.0                 212     PX0     BIT     0B8H.0
+ 00A0.4                 213     fpgaserialale   BIT     0A0H.4
+ 00B8.2                 214     PX1     BIT     0B8H.2
+ 009C                   215     DDR     DATA    09CH
+ 0083                   216     DPH     DATA    083H
+ 00F8                   217     EIP     DATA    0F8H
+ 0082                   218     DPL     DATA    082H
+ 00A2                   219     LCR     DATA    0A2H
+ 0099                   220     SBUF0   DATA    099H
+ 00C1                   221     SBUF1   DATA    0C1H
+ 00E8.0                 222     EINT2   BIT     0E8H.0
+ 00C8.3                 223     EXEN2   BIT     0C8H.3
+ 00B7                   224     MDR     DATA    0B7H
+ 00E8.1                 225     EINT3   BIT     0E8H.1
+ 00C8.0                 226     CPRL2   BIT     0C8H.0
+ 0098                   227     SCON0   DATA    098H
+ 00E8.2                 228     EINT4   BIT     0E8H.2
+ 00C0                   229     SCON1   DATA    0C0H
+ 0094                   230     SDSTSR  DATA    094H
+ 00E8.3                 231     EINT5   BIT     0E8H.3
+ 00E9                   232     STATUS  DATA    0E9H
+ 00E8.4                 233     EINT6   BIT     0E8H.4
+ 00C8                   234     T2CON   DATA    0C8H
+ 0086                   235     DPS     DATA    086H
+ 00B0.1                 236     HI8045T1        BIT     0B0H.1
+ 00DF                   237     CANDR   DATA    0DFH
+ 00B0.2                 238     HI8045T2        BIT     0B0H.2
+ 00AF                   239     TDR     DATA    0AFH
+ 00A5                   240     LDAHR   DATA    0A5H
+ 0093                   241     DPX     DATA    093H
+ 00AD                   242     DMAHR   DATA    0ADH
+ 00F8.0                 243     PINT2   BIT     0F8H.0
+ 00B0.0                 244     RXD     BIT     0B0H.0
+ 00F8.1                 245     PINT3   BIT     0F8H.1
+ 008E                   246     CKCON   DATA    08EH
+ 00F8.2                 247     PINT4   BIT     0F8H.2
+ 00D8.1                 248     EWT     BIT     0D8H.1
+ 00B0.1                 249     TXD     BIT     0B0H.1
+ 00A4                   250     LDALR   DATA    0A4H
+ 00F8.3                 251     PINT5   BIT     0F8H.3
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE     5
+
+ 00AB                   252     DMALR   DATA    0ABH
+ 00A3                   253     LSR     DATA    0A3H
+ 00F8.4                 254     PINT6   BIT     0F8H.4
+ 00AC                   255     DMAMR   DATA    0ACH
+ 00FF                   256     ARCON   DATA    0FFH
+ 00D0.5                 257     F0      BIT     0D0H.5
+ 00D0.1                 258     F1      BIT     0D0H.1
+ 00A6                   259     LDCSR   DATA    0A6H
+ 00B0.6                 260     HI8045CS        BIT     0B0H.6
+ 00D0                   261     PSW     DATA    0D0H
+ 0098.2                 262     RB08    BIT     098H.2
+ 00D8                   263     WDCON   DATA    0D8H
+ 00D8.0                 264     RWT     BIT     0D8H.0
+ 00C0.2                 265     RB18    BIT     0C0H.2
+------                  266     ?PR?x001uSDelay?CIRCUIT                  SEGMENT ECODE INSEG 
+------                  267     ?PR?x100nSDelay?CIRCUIT                  SEGMENT ECODE INSEG 
+------                  268     ?PR?ext1_5thHardwareDelay?CIRCUIT        SEGMENT ECODE INSEG 
+------                  269     ?PR?_nibbleswap?CIRCUIT                  SEGMENT ECODE INSEG 
+------                  270     ?XD?_nibbleswap?CIRCUIT                  SEGMENT XDATA 
+------                  271     ?PR?ext1_10thHardwareDelay?CIRCUIT       SEGMENT ECODE INSEG 
+------                  272     ?PR?extHardwareDelay?CIRCUIT             SEGMENT ECODE INSEG 
+                        273             PUBLIC  AssyVarPass1
+                        274             PUBLIC  extHardwareDelay
+                        275             PUBLIC  ext1_10thHardwareDelay
+                        276             PUBLIC  _nibbleswap
+                        277             PUBLIC  ext1_5thHardwareDelay
+                        278             PUBLIC  x100nSDelay
+                        279             PUBLIC  x001uSDelay
+                        280     
+000035                  281             ISEG  AT  035H
+000035                  282        AssyVarPass1:   DS   1
+                        283     
+------                  284             RSEG  ?XD?_nibbleswap?CIRCUIT
+000000                  285     ?_nibbleswap?BYTE:
+000000                  286             dat?340:   DS   1
+                        287     ; //====================================================================================
+                               ====//
+                        288     ; //====================================================================================
+                               ====//
+                        289     ; //====================================================================================
+                               ====//
+                        290     ; //     Copyright (c) 2016     Simtek, Incorporated      All rights reserved.          
+                                   //
+                        291     ; //                                                                                    
+                                   //
+                        292     ; //     This is unpublished proprietary source code of Simtek, Inc                     
+                                   //
+                        293     ; //                                                                                    
+                                   //
+                        294     ; //     The copyright notice above does not evidence any actual or intended            
+                                   //
+                        295     ; //     publication of such source code.                                               
+                                   //
+                        296     ; //====================================================================================
+                               ====//
+                        297     ; //====================================================================================
+                               ====//
+                        298     ; //====================================================================================
+                               ====//
+                        299     ; // 75-0640  for 10-8139-01                                                            
+                                   //
+                        300     ; //====================================================================================
+                               ====//
+                        301     ; // Author      : C. Mason                                                             
+                                   //
+                        302     ; // Date        : April  8, 2016                                                       
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE     6
+
+                                   //
+                        303     ; // Revision    : -                                                                    
+                                   //
+                        304     ; // Notes       : Shipped with instrument.                                             
+                                   //
+                        305     ; //====================================================================================
+                               ====//
+                        306     ; //                                                                                    
+                                   //
+                        307     ; //====================================================================================
+                               ====//
+                        308     ; //          include file declarations                                                 
+                                   //
+                        309     ; //====================================================================================
+                               ====//
+                        310     ; #include "types.h"
+                        311     ; #include "reg80390.h"
+                        312     ; #include "intrins.h"
+                        313     ; #include "CIRCUIT.H"
+                        314     ; #include "printd.h"
+                        315     ; #include "fpga.h"                                                                     
+                                   //
+                        316     ; 
+                        317     ; sbit A_0                = 0xE0;
+                        318     ; sbit A_1                = 0xE1;
+                        319     ; sbit A_2                = 0xE2;
+                        320     ; sbit A_3                = 0xE3;
+                        321     ; sbit A_4                = 0xE4;
+                        322     ; sbit A_5                = 0xE5;
+                        323     ; sbit A_6                = 0xE6;
+                        324     ; sbit A_7                = 0xE7;
+                        325     ; 
+                        326     ; #define tmpvar1             0x35
+                        327     ; //#define tmpvar3                0x36
+                        328     ; byte IDATA AssyVarPass1 _at_ tmpvar1;
+                        329     ; //#define tmpvar2                0x37
+                        330     ; //byte IDATA AssyVarPass2 _at_ tmpvar2;
+                        331     ; //#define tmpvar4                0x38
+                        332     ; //static byte IDATA AssyVarPass3 _at_ tmpvar4;
+                        333     ; 
+                        334     ; void x100nSDelay(void);
+                        335     ; void x001uSDelay(void);
+                        336     ; void ext1_5thHardwareDelay(void);
+                        337     ; void extHardwareDelay(void);
+                        338     ; byte nibbleswap(byte dat);
+                        339     ; 
+                        340     ; // ----------------------------------------------------------------------------
+                        341     ; // name    : x001uSDelay(void)
+                        342     ; // Purpose       : create a 1uS delay
+                        343     ; // Params        : void
+                        344     ; // Returns       : void
+                        345     ; // notes   : 
+                        346     ; // ----------------------------------------------------------------------------
+                        347     ; void x001uSDelay(void)
+                        348     
+------                  349             RSEG  ?PR?x001uSDelay?CIRCUIT
+000000                  350     x001uSDelay:
+                        351             USING   0
+                        352                             ; SOURCE LINE # 61
+                        353     ; {
+                        354                             ; SOURCE LINE # 62
+                        355     ;       x100nSDelay();                                                                  
+                                   // 100nS 100nS
+                        356                             ; SOURCE LINE # 63
+000000 12000000   F     357             LCALL   x100nSDelay
+                        358     ;       x100nSDelay();                                                                  
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE     7
+
+                                   // 100nS 200nS
+                        359                             ; SOURCE LINE # 64
+000004 12000000   F     360             LCALL   x100nSDelay
+                        361     ;       x100nSDelay();                                                                  
+                                   // 100nS 300nS
+                        362                             ; SOURCE LINE # 65
+000008 12000000   F     363             LCALL   x100nSDelay
+                        364     ;       x100nSDelay();                                                                  
+                                   // 100nS 400nS
+                        365                             ; SOURCE LINE # 66
+00000C 12000000   F     366             LCALL   x100nSDelay
+                        367     ;       x100nSDelay();                                                                  
+                                   // 100nS 500nS
+                        368                             ; SOURCE LINE # 67
+000010 12000000   F     369             LCALL   x100nSDelay
+                        370     ;       x100nSDelay();                                                                  
+                                   // 100nS 600nS
+                        371                             ; SOURCE LINE # 68
+000014 12000000   F     372             LCALL   x100nSDelay
+                        373     ;       x100nSDelay();                                                                  
+                                   // 100nS 700nS
+                        374                             ; SOURCE LINE # 69
+000018 12000000   F     375             LCALL   x100nSDelay
+                        376     ;       x100nSDelay();                                                                  
+                                   // 100nS 800nS
+                        377                             ; SOURCE LINE # 70
+00001C 12000000   F     378             LCALL   x100nSDelay
+                        379     ;       x100nSDelay();                                                                  
+                                   // 100nS 900nS
+                        380                             ; SOURCE LINE # 71
+000020 12000000   F     381             LCALL   x100nSDelay
+                        382     ;       _nop_();                                                                        
+                                   //  20nS 920nS
+                        383                             ; SOURCE LINE # 72
+000024 00               384             NOP     
+                        385     ; }
+                        386                             ; SOURCE LINE # 73
+000025                  387     ?C0001:
+000025 22               388             RET     
+                        389     ; END OF x001uSDelay
+                        390     
+                        391     ; 
+                        392     ; // ----------------------------------------------------------------------------
+                        393     ; // name    : x100nSDelay(void)
+                        394     ; // Purpose       : create a 100nS delay
+                        395     ; // Params        : void
+                        396     ; // Returns       : void
+                        397     ; // notes   : the call and return both take 40nS each
+                        398     ; // ----------------------------------------------------------------------------
+                        399     ; void x100nSDelay(void)
+                        400     
+------                  401             RSEG  ?PR?x100nSDelay?CIRCUIT
+000000                  402     x100nSDelay:
+                        403             USING   0
+                        404                             ; SOURCE LINE # 82
+                        405     ; {
+                        406                             ; SOURCE LINE # 83
+                        407     ;       _nop_();                                                                        
+                                   // 20nS 020nS
+                        408                             ; SOURCE LINE # 84
+000000 00               409             NOP     
+                        410     ; }
+                        411                             ; SOURCE LINE # 85
+000001                  412     ?C0002:
+000001 22               413             RET     
+                        414     ; END OF x100nSDelay
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE     8
+
+                        415     
+                        416     ; 
+                        417     ; // ----------------------------------------------------------------------------
+                        418     ; // name    : ext1_5thHardwareDelay(void)
+                        419     ; // Purpose       : create a delay
+                        420     ; // Params        : void
+                        421     ; // Returns       : void
+                        422     ; // notes   : 
+                        423     ; // ----------------------------------------------------------------------------
+                        424     ; void ext1_5thHardwareDelay(void)                                                      
+                                   // give the hardware some time to react
+                        425     
+------                  426             RSEG  ?PR?ext1_5thHardwareDelay?CIRCUIT
+000000                  427     ext1_5thHardwareDelay:
+                        428             USING   0
+                        429                             ; SOURCE LINE # 94
+                        430     ; {
+                        431                             ; SOURCE LINE # 95
+                        432     ;       _nop_();                                                                        
+                                   // 20nS 020nS
+                        433                             ; SOURCE LINE # 96
+000000 00               434             NOP     
+                        435     ;       _nop_();                                                                        
+                                   // 20nS 040nS
+                        436                             ; SOURCE LINE # 97
+000001 00               437             NOP     
+                        438     ;       _nop_();                                                                        
+                                   // 20nS 060nS
+                        439                             ; SOURCE LINE # 98
+000002 00               440             NOP     
+                        441     ;       _nop_();                                                                        
+                                   // 20nS 080nS
+                        442                             ; SOURCE LINE # 99
+000003 00               443             NOP     
+                        444     ;       _nop_();                                                                        
+                                   // 20nS 100nS
+                        445                             ; SOURCE LINE # 100
+000004 00               446             NOP     
+                        447     ;       _nop_();                                                                        
+                                   // 20nS 120nS
+                        448                             ; SOURCE LINE # 101
+000005 00               449             NOP     
+                        450     ;       _nop_();                                                                        
+                                   // 20nS 140nS
+                        451                             ; SOURCE LINE # 102
+000006 00               452             NOP     
+                        453     ;       _nop_();                                                                        
+                                   // 20nS 160nS
+                        454                             ; SOURCE LINE # 103
+000007 00               455             NOP     
+                        456     ;       _nop_();                                                                        
+                                   // 20nS 180nS
+                        457                             ; SOURCE LINE # 104
+000008 00               458             NOP     
+                        459     ;       _nop_();                                                                        
+                                   // 20nS 200nS
+                        460                             ; SOURCE LINE # 105
+000009 00               461             NOP     
+                        462     ;       _nop_();                                                                        
+                                   // 20nS 220nS
+                        463                             ; SOURCE LINE # 106
+00000A 00               464             NOP     
+                        465     ;       _nop_();                                                                        
+                                   // 20nS 240nS
+                        466                             ; SOURCE LINE # 107
+00000B 00               467             NOP     
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE     9
+
+                        468     ;       _nop_();                                                                        
+                                   // 20nS 260nS
+                        469                             ; SOURCE LINE # 108
+00000C 00               470             NOP     
+                        471     ;       _nop_();                                                                        
+                                   // 20nS 280nS
+                        472                             ; SOURCE LINE # 109
+00000D 00               473             NOP     
+                        474     ;       _nop_();                                                                        
+                                   // 20nS 300nS
+                        475                             ; SOURCE LINE # 110
+00000E 00               476             NOP     
+                        477     ;       _nop_();                                                                        
+                                   // 20nS 320nS
+                        478                             ; SOURCE LINE # 111
+00000F 00               479             NOP     
+                        480     ;       _nop_();                                                                        
+                                   // 20nS 340nS
+                        481                             ; SOURCE LINE # 112
+000010 00               482             NOP     
+                        483     ;       _nop_();                                                                        
+                                   // 20nS 360nS
+                        484                             ; SOURCE LINE # 113
+000011 00               485             NOP     
+                        486     ;       _nop_();                                                                        
+                                   // 20nS 380nS
+                        487                             ; SOURCE LINE # 114
+000012 00               488             NOP     
+                        489     ;       _nop_();                                                                        
+                                   // 20nS 400nS
+                        490                             ; SOURCE LINE # 115
+000013 00               491             NOP     
+                        492     ; }
+                        493                             ; SOURCE LINE # 116
+000014                  494     ?C0003:
+000014 22               495             RET     
+                        496     ; END OF ext1_5thHardwareDelay
+                        497     
+                        498     ; 
+                        499     ; // -----------------------------------------------------------------------------------
+                               ----
+                        500     ; // Function Name : nibbleswap      
+                        501     ; // Purpose       : swap the high and low nibbles of the given byte
+                        502     ; // Params        : byte to swapped
+                        503     ; // Returns       : swapped byte     
+                        504     ; // Note          : 
+                        505     ; // -----------------------------------------------------------------------------------
+                               ----
+                        506     ; byte nibbleswap(byte dat)
+                        507     
+------                  508             RSEG  ?PR?_nibbleswap?CIRCUIT
+000000                  509     _nibbleswap:
+                        510             USING   0
+                        511                             ; SOURCE LINE # 125
+000000 90000000   F     512             MOV     DPTR,#dat?340
+000004 EF               513             MOV     A,R7
+000005 F0               514             MOVX    @DPTR,A
+                        515     ; {
+                        516                             ; SOURCE LINE # 126
+                        517     ;       AssyVarPass1 = dat;
+                        518                             ; SOURCE LINE # 127
+000006 90000000   F     519             MOV     DPTR,#dat?340
+00000A E0               520             MOVX    A,@DPTR
+00000B FF               521             MOV     R7,A
+00000C 7800       F     522             MOV     R0,#LOW (AssyVarPass1)
+00000E A607             523             MOV     @R0,AR7
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE    10
+
+                        524     ; #pragma asm
+                        525     ;       push  Acc
+000010 C0E0             526               push  Acc
+                        527     ;       mov   Acc,tmpvar1
+000012 8535E0           528               mov   Acc,0x35
+                        529     ;       swap  a
+000015 C4               530               swap  a
+                        531     ;       mov   tmpvar1,Acc
+000016 85E035           532               mov   0x35,Acc
+                        533     ;       pop   Acc
+000019 D0E0             534               pop   Acc
+                        535     ; #pragma endasm
+                        536     ;       return AssyVarPass1;
+                        537                             ; SOURCE LINE # 135
+00001B 7800       F     538             MOV     R0,#LOW (AssyVarPass1)
+00001D E6               539             MOV     A,@R0
+00001E FF               540             MOV     R7,A
+                        541     ; }
+                        542                             ; SOURCE LINE # 136
+00001F                  543     ?C0004:
+00001F 22               544             RET     
+                        545     ; END OF _nibbleswap
+                        546     
+                        547     ; 
+                        548     ; // ----------------------------------------------------------------------------
+                        549     ; // name    : ext1_10thHardwareDelay(void)
+                        550     ; // purpose : create a delay
+                        551     ; // params  : void
+                        552     ; // returns : void
+                        553     ; // notes   :
+                        554     ; // ----------------------------------------------------------------------------
+                        555     ; void ext1_10thHardwareDelay(void)             // give the hardware some time to react 
+                        556     
+------                  557             RSEG  ?PR?ext1_10thHardwareDelay?CIRCUIT
+000000                  558     ext1_10thHardwareDelay:
+                        559             USING   0
+                        560                             ; SOURCE LINE # 145
+                        561     ; {
+                        562                             ; SOURCE LINE # 146
+                        563     ;       ext1_5thHardwareDelay();
+                        564                             ; SOURCE LINE # 147
+000000 12000000   F     565             LCALL   ext1_5thHardwareDelay
+                        566     ;       ext1_5thHardwareDelay();
+                        567                             ; SOURCE LINE # 148
+000004 12000000   F     568             LCALL   ext1_5thHardwareDelay
+                        569     ; }
+                        570                             ; SOURCE LINE # 149
+000008                  571     ?C0005:
+000008 22               572             RET     
+                        573     ; END OF ext1_10thHardwareDelay
+                        574     
+                        575     ; 
+                        576     ; // ----------------------------------------------------------------------------
+                        577     ; // name    : extHardwareDelay(void)
+                        578     ; // Purpose       : create a delay
+                        579     ; // Params        : void
+                        580     ; // Returns       : void
+                        581     ; // notes   : 
+                        582     ; // ----------------------------------------------------------------------------
+                        583     ; void extHardwareDelay(void)                                                           
+                                   // give the hardware some time to react
+                        584     
+------                  585             RSEG  ?PR?extHardwareDelay?CIRCUIT
+000000                  586     extHardwareDelay:
+                        587             USING   0
+                        588                             ; SOURCE LINE # 158
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE    11
+
+                        589     ; {
+                        590                             ; SOURCE LINE # 159
+                        591     ;       ext1_5thHardwareDelay();                                                        
+                                   // 01
+                        592                             ; SOURCE LINE # 160
+000000 12000000   F     593             LCALL   ext1_5thHardwareDelay
+                        594     ;       ext1_5thHardwareDelay();                                                        
+                                   // 02
+                        595                             ; SOURCE LINE # 161
+000004 12000000   F     596             LCALL   ext1_5thHardwareDelay
+                        597     ;       ext1_5thHardwareDelay();                                                        
+                                   // 03
+                        598                             ; SOURCE LINE # 162
+000008 12000000   F     599             LCALL   ext1_5thHardwareDelay
+                        600     ;       ext1_5thHardwareDelay();                                                        
+                                   // 04
+                        601                             ; SOURCE LINE # 163
+00000C 12000000   F     602             LCALL   ext1_5thHardwareDelay
+                        603     ;       ext1_5thHardwareDelay();                                                        
+                                   // 05
+                        604                             ; SOURCE LINE # 164
+000010 12000000   F     605             LCALL   ext1_5thHardwareDelay
+                        606     ;       ext1_5thHardwareDelay();                                                        
+                                   // 06
+                        607                             ; SOURCE LINE # 165
+000014 12000000   F     608             LCALL   ext1_5thHardwareDelay
+                        609     ;       ext1_5thHardwareDelay();                                                        
+                                   // 07
+                        610                             ; SOURCE LINE # 166
+000018 12000000   F     611             LCALL   ext1_5thHardwareDelay
+                        612     ;       ext1_5thHardwareDelay();                                                        
+                                   // 08
+                        613                             ; SOURCE LINE # 167
+00001C 12000000   F     614             LCALL   ext1_5thHardwareDelay
+                        615     ; }
+                        616                             ; SOURCE LINE # 168
+000020                  617     ?C0006:
+000020 22               618             RET     
+                        619     ; END OF extHardwareDelay
+                        620     
+                        621             END
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE    12
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E                                    T Y P E  V A L U E     ATTRIBUTES
+
+?_NIBBLESWAP?BYTE . . . . . . . . . . .    X  ADDR  0000H     R   SEG=?XD?_NIBBLESWAP?CIRCUIT
+?C0001. . . . . . . . . . . . . . . . .    EC ADDR  0025H     R   SEG=?PR?X001USDELAY?CIRCUIT
+?C0002. . . . . . . . . . . . . . . . .    EC ADDR  0001H     R   SEG=?PR?X100NSDELAY?CIRCUIT
+?C0003. . . . . . . . . . . . . . . . .    EC ADDR  0014H     R   SEG=?PR?EXT1_5THHARDWAREDELAY?CIRCUIT
+?C0004. . . . . . . . . . . . . . . . .    EC ADDR  001FH     R   SEG=?PR?_NIBBLESWAP?CIRCUIT
+?C0005. . . . . . . . . . . . . . . . .    EC ADDR  0008H     R   SEG=?PR?EXT1_10THHARDWAREDELAY?CIRCUIT
+?C0006. . . . . . . . . . . . . . . . .    EC ADDR  0020H     R   SEG=?PR?EXTHARDWAREDELAY?CIRCUIT
+?PR?_NIBBLESWAP?CIRCUIT . . . . . . . .    EC SEG   000020H       REL=INSEG, ALN=BYTE
+?PR?EXT1_10THHARDWAREDELAY?CIRCUIT. . .    EC SEG   000009H       REL=INSEG, ALN=BYTE
+?PR?EXT1_5THHARDWAREDELAY?CIRCUIT . . .    EC SEG   000015H       REL=INSEG, ALN=BYTE
+?PR?EXTHARDWAREDELAY?CIRCUIT. . . . . .    EC SEG   000021H       REL=INSEG, ALN=BYTE
+?PR?X001USDELAY?CIRCUIT . . . . . . . .    EC SEG   000026H       REL=INSEG, ALN=BYTE
+?PR?X100NSDELAY?CIRCUIT . . . . . . . .    EC SEG   000002H       REL=INSEG, ALN=BYTE
+?XD?_NIBBLESWAP?CIRCUIT . . . . . . . .    X  SEG   000001H       REL=UNIT, ALN=BYTE
+_NIBBLESWAP . . . . . . . . . . . . . .    EC ADDR  0000H     R   SEG=?PR?_NIBBLESWAP?CIRCUIT
+A_0 . . . . . . . . . . . . . . . . . .    B  ADDR  00E0H.0   A   
+A_1 . . . . . . . . . . . . . . . . . .    B  ADDR  00E0H.1   A   
+A_2 . . . . . . . . . . . . . . . . . .    B  ADDR  00E0H.2   A   
+A_3 . . . . . . . . . . . . . . . . . .    B  ADDR  00E0H.3   A   
+A_4 . . . . . . . . . . . . . . . . . .    B  ADDR  00E0H.4   A   
+A_5 . . . . . . . . . . . . . . . . . .    B  ADDR  00E0H.5   A   
+A_6 . . . . . . . . . . . . . . . . . .    B  ADDR  00E0H.6   A   
+A_7 . . . . . . . . . . . . . . . . . .    B  ADDR  00E0H.7   A   
+AC. . . . . . . . . . . . . . . . . . .    B  ADDR  00D0H.6   A   
+ACC . . . . . . . . . . . . . . . . . .    D  ADDR  00E0H     A   
+ACON. . . . . . . . . . . . . . . . . .    D  ADDR  009DH     A   
+AR7 . . . . . . . . . . . . . . . . . .    D  ADDR  0007H     A   
+ARCON . . . . . . . . . . . . . . . . .    D  ADDR  00FFH     A   
+ASSYVARPASS1. . . . . . . . . . . . . .    I  ADDR  0035H     R   SEG=?ID?CIRCUIT?8
+B . . . . . . . . . . . . . . . . . . .    D  ADDR  00F0H     A   
+CANCIR. . . . . . . . . . . . . . . . .    D  ADDR  00DEH     A   
+CANDR . . . . . . . . . . . . . . . . .    D  ADDR  00DFH     A   
+CCAPH0. . . . . . . . . . . . . . . . .    D  ADDR  00B9H     A   
+CCAPH1. . . . . . . . . . . . . . . . .    D  ADDR  00BAH     A   
+CCAPH2. . . . . . . . . . . . . . . . .    D  ADDR  00BBH     A   
+CCAPH3. . . . . . . . . . . . . . . . .    D  ADDR  00BCH     A   
+CCAPH4. . . . . . . . . . . . . . . . .    D  ADDR  00BDH     A   
+CCAPL0. . . . . . . . . . . . . . . . .    D  ADDR  00B1H     A   
+CCAPL1. . . . . . . . . . . . . . . . .    D  ADDR  00B2H     A   
+CCAPL2. . . . . . . . . . . . . . . . .    D  ADDR  00B3H     A   
+CCAPL3. . . . . . . . . . . . . . . . .    D  ADDR  00B4H     A   
+CCAPL4. . . . . . . . . . . . . . . . .    D  ADDR  00B5H     A   
+CCAPM0. . . . . . . . . . . . . . . . .    D  ADDR  00D1H     A   
+CCAPM1. . . . . . . . . . . . . . . . .    D  ADDR  00D2H     A   
+CCAPM2. . . . . . . . . . . . . . . . .    D  ADDR  00D3H     A   
+CCAPM3. . . . . . . . . . . . . . . . .    D  ADDR  00D4H     A   
+CCAPM4. . . . . . . . . . . . . . . . .    D  ADDR  00D5H     A   
+CCON. . . . . . . . . . . . . . . . . .    D  ADDR  00C3H     A   
+CH. . . . . . . . . . . . . . . . . . .    D  ADDR  00C5H     A   
+CIRCUIT . . . . . . . . . . . . . . . .    -- ----  -------       
+CKCON . . . . . . . . . . . . . . . . .    D  ADDR  008EH     A   
+CL. . . . . . . . . . . . . . . . . . .    D  ADDR  00C4H     A   
+CMOD. . . . . . . . . . . . . . . . . .    D  ADDR  00C2H     A   
+CPRL2 . . . . . . . . . . . . . . . . .    B  ADDR  00C8H.0   A   
+CSREPR. . . . . . . . . . . . . . . . .    D  ADDR  008FH     A   
+CT2 . . . . . . . . . . . . . . . . . .    B  ADDR  00C8H.1   A   
+CY. . . . . . . . . . . . . . . . . . .    B  ADDR  00D0H.7   A   
+DAT?340 . . . . . . . . . . . . . . . .    X  ADDR  0000H     R   SEG=?XD?_NIBBLESWAP?CIRCUIT
+DBAR. . . . . . . . . . . . . . . . . .    D  ADDR  009AH     A   
+DCIR. . . . . . . . . . . . . . . . . .    D  ADDR  009BH     A   
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE    13
+
+DDR . . . . . . . . . . . . . . . . . .    D  ADDR  009CH     A   
+DMAHR . . . . . . . . . . . . . . . . .    D  ADDR  00ADH     A   
+DMALR . . . . . . . . . . . . . . . . .    D  ADDR  00ABH     A   
+DMAMR . . . . . . . . . . . . . . . . .    D  ADDR  00ACH     A   
+DPH . . . . . . . . . . . . . . . . . .    D  ADDR  0083H     A   
+DPH0. . . . . . . . . . . . . . . . . .    D  ADDR  0083H     A   
+DPH1. . . . . . . . . . . . . . . . . .    D  ADDR  0085H     A   
+DPL . . . . . . . . . . . . . . . . . .    D  ADDR  0082H     A   
+DPL0. . . . . . . . . . . . . . . . . .    D  ADDR  0082H     A   
+DPL1. . . . . . . . . . . . . . . . . .    D  ADDR  0084H     A   
+DPS . . . . . . . . . . . . . . . . . .    D  ADDR  0086H     A   
+DPX . . . . . . . . . . . . . . . . . .    D  ADDR  0093H     A   
+DPX0. . . . . . . . . . . . . . . . . .    D  ADDR  0093H     A   
+DPX1. . . . . . . . . . . . . . . . . .    D  ADDR  0095H     A   
+EA. . . . . . . . . . . . . . . . . . .    B  ADDR  00A8H.7   A   
+EIE . . . . . . . . . . . . . . . . . .    D  ADDR  00E8H     A   
+EIF . . . . . . . . . . . . . . . . . .    D  ADDR  0091H     A   
+EINT2 . . . . . . . . . . . . . . . . .    B  ADDR  00E8H.0   A   
+EINT3 . . . . . . . . . . . . . . . . .    B  ADDR  00E8H.1   A   
+EINT4 . . . . . . . . . . . . . . . . .    B  ADDR  00E8H.2   A   
+EINT5 . . . . . . . . . . . . . . . . .    B  ADDR  00E8H.3   A   
+EINT6 . . . . . . . . . . . . . . . . .    B  ADDR  00E8H.4   A   
+EIP . . . . . . . . . . . . . . . . . .    D  ADDR  00F8H     A   
+EPCR. . . . . . . . . . . . . . . . . .    D  ADDR  00BEH     A   
+EPDR. . . . . . . . . . . . . . . . . .    D  ADDR  00BFH     A   
+ES0 . . . . . . . . . . . . . . . . . .    B  ADDR  00A8H.4   A   
+ES1 . . . . . . . . . . . . . . . . . .    B  ADDR  00A8H.6   A   
+ET0 . . . . . . . . . . . . . . . . . .    B  ADDR  00A8H.1   A   
+ET1 . . . . . . . . . . . . . . . . . .    B  ADDR  00A8H.3   A   
+ET2 . . . . . . . . . . . . . . . . . .    B  ADDR  00A8H.5   A   
+EWDI. . . . . . . . . . . . . . . . . .    B  ADDR  00E8H.5   A   
+EWT . . . . . . . . . . . . . . . . . .    B  ADDR  00D8H.1   A   
+EX0 . . . . . . . . . . . . . . . . . .    B  ADDR  00A8H.0   A   
+EX1 . . . . . . . . . . . . . . . . . .    B  ADDR  00A8H.2   A   
+EXEN2 . . . . . . . . . . . . . . . . .    B  ADDR  00C8H.3   A   
+EXF2. . . . . . . . . . . . . . . . . .    B  ADDR  00C8H.6   A   
+EXT1_10THHARDWAREDELAY. . . . . . . . .    EC ADDR  0000H     R   SEG=?PR?EXT1_10THHARDWAREDELAY?CIRCUIT
+EXT1_5THHARDWAREDELAY . . . . . . . . .    EC ADDR  0000H     R   SEG=?PR?EXT1_5THHARDWAREDELAY?CIRCUIT
+EXTHARDWAREDELAY. . . . . . . . . . . .    EC ADDR  0000H     R   SEG=?PR?EXTHARDWAREDELAY?CIRCUIT
+F0. . . . . . . . . . . . . . . . . . .    B  ADDR  00D0H.5   A   
+F1. . . . . . . . . . . . . . . . . . .    B  ADDR  00D0H.1   A   
+FPGADATAIN. . . . . . . . . . . . . . .    B  ADDR  00A0H.3   A   
+FPGADATAOUT . . . . . . . . . . . . . .    B  ADDR  00A0H.1   A   
+FPGASERIALALE . . . . . . . . . . . . .    B  ADDR  00A0H.4   A   
+FPGASERIALCLOCK . . . . . . . . . . . .    B  ADDR  00A0H.0   A   
+FPGASERIALLOAD. . . . . . . . . . . . .    B  ADDR  00A0H.2   A   
+HI8045CLK . . . . . . . . . . . . . . .    B  ADDR  00B0H.3   A   
+HI8045CS. . . . . . . . . . . . . . . .    B  ADDR  00B0H.6   A   
+HI8045DIN . . . . . . . . . . . . . . .    B  ADDR  00B0H.4   A   
+HI8045LOAD. . . . . . . . . . . . . . .    B  ADDR  00B0H.5   A   
+HI8045T1. . . . . . . . . . . . . . . .    B  ADDR  00B0H.1   A   
+HI8045T2. . . . . . . . . . . . . . . .    B  ADDR  00B0H.2   A   
+HRTBEAT . . . . . . . . . . . . . . . .    B  ADDR  0080H.7   A   
+I2CCIR. . . . . . . . . . . . . . . . .    D  ADDR  0096H     A   
+I2CDR . . . . . . . . . . . . . . . . .    D  ADDR  0097H     A   
+IE. . . . . . . . . . . . . . . . . . .    D  ADDR  00A8H     A   
+IE0 . . . . . . . . . . . . . . . . . .    B  ADDR  0088H.1   A   
+IE1 . . . . . . . . . . . . . . . . . .    B  ADDR  0088H.3   A   
+INT0. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.2   A   
+INT1. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.3   A   
+IP. . . . . . . . . . . . . . . . . . .    D  ADDR  00B8H     A   
+IT0 . . . . . . . . . . . . . . . . . .    B  ADDR  0088H.0   A   
+IT1 . . . . . . . . . . . . . . . . . .    B  ADDR  0088H.2   A   
+LCR . . . . . . . . . . . . . . . . . .    D  ADDR  00A2H     A   
+LDAHR . . . . . . . . . . . . . . . . .    D  ADDR  00A5H     A   
+LDALR . . . . . . . . . . . . . . . . .    D  ADDR  00A4H     A   
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE    14
+
+LDCSR . . . . . . . . . . . . . . . . .    D  ADDR  00A6H     A   
+LDHR. . . . . . . . . . . . . . . . . .    D  ADDR  00AAH     A   
+LDLR. . . . . . . . . . . . . . . . . .    D  ADDR  00A9H     A   
+LMSR. . . . . . . . . . . . . . . . . .    D  ADDR  00A1H     A   
+LOGICRST. . . . . . . . . . . . . . . .    B  ADDR  00A0H.5   A   
+LSAIER. . . . . . . . . . . . . . . . .    D  ADDR  00A1H     A   
+LSCR. . . . . . . . . . . . . . . . . .    D  ADDR  00A2H     A   
+LSR . . . . . . . . . . . . . . . . . .    D  ADDR  00A3H     A   
+LSSR. . . . . . . . . . . . . . . . . .    D  ADDR  00A3H     A   
+MCIR. . . . . . . . . . . . . . . . . .    D  ADDR  00B6H     A   
+MD0 . . . . . . . . . . . . . . . . . .    D  ADDR  00F9H     A   
+MD1 . . . . . . . . . . . . . . . . . .    D  ADDR  00FAH     A   
+MD2 . . . . . . . . . . . . . . . . . .    D  ADDR  00FBH     A   
+MD3 . . . . . . . . . . . . . . . . . .    D  ADDR  00FCH     A   
+MD4 . . . . . . . . . . . . . . . . . .    D  ADDR  00FDH     A   
+MD5 . . . . . . . . . . . . . . . . . .    D  ADDR  00FEH     A   
+MDR . . . . . . . . . . . . . . . . . .    D  ADDR  00B7H     A   
+MXAX. . . . . . . . . . . . . . . . . .    D  ADDR  00EAH     A   
+OV. . . . . . . . . . . . . . . . . . .    B  ADDR  00D0H.2   A   
+OWCIR . . . . . . . . . . . . . . . . .    D  ADDR  00D6H     A   
+OWDR. . . . . . . . . . . . . . . . . .    D  ADDR  00D7H     A   
+P . . . . . . . . . . . . . . . . . . .    B  ADDR  00D0H.0   A   
+P0. . . . . . . . . . . . . . . . . . .    D  ADDR  0080H     A   
+P0_0. . . . . . . . . . . . . . . . . .    B  ADDR  0080H.0   A   
+P0_1. . . . . . . . . . . . . . . . . .    B  ADDR  0080H.1   A   
+P0_2. . . . . . . . . . . . . . . . . .    B  ADDR  0080H.2   A   
+P0_3. . . . . . . . . . . . . . . . . .    B  ADDR  0080H.3   A   
+P0_4. . . . . . . . . . . . . . . . . .    B  ADDR  0080H.4   A   
+P0_5. . . . . . . . . . . . . . . . . .    B  ADDR  0080H.5   A   
+P0_6. . . . . . . . . . . . . . . . . .    B  ADDR  0080H.6   A   
+P0_7. . . . . . . . . . . . . . . . . .    B  ADDR  0080H.7   A   
+P1. . . . . . . . . . . . . . . . . . .    D  ADDR  0090H     A   
+P1_0. . . . . . . . . . . . . . . . . .    B  ADDR  0090H.0   A   
+P1_1. . . . . . . . . . . . . . . . . .    B  ADDR  0090H.1   A   
+P1_2. . . . . . . . . . . . . . . . . .    B  ADDR  0090H.2   A   
+P1_3. . . . . . . . . . . . . . . . . .    B  ADDR  0090H.3   A   
+P1_4. . . . . . . . . . . . . . . . . .    B  ADDR  0090H.4   A   
+P1_5. . . . . . . . . . . . . . . . . .    B  ADDR  0090H.5   A   
+P1_6. . . . . . . . . . . . . . . . . .    B  ADDR  0090H.6   A   
+P1_7. . . . . . . . . . . . . . . . . .    B  ADDR  0090H.7   A   
+P2. . . . . . . . . . . . . . . . . . .    D  ADDR  00A0H     A   
+P2_0. . . . . . . . . . . . . . . . . .    B  ADDR  00A0H.0   A   
+P2_1. . . . . . . . . . . . . . . . . .    B  ADDR  00A0H.1   A   
+P2_2. . . . . . . . . . . . . . . . . .    B  ADDR  00A0H.2   A   
+P2_3. . . . . . . . . . . . . . . . . .    B  ADDR  00A0H.3   A   
+P2_4. . . . . . . . . . . . . . . . . .    B  ADDR  00A0H.4   A   
+P2_5. . . . . . . . . . . . . . . . . .    B  ADDR  00A0H.5   A   
+P2_6. . . . . . . . . . . . . . . . . .    B  ADDR  00A0H.6   A   
+P2_7. . . . . . . . . . . . . . . . . .    B  ADDR  00A0H.7   A   
+P3. . . . . . . . . . . . . . . . . . .    D  ADDR  00B0H     A   
+P3_0. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.0   A   
+P3_1. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.1   A   
+P3_2. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.2   A   
+P3_3. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.3   A   
+P3_4. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.4   A   
+P3_5. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.5   A   
+P3_6. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.6   A   
+P3_7. . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.7   A   
+PCON. . . . . . . . . . . . . . . . . .    D  ADDR  0087H     A   
+PINT2 . . . . . . . . . . . . . . . . .    B  ADDR  00F8H.0   A   
+PINT3 . . . . . . . . . . . . . . . . .    B  ADDR  00F8H.1   A   
+PINT4 . . . . . . . . . . . . . . . . .    B  ADDR  00F8H.2   A   
+PINT5 . . . . . . . . . . . . . . . . .    B  ADDR  00F8H.3   A   
+PINT6 . . . . . . . . . . . . . . . . .    B  ADDR  00F8H.4   A   
+PISSR1. . . . . . . . . . . . . . . . .    D  ADDR  009EH     A   
+PISSR2. . . . . . . . . . . . . . . . .    D  ADDR  009FH     A   
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE    15
+
+PS0 . . . . . . . . . . . . . . . . . .    B  ADDR  00B8H.4   A   
+PS1 . . . . . . . . . . . . . . . . . .    B  ADDR  00B8H.6   A   
+PSW . . . . . . . . . . . . . . . . . .    D  ADDR  00D0H     A   
+PT0 . . . . . . . . . . . . . . . . . .    B  ADDR  00B8H.1   A   
+PT1 . . . . . . . . . . . . . . . . . .    B  ADDR  00B8H.3   A   
+PT2 . . . . . . . . . . . . . . . . . .    B  ADDR  00B8H.5   A   
+PWDI. . . . . . . . . . . . . . . . . .    B  ADDR  00F8H.5   A   
+PX0 . . . . . . . . . . . . . . . . . .    B  ADDR  00B8H.0   A   
+PX1 . . . . . . . . . . . . . . . . . .    B  ADDR  00B8H.2   A   
+RB08. . . . . . . . . . . . . . . . . .    B  ADDR  0098H.2   A   
+RB18. . . . . . . . . . . . . . . . . .    B  ADDR  00C0H.2   A   
+RCLK. . . . . . . . . . . . . . . . . .    B  ADDR  00C8H.5   A   
+RD. . . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.7   A   
+REN0. . . . . . . . . . . . . . . . . .    B  ADDR  0098H.4   A   
+REN1. . . . . . . . . . . . . . . . . .    B  ADDR  00C0H.4   A   
+RI0 . . . . . . . . . . . . . . . . . .    B  ADDR  0098H.0   A   
+RI1 . . . . . . . . . . . . . . . . . .    B  ADDR  00C0H.0   A   
+RLDH. . . . . . . . . . . . . . . . . .    D  ADDR  00CBH     A   
+RLDL. . . . . . . . . . . . . . . . . .    D  ADDR  00CAH     A   
+RS0 . . . . . . . . . . . . . . . . . .    B  ADDR  00D0H.3   A   
+RS1 . . . . . . . . . . . . . . . . . .    B  ADDR  00D0H.4   A   
+RWT . . . . . . . . . . . . . . . . . .    B  ADDR  00D8H.0   A   
+RXD . . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.0   A   
+SBUF0 . . . . . . . . . . . . . . . . .    D  ADDR  0099H     A   
+SBUF1 . . . . . . . . . . . . . . . . .    D  ADDR  00C1H     A   
+SCON0 . . . . . . . . . . . . . . . . .    D  ADDR  0098H     A   
+SCON1 . . . . . . . . . . . . . . . . .    D  ADDR  00C0H     A   
+SCOPEPIN. . . . . . . . . . . . . . . .    B  ADDR  0080H.5   A   
+SDSTSR. . . . . . . . . . . . . . . . .    D  ADDR  0094H     A   
+SM00. . . . . . . . . . . . . . . . . .    B  ADDR  0098H.7   A   
+SM01. . . . . . . . . . . . . . . . . .    B  ADDR  0098H.6   A   
+SM02. . . . . . . . . . . . . . . . . .    B  ADDR  0098H.5   A   
+SM10. . . . . . . . . . . . . . . . . .    B  ADDR  00C0H.7   A   
+SM11. . . . . . . . . . . . . . . . . .    B  ADDR  00C0H.6   A   
+SM12. . . . . . . . . . . . . . . . . .    B  ADDR  00C0H.5   A   
+SP. . . . . . . . . . . . . . . . . . .    D  ADDR  0081H     A   
+SPICIR. . . . . . . . . . . . . . . . .    D  ADDR  00CEH     A   
+SPIDR . . . . . . . . . . . . . . . . .    D  ADDR  00CFH     A   
+STATUS. . . . . . . . . . . . . . . . .    D  ADDR  00E9H     A   
+T0. . . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.4   A   
+T1. . . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.5   A   
+T2CON . . . . . . . . . . . . . . . . .    D  ADDR  00C8H     A   
+T2IF. . . . . . . . . . . . . . . . . .    D  ADDR  00C9H     A   
+TA. . . . . . . . . . . . . . . . . . .    D  ADDR  00EBH     A   
+TB08. . . . . . . . . . . . . . . . . .    B  ADDR  0098H.3   A   
+TB18. . . . . . . . . . . . . . . . . .    B  ADDR  00C0H.3   A   
+TCIR. . . . . . . . . . . . . . . . . .    D  ADDR  00AEH     A   
+TCLK. . . . . . . . . . . . . . . . . .    B  ADDR  00C8H.4   A   
+TCON. . . . . . . . . . . . . . . . . .    D  ADDR  0088H     A   
+TDR . . . . . . . . . . . . . . . . . .    D  ADDR  00AFH     A   
+TF0 . . . . . . . . . . . . . . . . . .    B  ADDR  0088H.5   A   
+TF1 . . . . . . . . . . . . . . . . . .    B  ADDR  0088H.7   A   
+TF2 . . . . . . . . . . . . . . . . . .    B  ADDR  00C8H.7   A   
+TH0 . . . . . . . . . . . . . . . . . .    D  ADDR  008CH     A   
+TH1 . . . . . . . . . . . . . . . . . .    D  ADDR  008DH     A   
+TH2 . . . . . . . . . . . . . . . . . .    D  ADDR  00CDH     A   
+TI0 . . . . . . . . . . . . . . . . . .    B  ADDR  0098H.1   A   
+TI1 . . . . . . . . . . . . . . . . . .    B  ADDR  00C0H.1   A   
+TL0 . . . . . . . . . . . . . . . . . .    D  ADDR  008AH     A   
+TL1 . . . . . . . . . . . . . . . . . .    D  ADDR  008BH     A   
+TL2 . . . . . . . . . . . . . . . . . .    D  ADDR  00CCH     A   
+TMOD. . . . . . . . . . . . . . . . . .    D  ADDR  0089H     A   
+TR0 . . . . . . . . . . . . . . . . . .    B  ADDR  0088H.4   A   
+TR1 . . . . . . . . . . . . . . . . . .    B  ADDR  0088H.6   A   
+TR2 . . . . . . . . . . . . . . . . . .    B  ADDR  00C8H.2   A   
+TXD . . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.1   A   
+AX51 MACRO ASSEMBLER  CIRCUIT                                                               03/13/26 10:21:43 PAGE    16
+
+UR2_DLH . . . . . . . . . . . . . . . .    D  ADDR  00E2H     A   
+UR2_DLL . . . . . . . . . . . . . . . .    D  ADDR  00E1H     A   
+UR2_FCR . . . . . . . . . . . . . . . .    D  ADDR  00E3H     A   
+UR2_IER . . . . . . . . . . . . . . . .    D  ADDR  00E2H     A   
+UR2_IIR . . . . . . . . . . . . . . . .    D  ADDR  00E3H     A   
+UR2_LCR . . . . . . . . . . . . . . . .    D  ADDR  00E4H     A   
+UR2_LSR . . . . . . . . . . . . . . . .    D  ADDR  00E6H     A   
+UR2_MCR . . . . . . . . . . . . . . . .    D  ADDR  00E5H     A   
+UR2_MSR . . . . . . . . . . . . . . . .    D  ADDR  00E7H     A   
+UR2_RBR . . . . . . . . . . . . . . . .    D  ADDR  00E1H     A   
+UR2_THR . . . . . . . . . . . . . . . .    D  ADDR  00E1H     A   
+WDCON . . . . . . . . . . . . . . . . .    D  ADDR  00D8H     A   
+WDIF. . . . . . . . . . . . . . . . . .    B  ADDR  00D8H.3   A   
+WR. . . . . . . . . . . . . . . . . . .    B  ADDR  00B0H.6   A   
+WTRF. . . . . . . . . . . . . . . . . .    B  ADDR  00D8H.2   A   
+WTST. . . . . . . . . . . . . . . . . .    D  ADDR  0092H     A   
+X001USDELAY . . . . . . . . . . . . . .    EC ADDR  0000H     R   SEG=?PR?X001USDELAY?CIRCUIT
+X100NSDELAY . . . . . . . . . . . . . .    EC ADDR  0000H     R   SEG=?PR?X100NSDELAY?CIRCUIT
+XMRHR . . . . . . . . . . . . . . . . .    D  ADDR  00A7H     A   
+XMRLR . . . . . . . . . . . . . . . . .    D  ADDR  00A6H     A   
+XMWHR . . . . . . . . . . . . . . . . .    D  ADDR  00A5H     A   
+XMWLR . . . . . . . . . . . . . . . . .    D  ADDR  00A4H     A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S).

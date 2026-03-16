@@ -1,0 +1,1353 @@
+//========================================================================================//
+//     Copyright (c) 2021     Simtek, Incorporated      All rights reserved.              //
+//                                                                                        //
+//     This is unpublished proprietary source code of Simtek, Inc                         //
+//                                                                                        //
+//     The copyright notice above does not evidence any actual or intended                //
+//     publication of such source code.                                                   //
+//========================================================================================//
+// 75-8217  for 10-9012-01                                                                //
+// Circuit boards used : 51-5330-01                                                       //
+// Used the programs from C. Mason 10-8149 to start with                                  //
+//                                                                                        //
+//========================================================================================//
+// Module Name : Main.c                                                                   //
+// Purpose     : Main loop                                                                //
+//========================================================================================//
+// Author      : C. Mason                                                                 //
+// Date        : March 20, 2021                                                           //
+// Revision    : -                                                                        //
+// Notes       : Shipped with instrument.                                                 //
+//========================================================================================//
+
+//========================================================================================//
+//          include file declarations                                                     //
+//========================================================================================//
+#include "reg80390.h"                                                                     //
+#include "main.h"                                                                         //
+#include "fpga.h"                                                                         //
+#include "adapter.h"                                                                      //
+#include "mstimer.h"                                                                      //
+#include "ax11000.h"                                                                      //
+#include "interrupt.h"                                                                    //
+#include "stoe.h"                                                                         //
+#include "dma.h"                                                                          //
+#include "tcpip.h"                                                                        //
+#include "printd.h"                                                                       //
+#include "delay.h"                                                                        //
+#include "intrins.h"                                                                      //
+#include "Hardware.h"                                                                     //
+#include "uart.h"                                                                         //
+#include "gconfig.h"                                                                      //
+#include "phy.h"                                                                          //
+#include "mac.h"                                                                          //
+#include "gudpdat.h"                                                                      //
+#include "uart.h"                                                                         //
+#include "gs2e.h"                                                                         //
+#include <string.h>                                                                       //
+#include <stdio.h>                                                                        //
+#include "CIRCUIT.H"                                                                      //
+#include "instrument.h"                                                                   //
+#include "hardware.h"                                                                     //
+#include <math.h>                                                                         //
+#include "dhcpc.h"                                                                        //
+#include <stdlib.h>                                                                       //
+#include "util_menus.h"                                                                   //
+//========================================================================================//
+//                 naming #define declarations                                            //
+//========================================================================================//
+#define  RS422                            0                                               //
+#define  RS232                            1                                               //
+#define  DEDisable                        0                                               //
+#define  DEEnable                         1                                               //
+
+#ifdef DEBUG                                                                              //
+#define DBGMSG(A) {A}                                                                     //
+#else                                                                                     //
+#define DBGMSG(A) {}                                                                      //
+#endif                                                                                    //
+#define  TIME_OUT_COUNTER                 (20/SWTIMER_INTERVAL)                           // 20/swtimer_intervale = x ms
+#define  SW_TIME_OUT_COUNTER              3000 // 3000 = 30 seconds                       // 30 seconds
+#define  DBG_TIME_OUT_COUNTER             100 // 100  =  1 seconds                        // 30 seconds
+
+#define Serial                            0
+#define Ethernet                          1
+#define Host_Port                       (Ethernet)
+// MACRO DECLARATIONS //
+#if   ( Host_Port == Serial )
+#define     wrHost(p,c)    UART0_PutStr(p,c)
+#else
+#define     wrHost(p,c)    wrStrEthTxBuffer(p,c)
+#endif
+//========================================================================================//
+//          switch action codes                                                           //
+//========================================================================================//
+#define acodeSS_NullPosition              0x00                                            //
+#define acodeS1_Position1                 0x01                                            //
+#define acodeS1_Position2                 0x02                                            //
+#define acodeS2_Position1                 0x03                                            //
+#define acodeS2_Position2                 0x04                                            //
+#define acodeS3_Position1                 0x05                                            //
+#define acodeS3_Position2                 0x06                                            //
+#define acodeS4_Position1                 0x07                                            //
+#define acodeS4_Position2                 0x08                                            //
+#define acodeS5_Position1                 0x09                                            //
+#define acodeS5_Position2                 0x0A                                            //
+#define acodeS6_Position1                 0x0B                                            //
+#define acodeS6_Position2                 0x0C                                            //
+#define acodeS7_Position1                 0x0D                                            //
+#define acodeS7_Position2                 0x0E                                            //
+#define acodeS8_Position1                 0x0F                                            //
+#define acodeS8_Position2                 0x10                                            //
+#define acodeS9_Position1                 0x11                                            //
+#define acodeS9_Position2                 0x12                                            //
+#define acodeS10_Position1                0x13                                            //
+#define acodeS10_Position2                0x14                                            //
+#define acodeS11_Position1                0x15                                            //
+#define acodeS11_Position2                0x16                                            //
+#define acodeS12_Position1                0x17                                            //
+#define acodeS12_Position2                0x18                                            //
+#define acodeS13_Position1                0x19                                            //
+#define acodeS13_Position2                0x1A                                            //
+#define acodeS14_Position1                0x1B                                            //
+#define acodeS14_Position2                0x1C                                            //
+#define acodeS15_Position1                0x1D                                            //
+#define acodeS15_Position2                0x1E                                            //
+#define acodeS16_Position1                0x1F                                            //
+#define acodeS16_Position2                0x20                                            //
+#define acodeS17_Position1                0x21                                            //
+#define acodeS17_Position2                0x22                                            //
+#define acodeR1                           0x01                                            //
+#define acodeR2                           0x02                                            //
+
+#define acodeDD_NullPosition              0x00                                            //
+#define acodeD0_Open                      0x10                                            //
+#define acodeD0_Ground                    0x11                                            //
+#define acodeD1_Open                      0x12                                            //
+#define acodeD1_Ground                    0x13                                            //
+#define acodeD2_Open                      0x14                                            //
+#define acodeD2_Ground                    0x15                                            //
+#define acodeD3_Open                      0x16                                            //
+#define acodeD3_Ground                    0x17                                            //
+#define acodeD4_Open                      0x18                                            //
+#define acodeD4_Ground                    0x19                                            //
+#define acodeD5_Open                      0x1A                                            //
+#define acodeD5_Ground                    0x1B                                            //
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//           fpga #define declarations/data array structure                               //
+//========================================================================================//
+//========================================================================================//
+//      fpga register addresses                                                           //
+//========================================================================================//
+#define defaultaddress        0x00                                                        // default address to use after reset
+
+#define adrsfirmware1         0x20                                                        // firmware number and revision data
+#define adrsfirmware2         0x21                                                        // firmware number and revision data
+#define adrsfirmware3         0x22                                                        // firmware number and revision data
+#define adrsfirmware4         0x23                                                        // firmware number and revision data
+
+#define adrsA2DChannel0       0x50                                                        // address of a2d channel 0 reader
+#define adrsA2DChannel1       0x51                                                        // address of a2d channel 1 reader
+
+#define adrsswitchbank1       0x60                                                        // address of switch bank 1 reader
+#define adrsswitchbank2       0x61                                                        // address of switch bank 2 reader
+#define adrsswitchbank3       0x62                                                        // address of switch bank 3 reader
+#define adrsswitchbank4       0x63                                                        // address of switch bank 4 reader
+
+#define adrsexternalenables   0x80                                                        // address of control register for external hardware enable/disable
+
+//----------------------------------------------------------------------------------------
+//          external hardware control enable bits
+//----------------------------------------------------------------------------------------
+#define closeCOMports         0x63
+#define A2DEngineEnable       0x01                                                        // turn the a2d sample in engine on
+#define onSwCmnLo             0x02
+#define onSwCmnHi             0x01
+#define onRs422port           0x18
+#define onRs422portDe         0x08
+#define onRs422portRe         0x10
+#define onRs233port           0x20
+//----------------------------------------------------------------------------------------
+//          commbined hardware control enable word
+//----------------------------------------------------------------------------------------
+#define defaultexternal       onRs233port                
+//----------------------------------------------------------------------------------------
+// bitcontrol = 0xFF all channels on, 0x00 all channels off
+// pwmon      = 0xFF all pwms off, 0x00 pwm works with all channels
+//----------------------------------------------------------------------------------------
+// PWM01  BIT 76543210    SNK -> 01 02 03 04 05 06 07 08 09 10 11 12 13 14 | SRC -> 01 02 03 04 05 06
+// DC CHANNEL 21332222    J8 PIN 20 19 18 17 16 15 14 13 12 11 10  9  8  7 | J8 PIN  1  2  3  4  5  6
+// PWM02  BIT 543210      PWMCTRL 01 BIT  7  6  5  4  3  2  1  0  PWMCTRL 01 BIT  7  6  5  4  3  2  1  0
+// DC CHANNEL 21332222    SNK ->         08 07 06 05 04 03 02 01  SNK ->          X  X 14 13 12 11 10 09
+// PWM03  BIT 543210      PWMCTRL 03 BIT  7  6  5  4  3  2  1  0
+// DC CHANNEL 21332222    SRC ->               06 05 04 03 02 01
+//----------------------------------------------------------------------------------------
+#define adrsbitcontrol1       0x90   // USED TO TURN BITS ON AND OFF                      // address of discrete bit control bank 1
+#define adrspwmon01           0xA0   // USED TO ENABLE THE PWM TO THE CONTROLLED BIT      // address of the device enable latch bank 1
+#define defaultpwmctrl01      0xFD   // PWM OFF EXCEPT BIT 1                              // default off state of device enable bank = 0xFF
+
+#define adrsbitcontrol2       0x91                                                        // address of discrete bit control bank 2
+#define adrspwmon02           0xA1                                                        // address of the device enable latch bank 2
+#define defaultpwmctrl02      0xFF                                                        // default off state of device enable bank = 0x3F
+
+#define adrsbitcontrol3       0x92                                                        // address of discrete bit control bank 3
+#define adrspwmon03           0xA2                                                        // address of the device enable latch bank 3
+#define defaultpwmctrl03      0x3F                                                        // default off state of device enable bank = 0x3F
+
+#define defaultbitonbit3      0x3F   // ALL SOURCE BITS OFF                               // define the default state
+
+#define adrsDutyCycle01       0xC0                                                        // address_xC0 address of pwm duty cycle control register for discrete 2
+#define adrsDutyCycle02       0xC1                                                        // address_xC1 address of pwm duty cycle control register for discrete 2
+#define adrsDutyCycle03       0xC2                                                        // address_xC2 address of pwm duty cycle control register for discrete 3
+#define adrsDutyCycle04       0xC3                                                        // address_xC2 address of pwm duty cycle control register for discrete 3
+
+#define defaultdutycycle      0x0C00                                                      // default PWM duty cycle
+//----------------------------------------------------------------------------------------//
+//           end fpga #define declarations                                                //
+//----------------------------------------------------------------------------------------//
+
+//----------------------------------------------------------------------------------------//
+//          GLOBAL VARIABLES DECLARATIONS                                                 //
+//----------------------------------------------------------------------------------------//
+typedef struct app_buf {                                                                  //
+      ulong ipaddr;                                                                       //
+      byte  buf[100];                                                                     //
+      uint  uip_len;                                                                      //
+      uint  PayLoadOffset;                                                                //
+      byte  wait;                                                                         //
+}APP_BUF;                                                                                 //
+
+APP_BUF     app_arp_buf;                                                                  //
+
+ulong  processEthernetTraffic(ulong ptc, dls);                                            //
+//----------------------------------------------------------------------------------------//
+//          static variable declarations                                                  //
+//----------------------------------------------------------------------------------------//
+byte  EthTxBuffer[EthMaxTxSize];                                                          //
+uint              EthTxBufHead            = 0;                                            // array index to write data into the temporary buffer
+uint              EthTxBufTail            = 0;                                            // array index to transfer data into the actual transmit buffer
+uint              EthTxCount              = 0;                                            // number of bytes in the temporary buffer to transmit
+uint              EthTxBufIndx            = 0;                                            // number of bytes in the temporary buffer to transmit
+uint              HrtBeatCnt              = 0x00;                                         //
+static byte       MinMsgLen;                                                              //
+       byte       HardwareSettings;                                                       //
+//----------------------------------------------------------------------------------------//
+//          hardware specific definitions                                                 //
+//----------------------------------------------------------------------------------------//
+// ACC (0xE0) Bit Registers                                                               //
+sbit A_0                      = 0xE0;                                                     //
+sbit A_1                      = 0xE1;                                                     //
+sbit A_2                      = 0xE2;                                                     //
+sbit A_3                      = 0xE3;                                                     //
+sbit A_4                      = 0xE4;                                                     //
+sbit A_5                      = 0xE5;                                                     //
+sbit A_6                      = 0xE6;                                                     //
+sbit A_7                      = 0xE7;                                                     //
+
+       uint idata Word1    _at_ 0x20;                                                     //
+       byte bdata HiByte   _at_ 0x20;                                                     //
+       byte bdata LoByte   _at_ 0x21;                                                     //
+    sbit          bits00  = LoByte^0;                                                     //
+    sbit          bits01  = LoByte^1;                                                     //
+    sbit          bits02  = LoByte^2;                                                     //
+    sbit          bits03  = LoByte^3;                                                     //
+    sbit          bits04  = LoByte^4;                                                     //
+    sbit          bits05  = LoByte^5;                                                     //
+    sbit          bits06  = LoByte^6;                                                     //
+    sbit          bits07  = LoByte^7;                                                     //
+    sbit          bits08  = HiByte^0;                                                     //
+    sbit          bits09  = HiByte^1;                                                     //
+    sbit          bits0A  = HiByte^2;                                                     //
+    sbit          bits0B  = HiByte^3;                                                     //
+    sbit          bits0C  = HiByte^4;                                                     //
+    sbit          bits0D  = HiByte^5;                                                     //
+    sbit          bits0E  = HiByte^6;                                                     //
+    sbit          bits0F  = HiByte^7;                                                     //
+//========================================================================================//
+//          port pin name definition                                                      //
+//========================================================================================//
+byte PinDefStr0[] = PORT0_PIN_NAMES;                                                      //
+byte PinDefStr1[] = PORT1_PIN_NAMES;                                                      //
+byte PinDefStr2[] = PORT2_PIN_NAMES;                                                      //
+byte PinDefStr3[] = PORT3_PIN_NAMES;                                                      //
+//========================================================================================//
+//          ethernet message frames                                                       //
+//========================================================================================//
+byte bufStatusData[bufStatusRspLength];                                                   //
+byte bufIndicatorData[bufIndicatorReqLength];                                             //
+byte bufDimmingData[bufDimmingReqLength];                                                 //
+byte bufFirmwareData[bufFirmwareRspLength];                                               //
+//----------------------------------------------------------------------------------------//
+byte    SwBank02Cnt;                                                                      // 
+#define SwBank02Delay 0x20;                                                               //
+byte    SwBank03Cnt;                                                                      // 
+#define SwBank03Delay 0x20;                                                               //
+byte    SwBank04Cnt;                                                                      // 
+#define SwBank04Delay 0x20;                                                               //
+//----------------------------------------------------------------------------------------//
+//                local variables declarations                                            //
+//----------------------------------------------------------------------------------------//
+byte fpgaOutputData[FPGADataLen];                                                         // data output from the FPGA -- switch/a2d/fpga revision
+byte bitmap[numof5841used];                                                               //
+uint ADCount;                                                                             //
+bool fDebugMode;                                                                          //
+bool fTransmitMode;                                                                       //
+byte ChngCnt;                                                                             //
+//----------------------------------------------------------------------------------------//
+//                bit addressable register definitions                                    //
+//----------------------------------------------------------------------------------------//
+static uint idata      wordreg _at_ 0x20;                                                 //
+static byte bdata btmpH _at_ 0x20;                                                        //
+    sbit          btmpH0 = btmpH^0;                                                       //
+    sbit          btmpH1 = btmpH^1;                                                       //
+    sbit          btmpH2 = btmpH^2;                                                       //
+    sbit          btmpH3 = btmpH^3;                                                       //
+    sbit          btmpH4 = btmpH^4;                                                       //
+    sbit          btmpH5 = btmpH^5;                                                       //
+    sbit          btmpH6 = btmpH^6;                                                       //
+    sbit          btmpH7 = btmpH^7;                                                       //
+static byte bdata btmpL _at_ 0x21;                                                        //
+    sbit          btmpL0 = btmpL^0;                                                       //
+    sbit          btmpL1 = btmpL^1;                                                       //
+    sbit          btmpL2 = btmpL^2;                                                       //
+    sbit          btmpL3 = btmpL^3;                                                       //
+    sbit          btmpL4 = btmpL^4;                                                       //
+    sbit          btmpL5 = btmpL^5;                                                       //
+    sbit          btmpL6 = btmpL^6;                                                       //
+    sbit          btmpL7 = btmpL^7;                                                       //
+//te bufIndicatorData[ix01];                                                              //
+    sbit          data01_d0 = btmpL^0;                                                    //
+    sbit          data01_d1 = btmpL^1;                                                    //
+    sbit          data01_d2 = btmpL^2;                                                    //
+    sbit          data01_d3 = btmpL^3;                                                    //
+    sbit          data01_d4 = btmpL^4;                                                    //
+    sbit          data01_d5 = btmpL^5;                                                    //
+    sbit          data01_d6 = btmpL^6;                                                    //
+    sbit          data01_d7 = btmpL^7;                                                    //
+//te bufIndicatorData[ix02];                                                              //
+    sbit          data02_d0 = btmpL^0;                                                    //
+    sbit          data02_d1 = btmpL^1;                                                    //
+    sbit          data02_d2 = btmpL^2;                                                    //
+    sbit          data02_d3 = btmpL^3;                                                    //
+    sbit          data02_d4 = btmpL^4;                                                    //
+    sbit          data02_d5 = btmpL^5;                                                    //
+    sbit          data02_d6 = btmpL^6;                                                    //
+    sbit          data02_d7 = btmpL^7;                                                    //
+//te bufIndicatorData[ix03];                                                              //
+    sbit          data03_d0 = btmpL^0;                                                    //
+    sbit          data03_d1 = btmpL^1;                                                    //
+    sbit          data03_d2 = btmpL^2;                                                    //
+    sbit          data03_d3 = btmpL^3;                                                    //
+    sbit          data03_d4 = btmpL^4;                                                    //
+    sbit          data03_d5 = btmpL^5;                                                    //
+    sbit          data03_d6 = btmpL^6;                                                    //
+    sbit          data03_d7 = btmpL^7;                                                    //
+//te bufIndicatorData[ix04];                                                              //
+    sbit          data04_d0 = btmpL^0;                                                    //
+    sbit          data04_d1 = btmpL^1;                                                    //
+    sbit          data04_d2 = btmpL^2;                                                    //
+    sbit          data04_d3 = btmpL^3;                                                    //
+    sbit          data04_d4 = btmpL^4;                                                    //
+    sbit          data04_d5 = btmpL^5;                                                    //
+    sbit          data04_d6 = btmpL^6;                                                    //
+    sbit          data04_d7 = btmpL^7;                                                    //
+                                                                                          // block sch connector.pin
+static byte bdata U03 _at_ 0x22;                                                          // name  sch connector    sch U#_seg   name //
+    sbit          J1_01 = U03^7;                                                          // seg-01 connector-J1.01 driver-_1
+    sbit          J1_02 = U03^6;                                                          // seg-02 connector-J1.02 driver-U03_2
+    sbit          J1_03 = U03^5;                                                          // seg-03 connector-J1.03 driver-U03_3
+    sbit          J1_04 = U03^4;                                                          // seg-04 connector-J1.04 driver-U03_4
+    sbit          J1_05 = U03^3;                                                          // seg-05 connector-J1.05 driver-U03_5
+    sbit          J1_06 = U03^2;                                                          // seg-06 connector-J1.06 driver-U03_6
+    sbit          J1_07 = U03^1;                                                          // seg-07 connector-J1.07 driver-U03_7
+    sbit          J1_08 = U03^0;                                                          // seg-08 connector-J1.08 driver-U03_8
+static byte bdata U05 _at_ 0x23;                                                          //
+    sbit          J1_09 = U05^7;                                                          // seg-09 connector-J1.09 driver-U05_1
+    sbit          J1_10 = U05^6;                                                          // seg-10 connector-J1.10 driver-U05_2
+    sbit          J1_11 = U05^5;                                                          // seg-11 connector-J1.11 driver-U05_3
+    sbit          J1_12 = U05^4;                                                          // seg-12 connector-J1.12 driver-U05_4
+    sbit          J1_13 = U05^3;                                                          // seg-13 connector-J1.13 driver-U05_5
+    sbit          J1_14 = U05^2;                                                          // seg-14 connector-J1.14 driver-U05_6
+    sbit          J1_15 = U05^1;                                                          // seg-15 connector-J1.15 driver-U05_7
+    sbit          J1_16 = U05^0;                                                          // seg-16 connector-J1.16 driver-U05_8
+static byte bdata U07 _at_ 0x22;                                                          //
+    sbit          J1_17 = U07^7;                                                          // seg-17 connector-J1.17 driver-U07_1
+    sbit          J1_18 = U07^6;                                                          // seg-18 connector-J1.18 driver-U07_2
+    sbit          J1_19 = U07^5;                                                          // seg-19 connector-J1.19 driver-U07_3
+    sbit          J1_20 = U07^4;                                                          // seg-20 connector-J1.20 driver-U07_4
+    sbit          J1_21 = U07^3;                                                          // seg-21 connector-J1.21 driver-U07_5
+    sbit          J1_22 = U07^2;                                                          // seg-22 connector-J1.22 driver-U07_6
+    sbit          J1_23 = U07^1;                                                          // seg-23 connector-J1.23 driver-U07_7
+    sbit          J1_24 = U07^0;                                                          // seg-24 connector-J1.24 driver-U07_8
+static byte bdata U09 _at_ 0x23;                                                          //
+    sbit          J1_25 = U09^7;                                                          // seg-25 connector-J1.25 driver-U09_1
+    sbit          J1_26 = U09^6;                                                          // seg-26 connector-J1.26 driver-U09_2
+    sbit          J1_27 = U09^5;                                                          // seg-27 connector-J1.27 driver-U09_3
+    sbit          J1_28 = U09^4;                                                          // seg-28 connector-J1.28 driver-U09_4
+    sbit          J1_29 = U09^3;                                                          // seg-29 connector-J1.29 driver-U09_5
+    sbit          J1_30 = U09^2;                                                          // seg-30 connector-J1.30 driver-U09_6
+    sbit          J1_31 = U09^1;                                                          // seg-31 connector-J1.31 driver-U09_7
+    sbit          J1_32 = U09^0;                                                          // seg-32 connector-J1.32 driver-U09_8
+static byte bdata U11 _at_ 0x22;                                                          //
+    sbit          J2_01 = U11^7;                                                          // seg-33 connector-J2.01 driver-U11_1
+    sbit          J2_02 = U11^6;                                                          // seg-34 connector-J2.02 driver-U11_2
+    sbit          J2_03 = U11^5;                                                          // seg-35 connector-J2.03 driver-U11_3
+    sbit          J2_04 = U11^4;                                                          // seg-36 connector-J2.04 driver-U11_4
+    sbit          J2_05 = U11^3;                                                          // seg-37 connector-J2.05 driver-U11_5
+    sbit          J2_06 = U11^2;                                                          // seg-38 connector-J2.06 driver-U11_6
+    sbit          J2_07 = U11^1;                                                          // seg-39 connector-J2.07 driver-U11_7
+    sbit          J2_08 = U11^0;                                                          // seg-40 connector-J2.08 driver-U11_8
+static byte bdata U13 _at_ 0x23;        
+    sbit          J2_09 = U13^7;                                                          // seg-41 connector-J2.09 driver-U13_1
+    sbit          J2_10 = U13^6;                                                          // seg-42 connector-J2.10 driver-U13_2
+    sbit          J2_11 = U13^5;                                                          // seg-43 connector-J2.11 driver-U13_3
+    sbit          J2_12 = U13^4;                                                          // seg-44 connector-J2.12 driver-U13_4
+    sbit          J2_13 = U13^3;                                                          // seg-45 connector-J2.13 driver-U13_5
+    sbit          J2_14 = U13^2;                                                          // seg-46 connector-J2.14 driver-U13_6
+    sbit          J2_15 = U13^1;                                                          // seg-47 connector-J2.15 driver-U13_7
+    sbit          J2_16 = U13^0;                                                          // seg-48 connector-J2.16 driver-U13_8
+static byte bdata U04 _at_ 0x22;                                                          //
+    sbit          J2_17 = U04^7;                                                          // seg-49 connector-J2.17 driver-U04_1
+    sbit          J2_18 = U04^6;                                                          // seg-50 connector-J2.18 driver-U04_2
+    sbit          J2_19 = U04^5;                                                          // seg-51 connector-J2.19 driver-U04_3
+    sbit          J2_20 = U04^4;                                                          // seg-52 connector-J2.20 driver-U04_4
+    sbit          J2_21 = U04^3;                                                          // seg-53 connector-J2.21 driver-U04_5
+    sbit          J2_22 = U04^2;                                                          // seg-54 connector-J2.22 driver-U04_6
+    sbit          J2_23 = U04^1;                                                          // seg-55 connector-J2.23 driver-U04_7
+    sbit          J2_24 = U04^0;                                                          // seg-56 connector-J2.24 driver-U04_8
+static byte bdata U06 _at_ 0x23;                                                          //
+    sbit          J2_25 = U06^7;                                                          // seg-57 connector-J2.25 driver-U06_1
+    sbit          J2_26 = U06^6;                                                          // seg-58 connector-J2.26 driver-U06_2
+    sbit          J2_27 = U06^5;                                                          // seg-59 connector-J2.27 driver-U06_3
+    sbit          J2_28 = U06^4;                                                          // seg-60 connector-J2.28 driver-U06_4
+    sbit          J2_29 = U06^3;                                                          // seg-61 connector-J2.29 driver-U06_5
+    sbit          J2_30 = U06^2;                                                          // seg-62 connector-J2.30 driver-U06_6
+    sbit          J2_31 = U06^1;                                                          // seg-63 connector-J2.31 driver-U06_7
+    sbit          J2_32 = U06^0;                                                          // seg-64 connector-J2.32 driver-U06_8
+static byte bdata U08 _at_ 0x22;                                                          //
+    sbit          J3_01 = U04^7;                                                          // seg-65 connector-J3.01 driver-U08_1
+    sbit          J3_02 = U04^6;                                                          // seg-66 connector-J3.02 driver-U08_2
+    sbit          J3_03 = U04^5;                                                          // seg-67 connector-J3.03 driver-U08_3
+    sbit          J3_04 = U04^4;                                                          // seg-68 connector-J3.04 driver-U08_4
+    sbit          J3_05 = U04^3;                                                          // seg-69 connector-J3.05 driver-U08_5
+    sbit          J3_06 = U04^2;                                                          // seg-70 connector-J3.06 driver-U08_6
+    sbit          J3_07 = U04^1;                                                          // seg-71 connector-J3.07 driver-U08_7
+    sbit          J3_08 = U04^0;                                                          // seg-72 connector-J3.08 driver-U08_8
+static byte bdata U10 _at_ 0x23;                                                          //
+    sbit          J3_09 = U06^7;                                                          // seg-73 connector-J3.09 driver-U10_1
+    sbit          J3_10 = U06^6;                                                          // seg-74 connector-J3.10 driver-U10_2
+    sbit          J3_11 = U06^5;                                                          // seg-75 connector-J3.11 driver-U10_3
+    sbit          J3_12 = U06^4;                                                          // seg-76 connector-J3.12 driver-U10_4
+    sbit          J3_13 = U06^3;                                                          // seg-77 connector-J3.13 driver-U10_5
+    sbit          J3_14 = U06^2;                                                          // seg-78 connector-J3.14 driver-U10_6
+    sbit          J3_15 = U06^1;                                                          // seg-79 connector-J3.15 driver-U10_7
+    sbit          J3_16 = U06^0;                                                          // seg-80 connector-J3.16 driver-U10_8
+static byte bdata U12 _at_ 0x22;                                                          //
+    sbit          J3_17 = U04^7;                                                          // seg-81 connector-J3.17 driver-U12_1
+    sbit          J3_18 = U04^6;                                                          // seg-82 connector-J3.18 driver-U12_2
+    sbit          J3_19 = U04^5;                                                          // seg-83 connector-J3.19 driver-U12_3
+    sbit          J3_20 = U04^4;                                                          // seg-84 connector-J3.20 driver-U12_4
+    sbit          J3_21 = U04^3;                                                          // seg-85 connector-J3.21 driver-U12_5
+    sbit          J3_22 = U04^2;                                                          // seg-86 connector-J3.22 driver-U12_6
+    sbit          J3_23 = U04^1;                                                          // seg-87 connector-J3.23 driver-U12_7
+    sbit          J3_24 = U04^0;                                                          // seg-88 connector-J3.24 driver-U12_8
+static byte bdata U14 _at_ 0x23;                                                          //
+    sbit          J3_25 = U06^7;                                                          // seg-89 connector-J3.25 driver-U14_1
+    sbit          J3_26 = U06^6;                                                          // seg-90 connector-J3.26 driver-U14_2
+    sbit          J3_27 = U06^5;                                                          // seg-91 connector-J3.27 driver-U14_3
+    sbit          J3_28 = U06^4;                                                          // seg-92 connector-J3.28 driver-U14_4
+    sbit          J3_29 = U06^3;                                                          // seg-93 connector-J3.29 driver-U14_5
+    sbit          J3_30 = U06^2;                                                          // seg-94 connector-J3.30 driver-U14_6
+    sbit          J3_31 = U06^1;                                                          // seg-95 connector-J3.31 driver-U14_7
+    sbit          J3_32 = U06^0;                                                          // seg-96 connector-J3.32 driver-U14_8
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          action counters                                                               //
+//========================================================================================//
+uint acResetRequest;                                  // host requested       //          //
+uint acOptionsRequest;                                // host requested       //          //
+uint acFirmwareRequest;                               // host requested       //          //
+uint acStatusRequest;                                 // host requested       //          //
+uint acIndicatorRequest;                              // host requested       //          //
+uint acDimmingRequest;                                // host requested       //          //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//                local subprogram prototype declarations                                 //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+static void UpdateIpSettings(ulong);                                                      // update the IP and port setting
+void  NOP(uint loop);                                                                     //
+// ==== function used to access the TOE buffers and controls =============================//
+uint  wrChrEthTxBuffer(byte ch, uint Count);                                              //
+uint  wrStrEthTxBuffer(byte* pData, uint cnt);                                            // write data to the ethernet transmit buffer
+void  printFirmwareInformation();                                                         //
+void  printDeviceConfigurationInformation();                                              //
+void  printdHex2Bin(byte num);                                                            //
+void  writeEthTxCount(uint TempCount);                                                    //
+uint  readEthTxBufCount(void);                                                            //
+// ==== functions to place data in the ethernet buffer for transmission ==================//
+void  processResetRsp(void);                                                              //
+void  processStatusRequest(void);                                                         //
+void  processIndicatorRequest(void);                                                      //
+void  processDimmingRequest(void);                                                        //
+void  processFirmwareRsp(void);                                                           //
+// ==== functions to retrive user data and process it ====================================//
+void  getStatusData01(void);                                                              //
+void  getStatusData02(void);                                                              //
+void  getStatusData03(void);                                                              //
+void  getStatusData04(void);                                                              //
+// ==== serial sink driver control functions =============================================//
+void  createbitmap5124(byte *hostdata,byte *pbitmap);                                     //
+void  loaddriverMIC5841(byte *pbitmap, byte num);                                         // Serial sink driver load
+// =======================================================================================//
+
+//== ---------------------------------------------------------------------------------- ==//
+//== -                       local subprogram definitions                             - ==//
+//== ---------------------------------------------------------------------------------- ==//
+
+//----------------------------------------------------------------------------------------//
+// name    : NOP                                                                          //
+// purpose : create a small runtime delay                                                 //
+// params  : the number of times to loop                                                  //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------//
+void NOP(uint loop)                                                                       //
+{
+      uint i;                                                                             //
+
+      for (i = 0; i < loop; i++)                                                          //
+       {    _nop_();    }                                                                 //
+}
+
+//----------------------------------------------------------------------------------------
+// name    : wrEthTxBuffer(byte ch, uint Count)                                           //
+// purpose : write data to the ring buffer to transmit over Ethernet                      //
+// params  : Data byte to write, Count of bytes currently in buffer                       //
+// returns : updated count of bytes in buffer                                             //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+uint wrChrEthTxBuffer(byte ch, uint Count)                                                // write data to the ethernet transmit buffer
+{
+      EthTxBuffer[EthTxBufIndx] = ch;                                                     // add the data to the ethernet buffer
+      EthTxBufIndx++;                                                                     // update the ethernet buffer index
+      Count++;                                                                            // update the count showing the number of bytes in the buffer
+      if (EthTxBufIndx == EthMaxTxSize)                                                   // check to see if the index is at the maximum
+        EthTxBufIndx = 0;                                                                 // reset the index to the first byte of the buffer
+      return Count;                                                                       // pass the buffer count back to the calling routine
+}
+
+//----------------------------------------------------------------------------------------
+// name    : wrStrEthTxBuffer(byte* pData, uint cnt)                                      //
+// purpose : write data to the ring buffer to transmit over Ethernet                      //
+// params  : pointer to the data bytes to write, number of bytes to write                 //
+// returns : number of bytes sucessfully written into the buffer                          //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+uint wrStrEthTxBuffer(byte* pData, uint cnt)                                              // write data to the ethernet transmit buffer
+{
+      uint TmpCnt;                                                                        //
+      uint offset;                                                                        //
+
+      if((EthTxBufIndx + cnt) > EthMaxTxSize)                                             // make sure that the number of bytes to write added to the number
+      {                                                                                   //  of bytes in the buffer already is not greater then the buffer
+        offset = EthMaxTxSize - EthTxBufIndx;                                             // find the number of bytes that will fit in the buffer before overflow
+        memmove(&EthTxBuffer[EthTxBufIndx], pData, offset);                               // fill the remainder of the buffer with the given data
+        memmove(&EthTxBuffer[ix01], pData+offset, cnt - offset);                          // add the remainder of the given data to the begining of the buffer
+        }
+      else                                                                                // else all of the given data will still fit in the buffer
+        {
+        memmove(&EthTxBuffer[EthTxBufIndx], pData, cnt);                                  // place all of the given data into the buffer
+        }
+      EthTxBufIndx += cnt;                                                                // make sure that the index points at the first empty byte
+      EthTxBufIndx &= EthMaxTxMask;                                                       // mask the index to wrap the buffer around into a ring
+      TmpCnt = readEthTxBufCount() + cnt;                                                 // adjust the current buffer count
+      writeEthTxCount(TmpCnt);
+      return TmpCnt;                                                                      // return the number of bytes in the buffer
+}
+
+//----------------------------------------------------------------------------------------
+// name    : WriteEthTxCount(uint TempCount)                                              //
+// purpose : update the count checked by Ethernet process                                 //
+// params  : updated count                                                                //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void writeEthTxCount(uint TempCount)                                                      // update the global ethernet transmit buffer count
+{
+      EthTxCount = TempCount;                                                             // write the new count to the global buffer
+}
+
+//----------------------------------------------------------------------------------------
+// name    : main_readEthChar(byte* pDat)                                                 //
+// purpose : retrieve data from buffer to place in ethernet transmit buffer               //
+// params  : pointer to variable to return                                                //
+// returns : count of data left in buffer                                                 //
+// notes   : this routine replaced GetEthChar defined in main.c.                          //
+//----------------------------------------------------------------------------------------
+uint main_readEthChar(byte* pDat)                                                         // read a data byte from the ethernet buffer
+{
+      uint temp;                                                                          //
+      
+      temp = readEthTxBufCount();                                                         // get the current ethernet buffer count
+      if (temp > 0)                                                                       // see if there are any bytes in the buffer
+        {
+        *pDat = EthTxBuffer[EthTxBufTail];                                                // write the data to the location pointed to by the pointer
+        EthTxBufTail++;                                                                   // update the ethernet ring buffer index
+        if (EthTxBufTail == EthMaxTxSize)                                                 // check the index to make sure that the index remains within the buffer space 
+          {  EthTxBufTail = 0;  }                                                         // reset the index to the first byte of the buffer
+        EthTxCount--;                                                                     // update the count of the bytes in the buffer
+        return EthTxCount;                                                                // pass the altered count back to the calling routine
+        }
+      return 0;                                                                           // write the default value for the count
+}
+
+//----------------------------------------------------------------------------------------
+// name    : readEthTxBufCount(void)                                                      //
+// purpose : read the current number of bytes in the Ethernet ring buffer                 //
+// params  : void                                                                         //
+// returns : current number of bytes in the Ethernet ring buffer                          //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+uint readEthTxBufCount(void)                                                               // retrieve the current number of bytes in the ethernet transmit buffer
+{
+      return EthTxCount;                                                                  // pass the ethernet transmit buffer to the calling routine
+}
+
+//----------------------------------------------------------------------------------------
+// name    : processResetRsp                                                              //
+// purpose : execute all steps required for a response                                    //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void  processResetRsp(void)                                                               //
+{
+      int   i     = 0;
+      byte  tmp   = 0;
+      char  ch    = ' ';
+      uint  port;
+
+      if (acResetRequest != 0)
+        {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the message buffers                                                //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        port = GCONFIG_GetServerDataPktListenPort();                                      // get the port number used by the device
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the message buffers device host communications                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        strncpy(&bufStatusData[ix01],statusdefault,sizeof(statusdefault));                //
+        strncpy(&bufIndicatorData[ix01],indicatordefault,sizeof(indicatordefault));       //
+        strncpy(&bufDimmingData[ix01],dimmingdefault,sizeof(dimmingdefault));             //
+        strncpy(&bufFirmwareData[ix01],firmwaredefault,sizeof(firmwaredefault));          //
+        wordreg = readFpgaData(adrsfirmware1,8);                                          // get the fpga firmware data MSB
+        bufFirmwareData[ix06] = btmpL;                                                    // 
+        wordreg = readFpgaData(adrsfirmware2,8);                                          // get the fpga firmware data 2nd MSB
+        bufFirmwareData[ix07] = btmpL;                                                    // 
+        wordreg = readFpgaData(adrsfirmware3,8);                                          // get the fpga firmware data 3rd MSB
+        bufFirmwareData[ix08] = btmpL;                                                    // 
+        wordreg = readFpgaData(adrsfirmware4,8);                                          // get the fpga firmware data LSB
+        bufFirmwareData[ix09] = btmpL;                                                    // 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//          reset the external hardware functions                                         //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        LogicRst = 1;                                                                     // activate FPGA reset
+        DELAY_Ms(5);                                                                      // wait for the FPGA to see the reset signal
+        LogicRst = 0;                                                                     // activate FPGA reset
+        DELAY_Ms(10);                                                                     // wait for the FPGA to see the reset signal
+        writeFpgaData(adrsexternalenables, defaultexternal, 5);                           // 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize the action counters to zero                                        //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        acResetRequest         = 0;                                                       // clear the display change request flag
+        HrtBeatCnt             = 0;                                                       // turn the heartbeat LED on
+        acStatusRequest        = 0;                                                       // clear the status response action count
+        acIndicatorRequest     = 1;                                                       // clear the status response action count
+        acDimmingRequest       = 1;                                                       // clear the status response action count
+        acFirmwareRequest      = 0;                                                       // clear the firmware response action count
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize the menu for debug port operations                                 //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        UTIL_MenuInit();                                                                   // process any messages entered in the debug window
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//                                                                                        //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        printd("Hardware init           : pass\n\r");                                     //
+        HardwareSettings = 0;                                                             //
+        }
+}
+
+//----------------------------------------------------------------------------------------
+// name    : processStatusRequest                                                         //
+// purpose :                                                                              //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void processStatusRequest(void)                                                           //
+{
+      if (acStatusRequest != 0)                                                           //
+        {
+        wrHost(&bufStatusData[ix01], bufStatusRspLength);                                 // send the host a firmware response message
+        acStatusRequest--;                                                                // clear the status response action count
+        }
+}
+
+//----------------------------------------------------------------------------------------
+// name    : processIndicatorRequest                                                      //
+// purpose :                                                                              //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void  processIndicatorRequest(void)                                                       //
+{
+      if (acIndicatorRequest != 0)                                                        //
+        {
+        createbitmap5124(&bufIndicatorData[ix01], &bitmap[ix03]);                         // map the data to match the hardware
+        loaddriverMIC5841(&bitmap[ix01], numof5841used);                                  // load the drivers with the mapped data
+        acIndicatorRequest--;                                                             // clear the status response action count
+        }
+}
+
+//----------------------------------------------------------------------------------------
+// name    : processDimmingRequest                                                        //
+// purpose :                                                                              //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void processDimmingRequest(void)                                                          //
+{
+      if (acDimmingRequest != 0)                                                          //
+        {
+        writeFpgaData(adrsDutyCycle02, bufDimmingData[ix02], 8);                          // 
+        acDimmingRequest--;                                                               // clear the status response action count
+        }
+}
+
+//----------------------------------------------------------------------------------------
+// name    : processFirmwareRsp                                                           //
+// purpose :                                                                              //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void processFirmwareRsp(void)                                                             //
+{
+      if (acFirmwareRequest > 0)
+        {
+        wrHost(&bufFirmwareData[ix01], bufFirmwareRspLength);                             // send the host a firmware response message
+        acFirmwareRequest--;                                                              // clear the status response action count
+        }
+}
+
+//----------------------------------------------------------------------------------------
+// name    : getStatusData01                                                              //
+// purpose : gather the data for the status message                                       //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void  getStatusData01(void)                                                               //
+{
+        wordreg             = readFpgaData(adrsswitchbank1,5);                            // get the fpga swich bank one register data
+        bufStatusData[ix02] = btmpL & 0x1F;                                               // place the data into the status, and mask off the unused data
+}
+
+//----------------------------------------------------------------------------------------
+// name    : getStatusData02                                                              //
+// purpose : gather the data for the status message                                       //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void  getStatusData02(void)                                                               //
+{
+        byte      tmp;
+
+        wordreg             = readFpgaData(adrsswitchbank1,8);                            // get the fpga swich bank one register data
+        tmp                 = btmpL;                                                      // get the second byte of switch data
+        wordreg             = readFpgaData(adrsswitchbank2,7);                            // get the fpga swich bank one register data
+        btmpH               = btmpL;                                                      // get the first byte of switch data
+        btmpL               = tmp;                                                        // place the first byte of switch data into the word
+        wordreg             = wordreg >> 5;                                               // reformat the byte into the bits location for the status byte
+        bufStatusData[ix03] = btmpL & 0x1F;                                               // place the data into the status, and mask off the unused data
+}
+
+//----------------------------------------------------------------------------------------
+// name    : getStatusData03                                                              //
+// purpose : gather the data for the status message                                       //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void  getStatusData03(void)                                                               //
+{
+        wordreg             = readFpgaData(adrsA2DChannel1,12);                           // get the fpga swich bank one register data
+        wordreg             = wordreg >> 4;                                               // 
+        bufStatusData[ix04] = btmpL;                                                      // place the data into the status, and mask off the unused data
+}
+
+//----------------------------------------------------------------------------------------
+// name    : getStatusData04                                                              //
+// purpose : gather the data for the status message                                       //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void  getStatusData04(void)                                                               //
+{
+        wordreg             = readFpgaData(adrsA2DChannel0,12);                           // get the fpga swich bank one register data
+        wordreg             = wordreg >> 4;                                               // 
+        bufStatusData[ix05] = btmpL;                                                      // place the data into the status, and mask off the unused data
+}
+
+//----------------------------------------------------------------------------------------
+// name    : UpdateIpSettings                                                             //
+// purpose : Update IP address, subnet mak, gateway IP address and DNS IP address         //
+// params  : IP to use for update                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void UpdateIpSettings(ulong ip)                                                           // Update IP address, subnet mask, gateway IP address and DNS IP address
+{
+      if (ip > 0)                                                                         // check the IP to see if it is valid
+        {
+        printd("IP  : %bu.%bu.%bu.%bu\n\r", (byte) ((ip >> 24) & 0x000000FF),             // write the IP address to the user debug port
+                                            (byte) ((ip >> 16) & 0x000000FF),             //
+                                            (byte) ((ip >> 8)  & 0x000000FF),             //
+                                            (byte) ( ip        & 0x000000FF));            //
+        }
+      else                                                                                // the IP was valid
+        if (ip == 0)                                                                      // check the IP to see if it is valid
+          {
+          ulong mask = GCONFIG_GetNetmask();                                              // retrieve the default net mask
+          ip = GCONFIG_GetServerStaticIP();                                               // retrieve the static IP
+          TCPIP_SetIPAddr(ip);                                                            // write the default IP addess into the DCB
+          STOE_SetIPAddr(ip);                                                             // write the default IP addess into the DCB
+          TCPIP_SetSubnetMask(mask);                                                      // write the default net mask into the DCB
+          STOE_SetSubnetMask(mask);                                                       // write the default net mask into the DCB
+          }
+      GS2E_Init();                                                                        //
+} // End of UpdateIpSettings //
+
+//----------------------------------------------------------------------------------------
+// name    : printdHex2Bin(byte num)
+// purpose : 
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void printdHex2Bin(byte num)
+{
+  if((num & 0x80) == 0) printd("0");  else printd("1");
+  if((num & 0x40) == 0) printd("0");  else printd("1");
+  if((num & 0x20) == 0) printd("0");  else printd("1");
+  if((num & 0x10) == 0) printd("0");  else printd("1");
+  if((num & 0x08) == 0) printd("0");  else printd("1");
+  if((num & 0x04) == 0) printd("0");  else printd("1");
+  if((num & 0x02) == 0) printd("0");  else printd("1");
+  if((num & 0x01) == 0) printd("0 "); else printd("1 ");
+}
+
+//----------------------------------------------------------------------------------------
+// name    : 
+// purpose : reformat host data to match device hardware
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   : using serial sink drivers MIC-5841
+//----------------------------------------------------------------------------------------
+void createbitmap5124(byte *hostdata,byte *pbitmap)
+{
+      hostdata++;                                                                         // move the pointer to the next byte of host data
+      btmpL = *hostdata;                                                                  // get segment data received from host
+      U03   = 0;                                                                          //
+      J1_01 = data01_d1;                                                                  // seg-01 connector-J1.01 driver-U03_1 name-data01_d0
+      J1_02 = data01_d0;                                                                  // seg-02 connector-J1.02 driver-U03_2 name-data01_d1
+      J1_03 = data01_d2;                                                                  // seg-03 connector-J1.03 driver-U03_3 name-data01_d2
+      J1_04 = data01_d2;                                                                  // seg-04 connector-J1.04 driver-U03_4 name-data01_d3
+      J1_05 = data01_d4;                                                                  // seg-05 connector-J1.05 driver-U03_5 name-data01_d4
+      J1_06 = data01_d3;                                                                  // seg-06 connector-J1.06 driver-U03_6 name-data01_d5
+      J1_07 = data01_d6;                                                                  // seg-07 connector-J1.07 driver-U03_7 name-data01_d6
+      J1_08 = data01_d5;                                                                  // seg-08 connector-J1.08 driver-U03_8 name-data01_d7
+      *pbitmap = U03;                                                                     // save the IC bit control data for ouput
+      pbitmap--;                                                                          // move the pointer to the next byte in the bitmap
+
+      hostdata++;                                                                         // move the pointer to the next byte of host data
+      btmpL = *hostdata;                                                                  // get segment data received from host
+      U05   = 0;                                                                          //
+      J1_09 = data02_d1;                                                                  // seg-09 connector-J1.09 driver-U05_1 name-data02_d0
+      J1_10 = data02_d0;                                                                  // seg-10 connector-J1.10 driver-U05_2 name-data02_d1
+      J1_11 = data02_d3;                                                                  // seg-11 connector-J1.11 driver-U05_3 name-data02_d2
+      J1_12 = data02_d2;                                                                  // seg-12 connector-J1.12 driver-U05_4 name-data02_d3
+      J1_13 = data02_d5;                                                                  // seg-13 connector-J1.13 driver-U05_5 name-data02_d4
+      J1_14 = data02_d4;                                                                  // seg-14 connector-J1.14 driver-U05_6 name-data02_d5
+      J1_16 = data03_d6;                                                                  // seg-16 connector-J1.16 driver-U05_8 name-data02_d7
+      hostdata++;                                                                         // move the pointer to the next byte of host data
+      btmpL = *hostdata;                                                                  // get segment data received from host
+      J1_15 = data03_d0;                                                                  // seg-15 connector-J1.15 driver-U05_7 name-data02_d6
+      *pbitmap = U05;                                                                     // save the IC bit control data for ouput
+      pbitmap--;                                                                          // move the pointer to the next byte in the bitmap
+
+//      hostdata++;                                                                         // move the pointer to the next byte of host data
+//      btmpL = *hostdata;                                                                  // get segment data received from host
+      U07   = 0;        
+      J1_17 = data03_d2;                                                                  // seg-17 connector-J1.17 driver-U07_1 name-data03_d0
+      J1_18 = data03_d1;                                                                  // seg-18 connector-J1.18 driver-U07_2 name-data03_d1
+      J1_19 = data03_d4;                                                                  // seg-19 connector-J1.19 driver-U07_3 name-data03_d2
+      J1_20 = data03_d3;                                                                  // seg-20 connector-J1.20 driver-U07_4 name-data03_d3
+      J1_21 = data03_d4;                                                                  // seg-21 connector-J1.21 driver-U07_5 name-data03_d4
+      J1_22 = data03_d5;                                                                  // seg-22 connector-J1.22 driver-U07_6 name-data03_d5
+      J1_23 = data03_d6;                                                                  // seg-23 connector-J1.23 driver-U07_7 name-data03_d6
+      J1_24 = data03_d7;                                                                  // seg-24 connector-J1.24 driver-U07_8 name-data03_d7
+      *pbitmap = U07;                                                                     // save the IC bit control data for ouput
+//      pbitmap--;                                                                          // move the pointer to the next byte in the bitmap
+
+//      hostdata++;                                                                         // move the pointer to the next byte of host data
+//      btmpL = *hostdata;                                                                  // get segment data received from host
+//      U09   = 0;                                                                          //
+//      J1_25 = data04_d0;                                                                  // seg-25 connector-J1.25 driver-U09_1 name-data04_d0
+//      J1_26 = data04_d1;                                                                  // seg-26 connector-J1.26 driver-U09_2 name-data04_d1
+//      J1_27 = data04_d2;                                                                  // seg-25 connector-J1.27 driver-U09_3 name-data04_d2
+//      J1_28 = data04_d3;                                                                  // seg-28 connector-J1.28 driver-U09_4 name-data04_d3
+//      J1_29 = data04_d4;                                                                  // seg-29 connector-J1.29 driver-U09_5 name-data04_d4
+//      J1_30 = data04_d5;                                                                  // seg-30 connector-J1.30 driver-U09_6 name-data04_d5
+//      J1_31 = data04_d6;                                                                  // seg-31 connector-J1.31 driver-U09_7 name-data04_d6
+//      J1_32 = data04_d7;                                                                  // seg-32 connector-J1.32 driver-U09_8 name-data04_d7
+//      *pbitmap = U09;                                                                     // save the IC bit control data for ouput
+//      pbitmap--;                                                                          // move the pointer to the next byte in the bitmap
+
+//      hostdata++;                                                                         // move the pointer to the next byte of host data
+//      btmpL = *hostdata;                                                                  // load a byte of host indicator data
+//      U11   = 0;                                                                          //
+//      J2_01 = data05_d0;                                                                  // seg-33 connector-J2.01 driver-U11_1 name-data05_d0
+//      J2_02 = data05_d0;                                                                  // seg-34 connector-J2.02 driver-U11_2 name-data05_d1
+//      J2_03 = data05_d0;                                                                  // seg-35 connector-J2.03 driver-U11_3 name-data05_d2
+//      J2_04 = data05_d0;                                                                  // seg-36 connector-J2.04 driver-U11_4 name-data05_d3
+//      J2_05 = data05_d0;                                                                  // seg-37 connector-J2.05 driver-U11_5 name-data05_d4
+//      J2_06 = data05_d0;                                                                  // seg-38 connector-J2.06 driver-U11_6 name-data05_d5
+//      J2_07 = data05_d0;                                                                  // seg-39 connector-J2.07 driver-U11_7 name-data05_d6
+//      J2_08 = data05_d0;                                                                  // seg-40 connector-J2.08 driver-U11_8 name-data05_d7
+//      *pbitmap = U11;                                                                     // save the IC bit control data for ouput
+//      pbitmap--;                                                                          // move the pointer to bitmapped data to the next cell
+
+//      hostdata++;                                                                         // move the pointer to the next byte of host data
+//      btmpL = *hostdata;                                                                  // load a byte of host indicator data
+//      U13   = 0;                                                                          //
+//      J2_09 = data06_d0;                                                                  // seg-41 connector-J2.09 driver-U13_1 name-data06_d0
+//      J2_10 = data06_d1;                                                                  // seg-42 connector-J2.10 driver-U13_2 name-data06_d1
+//      J2_11 = data06_d2;                                                                  // seg-43 connector-J2.11 driver-U13_3 name-data06_d2
+//      J2_12 = data06_d3;                                                                  // seg-44 connector-J2.12 driver-U13_4 name-data06_d3
+//      J2_13 = data06_d4;                                                                  // seg-45 connector-J2.13 driver-U13_5 name-data06_d4
+//      J2_14 = data06_d5;                                                                  // seg-46 connector-J2.14 driver-U13_6 name-data06_d5
+//      J2_15 = data06_d6;                                                                  // seg-47 connector-J2.15 driver-U13_7 name-data06_d6
+//      J2_16 = data06_d7;                                                                  // seg-48 connector-J2.16 driver-U13_8 name-data06_d7
+//      *pbitmap = U13;                                                                     // save the IC bit control data for ouput
+//      pbitmap--;                                                                          // move the pointer to bitmapped data to the next cell
+
+//      hostdata++;                                                                         // move the pointer to the next byte of host data
+//      btmpL = *hostdata;                                                                  // load a byte of host indicator data
+//      U04   = 0;                                                                          //
+//      J2_17 = data07_d0;                                                                  // seg-49 connector-J2.17 driver-U04_1 name-data07_d0
+//      J2_18 = data07_d1;                                                                  // seg-50 connector-J2.18 driver-U04_2 name-data07_d1
+//      J2_19 = data07_d2;                                                                  // seg-51 connector-J2.19 driver-U04_3 name-data07_d2
+//      J2_20 = data07_d3;                                                                  // seg-52 connector-J2.20 driver-U04_4 name-data07_d3
+//      J2_21 = data07_d4;                                                                  // seg-53 connector-J2.21 driver-U04_5 name-data07_d4
+//      J2_22 = data07_d5;                                                                  // seg-54 connector-J2.22 driver-U04_6 name-data07_d5
+//      J2_23 = data07_d6;                                                                  // seg-55 connector-J2.23 driver-U04_7 name-data07_d6
+//      J2_24 = data07_d7;                                                                  // seg-56 connector-J2.24 driver-U04_8 name-data07_d7
+//      *pbitmap = U04;                                                                     // save the IC bit control data for ouput
+//      pbitmap--;                                                                          // move the pointer to bitmapped data to the next cell
+
+//      hostdata++;                                                                         // move the pointer to the previous byte of host data
+//      btmpL = *hostdata;                                                                  // load a byte of host indicator data
+//      U06   = 0;                                                                          //
+//      J2_25 = data08_d0;                                                                  // seg-57 connector-J2.25 driver-U06_1 name-data08_d0
+//      J2_26 = data08_d1;                                                                  // seg-58 connector-J2.26 driver-U06_2 name-data08_d1
+//      J2_27 = data08_d2;                                                                  // seg-59 connector-J2.27 driver-U06_3 name-data08_d2
+//      J2_28 = data08_d3;                                                                  // seg-60 connector-J2.28 driver-U06_4 name-data08_d3
+//      J2_29 = data08_d4;                                                                  // seg-61 connector-J2.29 driver-U06_5 name-data08_d4
+//      J2_30 = data08_d5;                                                                  // seg-62 connector-J2.30 driver-U06_6 name-data08_d5
+//      J2_31 = data08_d6;                                                                  // seg-63 connector-J2.31 driver-U06_7 name-data08_d6
+//      J2_32 = data08_d7;                                                                  // seg-64 connector-J2.32 driver-U06_8 name-data08_d7
+//      *pbitmap  = U06;                                                                    // save the IC bit control data for ouput
+//      pbitmap--;                                                                          // move the pointer to bitmapped data to the next cell
+
+//      hostdata++;                                                                         // move the pointer to the previous byte of host data
+//      btmpL = *hostdata;                                                                  // load a byte of host indicator data
+//      U08   = 0;                                                                          //
+//      J2_01 = data09_d0;                                                                  // seg-65 connector-J3.01 driver-U08_1 name-data09_d0
+//      J2_02 = data09_d1;                                                                  // seg-66 connector-J3.02 driver-U08_2 name-data09_d1
+//      J2_03 = data09_d2;                                                                  // seg-67 connector-J3.03 driver-U08_3 name-data09_d2
+//      J2_04 = data09_d3;                                                                  // seg-68 connector-J3.04 driver-U08_4 name-data09_d3
+//      J2_05 = data09_d4;                                                                  // seg-69 connector-J3.05 driver-U08_5 name-data09_d4
+//      J2_06 = data09_d5;                                                                  // seg-70 connector-J3.06 driver-U08_6 name-data09_d5
+//      J2_07 = data09_d6;                                                                  // seg-71 connector-J3.07 driver-U08_7 name-data09_d6
+//      J2_08 = data09_d7;                                                                  // seg-72 connector-J3.08 driver-U08_8 name-data09_d7
+//      *pbitmap  = U08;                                                                    // save the IC bit control data for ouput
+//      pbitmap--;                                                                          // move the pointer to bitmapped data to the next cell
+
+//      hostdata++;                                                                         // move the pointer to the previous byte of host data
+//      btmpL = *hostdata;                                                                  // load a byte of host indicator data
+//      U10   = 0;
+//      J3_09 = data10_d0;                                                                  // seg-73 connector-J3.09 driver-U10_1 name-data10_d0
+//      J3_10 = data10_d1;                                                                  // seg-74 connector-J3.10 driver-U10_2 name-data10_d1
+//      J3_11 = data10_d2;                                                                  // seg-75 connector-J3.11 driver-U10_3 name-data10_d2
+//      J3_12 = data10_d3;                                                                  // seg-76 connector-J3.12 driver-U10_4 name-data10_d3
+//      J3_13 = data10_d4;                                                                  // seg-77 connector-J3.13 driver-U10_5 name-data10_d4
+//      J3_14 = data10_d5;                                                                  // seg-78 connector-J3.14 driver-U10_6 name-data10_d5
+//      J3_15 = data10_d6;                                                                  // seg-79 connector-J3.15 driver-U10_7 name-data10_d6
+//      J3_16 = data10_d7;                                                                  // seg-80 connector-J3.16 driver-U10_8 name-data10_d7
+//      *pbitmap  = U10;                                                                    // save the IC bit control data for ouput
+//      pbitmap--;                                                                          // move the pointer to bitmapped data to the next cell
+
+//      hostdata++;                                                                         // move the pointer to the previous byte of host data
+//      btmpL = *hostdata;                                                                  // load a byte of host indicator data
+//      U12   = 0;
+//      J3_17 = data11_d0;                                                                  // seg-81 connector-J3.17 driver-U12_1 name-data11_d0
+//      J3_18 = data11_d1;                                                                  // seg-82 connector-J3.18 driver-U12_2 name-data11_d1
+//      J3_19 = data11_d2;                                                                  // seg-83 connector-J3.19 driver-U12_3 name-data11_d2
+//      J3_20 = data11_d3;                                                                  // seg-84 connector-J3.20 driver-U12_4 name-data11_d3
+//      J3_21 = data11_d4;                                                                  // seg-85 connector-J3.21 driver-U12_5 name-data11_d4
+//      J3_22 = data11_d5;                                                                  // seg-86 connector-J3.22 driver-U12_6 name-data11_d5
+//      J3_23 = data11_d6;                                                                  // seg-87 connector-J3.23 driver-U12_7 name-data11_d6
+//      J3_24 = data11_d7;                                                                  // seg-88 connector-J3.24 driver-U12_8 name-data11_d7
+//      *pbitmap  = U12;                                                                    // save the IC bit control data for ouput
+//      pbitmap--;                                                                          // move the pointer to bitmapped data to the next cell
+
+//      hostdata++;                                                                         // move the pointer to the previous byte of host data
+//      btmpL = *hostdata;                                                                  // load a byte of host indicator data
+//      U14   = 0;                                                                          //
+//      J3_25 = data12_d0;                                                                  // seg-89 connector-J3.25 driver-U14_1 name-data12_d0
+//      J3_26 = data12_d1;                                                                  // seg-90 connector-J3.26 driver-U14_2 name-data12_d1
+//      J3_27 = data12_d2;                                                                  // seg-91 connector-J3.27 driver-U14_3 name-data12_d2
+//      J3_28 = data12_d3;                                                                  // seg-92 connector-J3.28 driver-U14_4 name-data12_d3
+//      J3_29 = data12_d4;                                                                  // seg-93 connector-J3.29 driver-U14_5 name-data12_d4
+//      J3_30 = data12_d5;                                                                  // seg-94 connector-J3.30 driver-U14_6 name-data12_d5
+//      J3_31 = data12_d6;                                                                  // seg-95 connector-J3.31 driver-U14_7 name-data12_d6
+//      J3_32 = data12_d7;                                                                  // seg-96 connector-J3.32 driver-U14_8 name-data12_d7
+//      *pbitmap  = U14;                                                                    // save the IC bit control data for ouput
+}
+
+//----------------------------------------------------------------------------------------
+// name    : loaddriverMIC5841                                                            //
+// purpose : Load data into MIC5841 serial sink drivers                                   //
+// params  : Fpga Address for 5841 control pins                                           //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void loaddriverMIC5841(byte *pbitmap, byte num)                                              // Serial sink driver load
+{
+      byte loop, cnt;
+
+      Load5841 = 0;                                                                       //
+      Clk5841  = 0;                                                                       // make sure the driver clock is deactivated
+      Din5841  = 0;                                                                       //
+      NOP(1);                                                                             // give the display time to see the data
+      for(cnt  = 0; cnt < num; cnt++)                                                     // loop so all the bytes are output to the high current sink drivers
+        {
+        btmpL = *pbitmap;                                                                 // get a byte of the bitmapped data
+        pbitmap++;                                                                        // move the pointer to bitmapped data to the next cell
+        for (loop = 0; loop < 8; loop++)                                                  // loop until one drivers worth of bits is loaded
+          {
+          Din5841 = btmpL0;                                                               // write the bit of the data to the fpga data input pin
+          Din5841 = btmpL0;                                                               // burn a cycle
+          Clk5841 = 1;                                                                    // deactivate the fpga serial register clock
+          Clk5841 = 1;                                                                    // burn a cycle
+          Clk5841 = 1;                                                                    // deactivate the fpga serial register clock
+          Clk5841 = 1;                                                                    // burn a cycle
+          btmpL   = btmpL >> 1;                                                           // shift the next bit into position for the next bit write
+          Clk5841 = 0;                                                                    // activate the fpga serial register clock
+          Clk5841 = 0;                                                                    // activate the fpga serial register clock
+          }
+        }
+      Load5841 = 1;                                                                       // activate display driver load
+      Load5841 = 1;                                                                       // activate display driver load
+      Load5841 = 1;                                                                       // activate display driver load
+      Load5841 = 1;                                                                       // activate display driver load
+      Load5841 = 0;                                                                       // deactivate display driver load      
+      Clk5841  = 0;                                                                       // make sure the driver clock is deactivated
+      Din5841  = 0;                                                                       //
+}
+
+//----------------------------------------------------------------------------------------
+// name    : printFirmwareInformation                                                     //
+// purpose : display the  firmware information in the debug window                        //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// note    :                                                                              //
+//----------------------------------------------------------------------------------------
+void  printFirmwareInformation()                                                          //
+{
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    printd("uC Firmware PN          : ");                                                 // output the firmware data for the master processor
+    printd("%02bx-",   bufFirmwareData[ix02]);                                            //
+    printd("%02bx",    bufFirmwareData[ix03]);                                            //
+    printd("%02bx",    bufFirmwareData[ix04]);                                            //
+    printd(" : %c\n\r",bufFirmwareData[ix05]);                                            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    printd("FPGA Firmware PN        : ");                                                 // output the firmware data for the slave 0 processor
+    printd("%02bx-",   bufFirmwareData[ix06]);                                            //
+    printd("%02bx",    bufFirmwareData[ix07]);                                            //
+    printd("%02bx",    bufFirmwareData[ix08]);                                            //
+    printd(" : %c\n\r",bufFirmwareData[ix09]);                                            //
+}
+
+//----------------------------------------------------------------------------------------
+// name    : printDeviceConfigurationInformation                                          //
+// purpose : show the user the device information in the debug window                     //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void  printDeviceConfigurationInformation()                                               //
+{
+    printd("Debug Routines          : ");                                                 //
+    if(fDebugMode == OFF)                                                                 // get the state of the debug bit
+      printd("disabled\n\r");                                                             // alert the user to port status
+    else                                                                                  //
+      printd("enabled\n\r");                                                              // alert the user to port status
+    printd("Transmit Mode           : ");                                                 // alert the user to port status
+    if(fDebugMode == OFF)                                                                 // get the state of the debug bit
+      {
+      if(fTransmitMode == Server)                                                         // get the state of the client port bit
+        printd("Server\n\r");                                                             // alert the user to port status
+      else                                                                                //
+        printd("Client\n\r");                                                             // alert the user to port status
+      }
+    else                                                                                  //
+      printd("Server\n\r");                                                               // alert the user to port status
+    gconfig_ExDisplayConfigData();                                                        //
+    printd("*****************************************************\n\r");                  //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          display the firmware information for all programs in the debug window         //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    printFirmwareInformation();                                                           //
+    printd("*****************************************************\n\r");                  //
+}
+
+//----------------------------------------------------------------------------------------
+// name    : processEthernetTraffic                                                       //
+// purpose : check for new Ethernet traffic and process new data                          //
+// params  : last software timer count, display link speed flag                           //
+// returns : current timer count                                                          //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+ulong processEthernetTraffic(ulong ptc, dls)                                              //
+{
+    ulong tc;                                                                             // current time count
+    byte  linkSpeed = 0;                                                                  //
+    
+    tc              = (uint)SWTIMER_Tick();                                               // get the current timer count
+    if ((tc - ptc) >= TIME_OUT_COUNTER)                                                   // see if the difference in the curent & last time differs more then the timeout
+      {
+      ptc           = tc;                                                                 // set the last time to the current time
+      TCPIP_PeriodicCheck();                                                              // check the for any TCPIP traffic
+      }
+    STOE_ProcessInterrupt();                                                              // process all TOE buffers input/output
+    if (MAC_GetInterruptFlag())                                                           // get the data for this device
+      { linkSpeed   = MAC_ProcessInterruptExt(); }                                        // find the linkage speed, and process device traffic
+    if(dls == ON) printd("Ethernet Link Speed = bps\n\r", linkSpeed);                     // display the linkage speed
+    return ptc;                                                                           // return the current timer count
+}
+
+//----------------------------------------------------------------------------------------
+// name    : setupEthernet                                                                //
+// purpose : initailize and start all of the Ethernet processes                           //
+// params  : enabled                                                                      //
+// returns : the last updated timer count                                                 //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+ulong setupEthernet(byte enabled)
+{
+    ulong ip;                                                                             //
+    ulong mask;                                                                           //
+    byte  cmdDhcpFlag      = 0;                                                           //
+    ulong dhcpTimeStart    = 0;                                                           //
+    ulong swtc;                                                                           //
+
+    if(enabled == TRUE)                                                                   //
+      {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize network adapter                                                    //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      ETH_Init();                                                                         //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the device configurationnitialization                              //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      GCONFIG_Init();                                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          iniailize the software timer                                                  //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      SWTIMER_Init();                                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          enable transmit socket for runtime mode                                       //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      gudpdat_ClientOpen(TrxSocket);                                                      //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          Start the Ethernet Engine and Software Timer for DMA                          //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      ETH_Start();                                                                        // start the ethernet process
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          Start the Ethernet Engine and Software Timer for DMA                          //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      SWTIMER_Start();                                                                    // start the software timer
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the hardware DCB                                                   //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      mask    = GCONFIG_GetNetmask();                                                     //
+      ip      = GCONFIG_GetServerStaticIP();                                              //
+      TCPIP_SetIPAddr(ip);                                                                //
+      STOE_SetIPAddr(ip);                                                                 //
+      TCPIP_SetSubnetMask(mask);                                                          //
+      STOE_SetSubnetMask(mask);                                                           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          update device IP and port settings                                            //
+      if ((GCONFIG_GetNetwork() & GCONFIG_NETWORK_DHCP_ENABLE) == GCONFIG_NETWORK_DHCP_ENABLE)
+        {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize network adapter                                                    //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        printd("DHCP     init           : ");                                             //
+        if (DHCP_Init())                                                                  //
+          printd("pass\n\r");                                                             //
+        else
+          printd("**ERROR**\n\r");                                                        //
+        printd("DHCP Assigned IP    : ");                                                 // tell user that the DHCP process has started
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//    start the DHCP engine                                                               //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        DHCP_Start();                                                                     // start the DHCP process
+        cmdDhcpFlag   = 1;                                                                // set the DHCP initailization flag to start
+        dhcpTimeStart = SWTIMER_Tick();                                                   // record the DHCP process start time
+        }
+      else                                                                                //
+        {
+        ip            = 0;                                                                // update the IP settings to the static IP and port
+        cmdDhcpFlag   = 0;                                                                // set the DHCP initailization flag to bypass
+        }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          start DHCP process loop                                                       //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      DELAY_Ms(1000);                                                                     // wait 1S to give the internal hardware time to start up
+      while(cmdDhcpFlag == 1)                                                             // check the DHCP flag to see if the DHCP process has completed
+        {
+        printd("DHCP response -- ");                                                      //
+        if (DHCP_GetState() > DHCP_IDLE_STATE)                                            // see if the DHCP process is in the beginning idle state
+          { DHCP_Send(); }                                                                // send a DHCP request to the DHCP host
+        else                                                                              // the DHCP process is not in IDLE, execute the next step
+          { 
+          ulong ip = STOE_GetIPAddr();                                                    // reteieve the DHCP host proposed IP
+          if (ip == 0)                                                                    // make sure the proposed IP was not invalid
+            printd(" fail!\n\r");                                                         // let the host know that the DHCP process failed
+          cmdDhcpFlag = 0;                                                                // set the DHCP process flag to complete
+          }//if (DHCP_GetState() > DHCP_IDLE_STATE)
+        swtc = processEthernetTraffic(0, ON);                                             // check for new Ethernet traffic and process new data
+        }//while(cmdDhcpFlag == 1)do
+      UpdateIpSettings(ip);                                                               // update IP address, subnet mask, gateway IP address and DNS IP address
+      printd("*****************************************************\n\r");                // 
+      }
+      return swtc;                                                                        // return the software timer count
+}
+
+//----------------------------------------------------------------------------------------
+// name    : main                                                                         //
+// purpose : execute the main loop of the program as long as powered                      //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void main(void)
+{
+      uint  temp16 = 1;                                                                   //
+      byte  sysInitFlag = 1;                                                              //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      byte  linkFlag = 0;                                                                 //
+      byte  cmdDhcpFlag = 0;                                                              //
+      ulong dhcpTimeStart = 0;                                                            //
+      ulong timeCount;                                                                    //
+      ulong preTimeCount;                                                                 //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          Start Main Code                                                               //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      ExecuteRuntimeFlag     = 1;                                                         //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          system initiation                                                             //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      AX11000_Init();                                                                     // initailize the AX110xx setup registers
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          uart interface initiation                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      uart_Init(0,Baud___9600, FALSE);                                                    // setup port 0 for 8,1,1n, and baudrate
+      uart_Init(1,Baud___9600, FALSE);                                                    // setup port 1 for 8,1,1n, and 9600bps
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          uart interface initiation                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      printd("Instrument Part Number  : %s\n\r",SIMTEK_Inst_Number);                      //
+      printd("Firmware Last Revised   : %s %s\n\r",__DATE__,__TIME__);                    // c:\tftpd64
+      printd("Ethernet Library Ver.   : %s\n\r", GCONFIG_VERSION_STRING);                 //
+      printd("*********************************************************\n\r");            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          uart interface initiation                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      printd("UART-0   init           : pass   ");                                        //
+      printd("baud : %02bx \n\r",Baud___9600);                                            // show the user the baudrate
+      printd("UART-1   init           : pass\n\r");                                       //
+      printd("*****************************************************\n\r");                // print this in the debug widow to ease readability for user
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the device configuration                                           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      preTimeCount = setupEthernet(TRUE);                                                 // initailize and start all of the Ethernet processes
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize harware                                                            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      LogicRst                = 1;                                                        // activate FPGA reset
+      DELAY_Ms(5);                                                                        // wait for the FPGA to see the reset signal
+      LogicRst                = 0;                                                        // activate FPGA reset
+      acResetRequest          = 1;                                                        //
+      processResetRsp();                                                                  // reset all functions to the powerup state
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          display device configuration information                                      //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      printDeviceConfigurationInformation();                                              // print the device configuration information in the debug window
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          start main loop                                                               //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//      
+      while (1)                                                                           // loop until power is removed
+        {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          begin action request processing for debug commands                            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        UTIL_MenuExecute();                                                               // get and process any data the user entered in the debug window
+        processResetRsp();                                                                //
+        processStatusRequest();                                                           //
+        processIndicatorRequest();                                                        //
+        processDimmingRequest();                                                          //
+        processFirmwareRsp();                                                             //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//                                                                                        //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        getStatusData01();                                                                //
+        getStatusData02();                                                                //
+        getStatusData03();                                                                //
+        getStatusData04();                                                                //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          check for the processing count and process any dimming data changes           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        timeCount = (uint)SWTIMER_Tick();                                                 //
+        if ((timeCount- preTimeCount)>= TIME_OUT_COUNTER)                                 //
+          {
+          preTimeCount = timeCount;                                                       //
+          TCPIP_PeriodicCheck();                                                          //
+          }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          polling mode                                                                  //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        STOE_ProcessInterrupt();                                                          //
+        if (MAC_GetInterruptFlag())                                                       //
+          {
+          linkFlag = MAC_ProcessInterruptExt();                                           //
+          }
+        GS2E_Task();                                                                      //
+        }
+} // End of main() //

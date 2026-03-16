@@ -1,0 +1,29 @@
+#Build: Synplify Pro J-2015.03M-SP1-2, Build 266R, Dec 14 2015
+#install: C:\Microsemi\Libero_SoC_v11.7\Synplify
+#OS: Windows 8 6.2
+#Hostname: CMASON10
+
+#Implementation: synthesis
+
+Synopsys HDL Compiler, version comp201503sp1p1, Build 240R, built Dec  1 2015
+@N|Running in 64-bit mode
+Copyright (C) 1994-2015 Synopsys, Inc. This software and the associated documentation are proprietary to Synopsys, Inc. This software may only be used in accordance with the terms and conditions of a written license agreement with Synopsys, Inc.  All other use, reproduction, or distribution of this software is strictly prohibited.
+
+Synopsys VHDL Compiler, version comp201503sp1p1, Build 240R, built Dec  1 2015
+@N|Running in 64-bit mode
+Copyright (C) 1994-2015 Synopsys, Inc. This software and the associated documentation are proprietary to Synopsys, Inc. This software may only be used in accordance with the terms and conditions of a written license agreement with Synopsys, Inc.  All other use, reproduction, or distribution of this software is strictly prohibited.
+
+@N: CD720 :"C:\Microsemi\Libero_SoC_v11.7\Synplify\lib\vhd2008\std.vhd":146:18:146:21|Setting time resolution to ns
+@N:"C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\hdl\mainprogram.vhd":15:7:15:17|Top entity is set to mainprogram.
+@E: CD255 :"C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\hdl\mainprogram.vhd":452:51:452:51|No identifier "adres_x67" in scope
+1 error parsing file C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\hdl\mainprogram.vhd
+@E|Parse errors encountered - exiting
+Process took 0h:00m:01s realtime, 0h:00m:01s cputime
+# Wed Jul 26 07:54:08 2017
+
+###########################################################]
+@END
+Process took 0h:00m:01s realtime, 0h:00m:01s cputime
+# Wed Jul 26 07:54:08 2017
+
+###########################################################]

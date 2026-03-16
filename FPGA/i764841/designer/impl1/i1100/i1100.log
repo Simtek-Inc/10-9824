@@ -1,0 +1,69 @@
+FlashPro
+Version: 11.9.2.1
+Release: v11.9 SP2
+
+Software Version: 11.9.2.1
+PDB file
+'C:\_SWork\LocalRepos\10-9182\Source_Code\8655\FPGA\p754270\designer\impl1\mainprogram.pdb' has
+been loaded successfully.
+DESIGN : mainprogram;  CHECKSUM : 8796;  PDB_VERSION : 1.9
+programmer 'S2001L81KX' : FlashPro5
+Warning: The programmer with id '75920' in the project file cannot be detected and connected.
+Opened
+'C:\_SWork\LocalRepos\10-9182\Source_Code\8655\FPGA\p754270\designer\impl1\mainprogram_fp\mainp\
+rogram.pro'
+Project closed.
+Software Version: 11.9.2.1
+PDB file
+'C:\_SWork\LocalRepos\10-9182\Source_Code\8655\FPGA\p754270\designer\impl1\mainprogram.pdb' has
+been loaded successfully.
+DESIGN : mainprogram;  CHECKSUM : 8796;  PDB_VERSION : 1.9
+programmer 'S2001L81KX' : FlashPro5
+Opened
+'C:\_SWork\LocalRepos\10-9182\Source_Code\8655\FPGA\p754270\designer\impl1\i8667\i8667.pro'
+PDB file
+'C:\_SWork\LocalRepos\10-9182\Source_Code\8655\FPGA\p754270\designer\impl1\mainprogram.pdb' has
+been loaded successfully.
+DESIGN : mainprogram;  CHECKSUM : 8796;  PDB_VERSION : 1.9
+programmer 'S2001L81KX' : Scan Chain...
+programmer 'S2001L81KX' : Scan Chain PASSED.
+programmer 'S2001L81KX' : Executing action PROGRAM
+programmer 'S2001L81KX' : EXPORT FSN[48] = 01a65e18647d
+programmer 'S2001L81KX' : Erase ...
+programmer 'S2001L81KX' : Completed erase
+programmer 'S2001L81KX' : EXPORT CHECKSUM[16] = 8796
+programmer 'S2001L81KX' : Programming FPGA Array
+programmer 'S2001L81KX' : Verifying FPGA Array
+programmer 'S2001L81KX' :         Verifying FPGA Array -- pass
+programmer 'S2001L81KX' : Finished: Fri Oct 08 12:58:15 2021 (Elapsed time 00:00:27)
+programmer 'S2001L81KX' : Executing action PROGRAM PASSED.
+
+                        o - o - o - o - o - o
+
+Warning: Project 'i8667' has been modified. Do you want to save it? [YES]
+Project saved.
+Project closed.
+Software Version: 11.9.2.1
+PDB file
+'C:\_SWork\LocalRepos\10-9182\Source_Code\8655\FPGA\p754270\designer\impl1\mainprogram.pdb' has
+been loaded successfully.
+DESIGN : mainprogram;  CHECKSUM : 8796;  PDB_VERSION : 1.9
+programmer 'S2001L81KX' : FlashPro5
+Opened
+'C:\_SWork\LocalRepos\10-9182\Source_Code\8655\FPGA\p754270\designer\impl1\i1100\i1100.pro'
+programmer 'S2001L81KX' : Scan Chain...
+programmer 'S2001L81KX' : Scan Chain PASSED.
+programmer 'S2001L81KX' : Executing action PROGRAM
+programmer 'S2001L81KX' : EXPORT FSN[48] = 01a65e18647d
+programmer 'S2001L81KX' : Erase ...
+programmer 'S2001L81KX' : Completed erase
+programmer 'S2001L81KX' : EXPORT CHECKSUM[16] = 8796
+programmer 'S2001L81KX' : Programming FPGA Array
+programmer 'S2001L81KX' : Verifying FPGA Array
+programmer 'S2001L81KX' :         Verifying FPGA Array -- pass
+programmer 'S2001L81KX' : Finished: Fri Oct 08 12:59:39 2021 (Elapsed time 00:00:26)
+programmer 'S2001L81KX' : Executing action PROGRAM PASSED.
+
+                        o - o - o - o - o - o
+
+Project closed.

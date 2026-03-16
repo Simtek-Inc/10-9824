@@ -1,0 +1,2983 @@
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 1   
+
+
+C51 COMPILER V8.06, COMPILATION OF MODULE SPIAPI
+OBJECT MODULE PLACED IN spiapi.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE src\spi\spiapi.c LARGE OMF2 ROM(D16M) OPTIMIZE(0,SPEED) BROWSE INTVECTOR(0X
+                    -6020) INCDIR(.\src\cpu\;.\src\ethernet;.\src\swdma\;.\src\mstimer\;.\src\uart\;.\src\main\;.\src\tcpip\;.\src\hsur\;.\sr
+                    -c\gs2e\;.\src\debug\;.\src\dhcp;.\src\dns\;.\src\adapter\;.\src\pppoe\;.\src\console;.\src\telnet;.\src\smtp;.\src\http;
+                    -.\src\web_page;.\src\si2c;.\src\eeprom;.\src\ping;.\src\fpga;.\src\menu;.\src\spi) DEFINE(RuntimeCodeAt24KH) VARBANKING 
+                    -DEBUG CODE LISTINCLUDE SYMBOLS PRINT(.\spiapi.lst) OBJECT(spiapi.obj)
+
+line level    source
+
+   1          /*
+   2           *********************************************************************************
+   3           *     Copyright (c) 2005       ASIX Electronic Corporation      All rights reserved.
+   4           *
+   5           *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6           *
+   7           *     The copyright notice above does not evidence any actual or intended
+   8           *     publication of such source code.
+   9           *********************************************************************************
+  10           */
+  11          /*================================================================================
+  12           * Module Name : spiapi.c
+  13           * Purpose     : API functions provide user to send and receive packet.
+  14           *               These API functions invovle SPI driver to accomplish
+  15           *               a packet transfer.
+  16           * Author      : Robin Lee
+  17           * Date        : 2006-01-11
+  18           * Notes       :
+  19           * $Log: spiapi.c,v $
+  20           * Revision 1.1  2006/04/07 11:39:02  robin6633
+  21           * no message
+  22           *
+  23           *================================================================================
+  24           */
+  25          
+  26          /* INCLUDE FILE DECLARATIONS */
+  27          #include        "reg80390.h"
+   1      =1  //--------------------------------------------------------------------------
+   2      =1  // AX110XX.H
+   3      =1  //
+   4      =1  // Header file for the AX110XX.
+   5      =1  // Copyright (c) 2001 Keil Software, Inc.  All rights reserved.
+   6      =1  //--------------------------------------------------------------------------
+   7      =1  //
+   8      =1  // --------------------------------------------------------------------------*/
+   9      =1  // Make sure that this file gets included only once.
+  10      =1  // --------------------------------------------------------------------------*/
+  11      =1  #ifndef AX110XX_HEADER_FILE
+  12      =1  #define AX110XX_HEADER_FILE             1
+  13      =1  // --------------------------------------------------------------------------*/
+  14      =1  // Byte Registers
+  15      =1  // --------------------------------------------------------------------------*/
+  16      =1  sfr     P0                      = 0x80;// Port 0
+  17      =1  sfr     SP                      = 0x81;// Stack Pointer
+  18      =1  sfr     DPL0            = 0x82;// Data Pointer 0 Low Byte
+  19      =1  sfr     DPH0            = 0x83;// Data Pointer 0 High Byte
+  20      =1  sfr     DPL                     = 0x82;// Data Pointer 0 Low Byte
+  21      =1  sfr     DPH                     = 0x83;// Data Pointer 0 High Byte
+  22      =1  sfr     DPL1            = 0x84;// Data Pointer 1 Low Byte
+  23      =1  sfr     DPH1            = 0x85;// Data Pointer 1 High Byte
+  24      =1  sfr     DPS                     = 0x86;// Data Pointers Select Register
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 2   
+
+  25      =1  sfr     PCON            = 0x87;// Power Configuration Register
+  26      =1  sfr TCON                = 0x88;// Timer 0,1 Configuration Register
+  27      =1  sfr TMOD                = 0x89;// Timer 0,1 Control Mode Register
+  28      =1  sfr TL0                 = 0x8A;// Timer 0 Low Byte Counter
+  29      =1  sfr TL1                 = 0x8B;// Timer 1 Low Byte Counter
+  30      =1  sfr TH0                 = 0x8C;// Timer 0 High Byte Counter
+  31      =1  sfr TH1                 = 0x8D;// Timer 1 High Byte Counter
+  32      =1  sfr CKCON               = 0x8E;// Clock Control Register
+  33      =1  sfr CSREPR              = 0x8F;// Software Reset and External Program RAM Select Register
+  34      =1  
+  35      =1  sfr P1                  = 0x90;// Port 1
+  36      =1  sfr EIF                 = 0x91;// Extended Interrupt Flag Register
+  37      =1  sfr WTST                = 0x92;// Program Wait States Register
+  38      =1  sfr DPX0                = 0x93;// Data Pointer Extended Register 0
+  39      =1  sfr DPX                 = 0x93;// Data Pointer Extended Register 0
+  40      =1  sfr     SDSTSR          = 0x94;// Software Timer and Software DMA complete interrupt status
+  41      =1  sfr DPX1                = 0x95;// Data Pointer Extended Register 1
+  42      =1  sfr I2CCIR              = 0x96;// I2C Command Index Register
+  43      =1  sfr I2CDR               = 0x97;// I2C Data Register
+  44      =1  sfr SCON0               = 0x98;// UART 0 Configuration Register
+  45      =1  sfr SBUF0               = 0x99;// UART 0 Buffer Register
+  46      =1  sfr DBAR                = 0x9A;// DMA Bus Arbitration Register
+  47      =1  sfr DCIR                = 0x9B;// DMA Command Index Register
+  48      =1  sfr DDR                 = 0x9C;// DMA Data Register
+  49      =1  sfr ACON                = 0x9D;// Address Control Register
+  50      =1  sfr PISSR1              = 0x9E;// Peripheral Interrupt Status Summary Register 1
+  51      =1  sfr PISSR2              = 0x9F;// Peripheral Interrupt Status Summary Register 2
+  52      =1  
+  53      =1  sfr P2                  = 0xA0;// Port 2
+  54      =1  // Local Bus Master Mode //
+  55      =1  sfr LMSR                = 0xA1;// Local Bus Mode Setup Register
+  56      =1  sfr LCR                 = 0xA2;// Local Bus Command Register
+  57      =1  sfr LSR                 = 0xA3;// Local Bus Status Register
+  58      =1  sfr LDALR               = 0xA4;// Local Bus Device Address Low Register
+  59      =1  sfr LDAHR               = 0xA5;// Local Bus Device Address High Register
+  60      =1  sfr LDCSR               = 0xA6;// Local Bus Device Chip Select Register
+  61      =1  // Local Bus Slave Mode //
+  62      =1  sfr LSAIER              = 0xA1;// Local Bus Slave mode Action and Interrupt Enable Register
+  63      =1  sfr LSCR                = 0xA2;// Local Bus Slave mode Command Register
+  64      =1  sfr LSSR                = 0xA3;// Local Bus Slave mode Status Register
+  65      =1  sfr XMWLR               = 0xA4;// External Master Write-read Low Register
+  66      =1  sfr XMWHR               = 0xA5;// External Master Write-read High Register
+  67      =1  sfr XMRLR               = 0xA6;// External Master Read-only Low Register
+  68      =1  sfr XMRHR               = 0xA7;// External Master Read-only High Register
+  69      =1  
+  70      =1  sfr IE                  = 0xA8;// Interrupt Enable register
+  71      =1  sfr LDLR                = 0xA9;// Local Bus Data Low Register
+  72      =1  sfr LDHR                = 0xAA;// Local Bus Data High Register
+  73      =1  sfr DMALR               = 0xAB;// Local Bus DMA Address Low Register
+  74      =1  sfr DMAMR               = 0xAC;// Local Bus DMA Address Medium Register
+  75      =1  sfr DMAHR               = 0xAD;// Local Bus DMA Address High Register
+  76      =1  sfr TCIR                = 0xAE;// TOE Command Index Register
+  77      =1  sfr     TDR                     = 0xAF;// TOE Data Register
+  78      =1  
+  79      =1  sfr P3                  = 0xB0;// Port 3
+  80      =1  sfr CCAPL0      = 0xB1;// PCA Module 0 Compare/Capture Low Byte Register
+  81      =1  sfr CCAPL1      = 0xB2;// PCA Module 1 Compare/Capture Low Byte Register
+  82      =1  sfr CCAPL2      = 0xB3;// PCA Module 2 Compare/Capture Low Byte Register
+  83      =1  sfr CCAPL3      = 0xB4;// PCA Module 3 Compare/Capture Low Byte Register
+  84      =1  sfr CCAPL4      = 0xB5;// PCA Module 4 Compare/Capture Low Byte Register
+  85      =1  sfr MCIR                = 0xB6;// MAC Command Index Register
+  86      =1  sfr MDR                 = 0xB7;// MAC Data Register
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 3   
+
+  87      =1  sfr IP                  = 0xB8;// Interrupt Priority Register
+  88      =1  sfr CCAPH0      = 0xB9;// PCA Module 0 Compare/Capture High Byte Register
+  89      =1  sfr CCAPH1      = 0xBA;// PCA Module 1 Compare/Capture High Byte Register
+  90      =1  sfr CCAPH2      = 0xBB;// PCA Module 2 Compare/Capture High Byte Register
+  91      =1  sfr CCAPH3      = 0xBC;// PCA Module 3 Compare/Capture High Byte Register
+  92      =1  sfr CCAPH4      = 0xBD;// PCA Module 4 Compare/Capture High Byte Register
+  93      =1  sfr EPCR                = 0xBE;// Ethernet PHY Command Index Register
+  94      =1  sfr EPDR                = 0xBF;// Ethernet PHY Data Register
+  95      =1  
+  96      =1  sfr SCON1               = 0xC0;// UART 1 Configuration Register
+  97      =1  sfr SBUF1               = 0xC1;// UART 1 Buffer Register
+  98      =1  sfr CMOD                = 0xC2;// PCA Timer/Counter Mode Register
+  99      =1  sfr CCON                = 0xC3;// PCA Timer/Counter Control Register
+ 100      =1  sfr CL                  = 0xC4;// PCA Timer/Counter Low
+ 101      =1  sfr CH                  = 0xC5;// PCA Timer/Counter High
+ 102      =1  sfr T2CON               = 0xC8;// Timer 2 Configuration Register
+ 103      =1  sfr T2IF                = 0xC9;// Timer 2 Interrupt Flags
+ 104      =1  sfr RLDL                = 0xCA;// Timer 2 Reload Low Byte
+ 105      =1  sfr RLDH                = 0xCB;// Timer 2 Reload High Byte
+ 106      =1  sfr TL2                 = 0xCC;// Timer 2 Low Byte Counter
+ 107      =1  sfr TH2                 = 0xCD;// Timer 2 High Byte Counter
+ 108      =1  sfr SPICIR              = 0xCE;// SPI Command Index Register
+ 109      =1  sfr SPIDR               = 0xCF;// SPI Data Register
+ 110      =1  
+ 111      =1  sfr PSW                 = 0xD0;// Program Status Word
+ 112      =1  sfr CCAPM0              = 0xD1;// PCA Compare/Capture Module Mode Register 0
+ 113      =1  sfr CCAPM1              = 0xD2;// PCA Compare/Capture Module Mode Register 1
+ 114      =1  sfr CCAPM2              = 0xD3;// PCA Compare/Capture Module Mode Register 2
+ 115      =1  sfr CCAPM3              = 0xD4;// PCA Compare/Capture Module Mode Register 3
+ 116      =1  sfr CCAPM4              = 0xD5;// PCA Compare/Capture Module Mode Register 4
+ 117      =1  sfr OWCIR               = 0xD6;// OneWire Command Index Register
+ 118      =1  sfr OWDR                = 0xD7;// OneWire Data Register
+ 119      =1  sfr WDCON               = 0xD8;// Watchdog Configuration
+ 120      =1  sfr CANCIR              = 0xDE;// CAN Bus Command Index Register
+ 121      =1  sfr CANDR               = 0xDF;// CAN Bus Data Register
+ 122      =1  
+ 123      =1  sfr ACC                 = 0xE0;// Accumulator
+ 124      =1  
+ 125      =1  // UART2 registers //
+ 126      =1  sfr     UR2_DLL         = 0xE1;// High Speed UART2 Divisor Latch Low Register
+ 127      =1  sfr     UR2_THR         = 0xE1;// High Speed UART2 Transmit Holding Register for Writing
+ 128      =1  sfr     UR2_RBR         = 0xE1;// High Speed UART2 Receive Buffer Register for Reading
+ 129      =1  sfr     UR2_DLH         = 0xE2;// High Speed UART2 Divisor Latch High Register
+ 130      =1  sfr     UR2_IER         = 0xE2;// High Speed UART2 Interrupt Enable Register
+ 131      =1  sfr     UR2_FCR         = 0xE3;// High Speed UART2 FIFO Control Register for Writing
+ 132      =1  sfr     UR2_IIR         = 0xE3;// High Speed UART2 Interrupt Identification Register for Reading
+ 133      =1  sfr     UR2_LCR         = 0xE4;// High Speed UART2 Line Control Register
+ 134      =1  sfr     UR2_MCR         = 0xE5;// High Speed UART2 Modem Control Register
+ 135      =1  sfr     UR2_LSR         = 0xE6;// High Speed UART2 Line Status Register
+ 136      =1  sfr     UR2_MSR         = 0xE7;// High Speed UART2 Modem Status Register
+ 137      =1  
+ 138      =1  sfr EIE                 = 0xE8;// External Interrupt Enable
+ 139      =1  sfr STATUS              = 0xE9;// Status Register
+ 140      =1  sfr MXAX                = 0xEA;// MOVX @Ri Extended Register
+ 141      =1  sfr TA                  = 0xEB;// Timed Access Protection
+ 142      =1  
+ 143      =1  sfr B                   = 0xF0;// B Working Register
+ 144      =1  sfr EIP                 = 0xF8;// Extended Interrupt Priority Register
+ 145      =1  sfr MD0                 = 0xF9;// MDU Data 0
+ 146      =1  sfr MD1                 = 0xFA;// MDU Data 1
+ 147      =1  sfr MD2                 = 0xFB;// MDU Data 2
+ 148      =1  sfr MD3                 = 0xFC;// MDU Data 3
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 4   
+
+ 149      =1  sfr MD4                 = 0xFD;// MDU Data 4
+ 150      =1  sfr MD5                 = 0xFE;// MDU Data 5
+ 151      =1  sfr ARCON               = 0xFF;// MDU Control Register
+ 152      =1  //--------------------------------------------------------------------------
+ 153      =1  // P0 (0x80) Bit Registers
+ 154      =1  //--------------------------------------------------------------------------
+ 155      =1  sbit P0_0               = 0x80;
+ 156      =1  sbit P0_1               = 0x81;
+ 157      =1  sbit P0_2               = 0x82;
+ 158      =1  sbit P0_3               = 0x83;
+ 159      =1  sbit P0_4               = 0x84;
+ 160      =1  sbit P0_5               = 0x85;
+ 161      =1  sbit P0_6               = 0x86;
+ 162      =1  sbit P0_7               = 0x87;
+ 163      =1  //--------------------------------------------------------------------------
+ 164      =1  // DPS (0x86) Bit Values
+ 165      =1  //--------------------------------------------------------------------------
+ 166      =1  #define SEL_    0x01
+ 167      =1  #define TSL_    0x20
+ 168      =1  #define ID0_    0x40
+ 169      =1  #define ID1_    0x80
+ 170      =1  //--------------------------------------------------------------------------
+ 171      =1  // PCON (0x87) Bit Values
+ 172      =1  //--------------------------------------------------------------------------
+ 173      =1  #define PMM_    0x01
+ 174      =1  #define STOP_   0x02
+ 175      =1  #define SWB_    0x04
+ 176      =1  #define PWE_    0x10
+ 177      =1  #define SMOD1_  0x40
+ 178      =1  #define SMOD2_  0x80
+ 179      =1  //--------------------------------------------------------------------------
+ 180      =1  // TCON (0x88) Bit Registers
+ 181      =1  //--------------------------------------------------------------------------
+ 182      =1  sbit    IT0             = 0x88;
+ 183      =1  sbit    IE0             = 0x89;
+ 184      =1  sbit    IT1             = 0x8A;
+ 185      =1  sbit    IE1             = 0x8B;
+ 186      =1  sbit    TR0             = 0x8C;
+ 187      =1  sbit    TF0             = 0x8D;
+ 188      =1  sbit    TR1             = 0x8E;
+ 189      =1  sbit    TF1             = 0x8F;
+ 190      =1  //--------------------------------------------------------------------------
+ 191      =1  // TMOD (0x89) Bit Values
+ 192      =1  //--------------------------------------------------------------------------
+ 193      =1  #define T0_M0_          0x01
+ 194      =1  #define T0_M1_          0x02
+ 195      =1  #define T0_CT_          0x04
+ 196      =1  #define T0_GATE_        0x08
+ 197      =1  #define T1_M0_          0x10
+ 198      =1  #define T1_M1_          0x20
+ 199      =1  #define T1_CT_          0x40
+ 200      =1  #define T1_GATE_        0x80
+ 201      =1  
+ 202      =1  #define T1_MASK_        0xF0
+ 203      =1  #define T0_MASK_        0x0F
+ 204      =1  //--------------------------------------------------------------------------
+ 205      =1  // CKCON (0x8E) Bit Values
+ 206      =1  //--------------------------------------------------------------------------
+ 207      =1  #define MD0_    0x01
+ 208      =1  #define MD1_    0x02
+ 209      =1  #define MD2_    0x04
+ 210      =1  #define T0M_    0x08
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 5   
+
+ 211      =1  #define T1M_    0x10
+ 212      =1  #define T2M_    0x20
+ 213      =1  #define WD0_    0x40
+ 214      =1  #define WD1_    0x80
+ 215      =1  //--------------------------------------------------------------------------
+ 216      =1  // CSREPR (0x8F) Bit Values
+ 217      =1  //--------------------------------------------------------------------------
+ 218      =1  #define SW_RST                          0x01
+ 219      =1  #define SW_RBT                          0x02
+ 220      =1  #define FARM                            0x04
+ 221      =1  #define FAES                            0x08
+ 222      =1  #define PMS                                     0x10
+ 223      =1  #define SCS_100M                        0xC0
+ 224      =1  #define SCS_75M                         0x80
+ 225      =1  #define SCS_50M                         0x40
+ 226      =1  #define SCS_25M                         0x00
+ 227      =1  //--------------------------------------------------------------------------
+ 228      =1  // P1 (0x90) Bit Registers
+ 229      =1  //--------------------------------------------------------------------------
+ 230      =1  sbit P1_0               = 0x90;
+ 231      =1  sbit P1_1               = 0x91;
+ 232      =1  sbit P1_2               = 0x92;
+ 233      =1  sbit P1_3               = 0x93;
+ 234      =1  sbit P1_4               = 0x94;
+ 235      =1  sbit P1_5               = 0x95;
+ 236      =1  sbit P1_6               = 0x96;
+ 237      =1  sbit P1_7               = 0x97;
+ 238      =1  //--------------------------------------------------------------------------
+ 239      =1  // EIF (0x91) Bit Values
+ 240      =1  //--------------------------------------------------------------------------
+ 241      =1  #define INT2F           0x01
+ 242      =1  #define INT3F           0x02
+ 243      =1  #define INT4F           0x04
+ 244      =1  #define INT5F           0x08
+ 245      =1  #define INT6F           0x10
+ 246      =1  //--------------------------------------------------------------------------
+ 247      =1  // SCON0 (0x98) Bit Registers
+ 248      =1  //--------------------------------------------------------------------------
+ 249      =1  sbit RI0                        = 0x98;
+ 250      =1  sbit TI0                        = 0x99;
+ 251      =1  sbit RB08                       = 0x9A;
+ 252      =1  sbit TB08                       = 0x9B;
+ 253      =1  sbit REN0                       = 0x9C;
+ 254      =1  sbit SM02                       = 0x9D;
+ 255      =1  sbit SM01                       = 0x9E;
+ 256      =1  sbit SM00                       = 0x9F;
+ 257      =1  //--------------------------------------------------------------------------
+ 258      =1  // DBAR (0x9A) Bit Values
+ 259      =1  //--------------------------------------------------------------------------
+ 260      =1  #define BUS_REQ                         0x01
+ 261      =1  #define BUS_GRANT                       0x80
+ 262      =1  //--------------------------------------------------------------------------
+ 263      =1  // ACON (0x9D) Bit Values
+ 264      =1  //--------------------------------------------------------------------------
+ 265      =1  #define FLAT_MODE                       0x02
+ 266      =1  #define LARGE_MODE                      0x00
+ 267      =1  //--------------------------------------------------------------------------
+ 268      =1  // PISSR1 (0x9E) Bit Values
+ 269      =1  //--------------------------------------------------------------------------
+ 270      =1  #define LB_INT_STU                      0x01
+ 271      =1  #define LB_EXT_INT_STU          0x02
+ 272      =1  #define ETH_INT_STU                     0x04
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 6   
+
+ 273      =1  #define TOE_INT_STU                     0x08
+ 274      =1  #define OW_INT_STU                      0x10
+ 275      =1  #define SPI_INT_STU                     0x20
+ 276      =1  #define I2C_INT_STU                     0x40
+ 277      =1  #define CAN_INT_STU                     0x80
+ 278      =1  //--------------------------------------------------------------------------
+ 279      =1  // PISSR2 (0x9F) Bit Values
+ 280      =1  //--------------------------------------------------------------------------
+ 281      =1  #define UART2_INT_STU           0x01
+ 282      =1  //--------------------------------------------------------------------------
+ 283      =1  // P2 (0xA0) Bit Registers
+ 284      =1  //--------------------------------------------------------------------------
+ 285      =1  sbit P2_0               = 0xA0;
+ 286      =1  sbit P2_1               = 0xA1;
+ 287      =1  sbit P2_2               = 0xA2;
+ 288      =1  sbit P2_3               = 0xA3;
+ 289      =1  sbit P2_4               = 0xA4;
+ 290      =1  sbit P2_5               = 0xA5;
+ 291      =1  sbit P2_6               = 0xA6;
+ 292      =1  sbit P2_7               = 0xA7;
+ 293      =1  //--------------------------------------------------------------------------
+ 294      =1  // IE (0xA8) Bit Registers
+ 295      =1  //--------------------------------------------------------------------------
+ 296      =1  sbit EX0                    = 0xA8;                                                       // 1=Enable Exte
+             -rnal interrupt 0
+ 297      =1  sbit ET0                    = 0xA9;                                                       // 1=Enable Time
+             -r 0 interrupt
+ 298      =1  sbit EX1                    = 0xAA;                                                       // 1=Enable Exte
+             -rnal interrupt 1
+ 299      =1  sbit ET1                    = 0xAB;                                                       // 1=Enable Time
+             -r 1 interrupt
+ 300      =1  sbit ES0                    = 0xAC;                                                       // 1=Enable Seri
+             -al port 0 interrupt
+ 301      =1  sbit ET2                    = 0xAD;                                                       // 1=Enable Time
+             -r 2 interrupt
+ 302      =1  sbit ES1                    = 0xAE;                                                       // 1=Enable Seri
+             -al port 1 interrupt
+ 303      =1  sbit EA                     = 0xAF;                                                       // 0=Disabe all 
+             -interrupts
+ 304      =1  //--------------------------------------------------------------------------
+ 305      =1  // P3 (0xB0) Bit Registers (Mnemonics & Ports)
+ 306      =1  //--------------------------------------------------------------------------
+ 307      =1  sbit P3_0               = 0xB0;
+ 308      =1  sbit P3_1               = 0xB1;
+ 309      =1  sbit P3_2               = 0xB2;
+ 310      =1  sbit P3_3               = 0xB3;
+ 311      =1  sbit P3_4               = 0xB4;
+ 312      =1  sbit P3_5               = 0xB5;
+ 313      =1  sbit P3_6               = 0xB6;
+ 314      =1  sbit P3_7               = 0xB7;
+ 315      =1  
+ 316      =1  sbit RXD                    = 0xB0;                                                       // Serial data i
+             -nput
+ 317      =1  sbit TXD                    = 0xB1;                                                       // Serial data o
+             -utput
+ 318      =1  sbit INT0                   = 0xB2;                                                       // External inte
+             -rrupt 0
+ 319      =1  sbit INT1                   = 0xB3;                                                       // External inte
+             -rrupt 1
+ 320      =1  sbit T0                     = 0xB4;                                                       // Timer 0 exter
+             -nal input
+ 321      =1  sbit T1                     = 0xB5;                                                       // Timer 1 exter
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 7   
+
+             -nal input
+ 322      =1  sbit WR                     = 0xB6;                                                       // External data
+             - memory write strobe
+ 323      =1  sbit RD                     = 0xB7;                                                       // External data
+             - memory read strobe
+ 324      =1  //--------------------------------------------------------------------------
+ 325      =1  // IP (0xB8) Bit Registers
+ 326      =1  //--------------------------------------------------------------------------
+ 327      =1  sbit PX0                = 0xB8;
+ 328      =1  sbit PT0                = 0xB9;
+ 329      =1  sbit PX1                = 0xBA;
+ 330      =1  sbit PT1                = 0xBB;
+ 331      =1  sbit PS0                = 0xBC;
+ 332      =1  sbit PT2                = 0xBD;
+ 333      =1  sbit PS1                = 0xBE;
+ 334      =1  //--------------------------------------------------------------------------
+ 335      =1  // SCON1 (0xC0) Bit Registers
+ 336      =1  //--------------------------------------------------------------------------
+ 337      =1  sbit RI1                = 0xC0;
+ 338      =1  sbit TI1                = 0xC1;
+ 339      =1  sbit RB18               = 0xC2;
+ 340      =1  sbit TB18               = 0xC3;
+ 341      =1  sbit REN1               = 0xC4;
+ 342      =1  sbit SM12               = 0xC5;
+ 343      =1  sbit SM11               = 0xC6;
+ 344      =1  sbit SM10               = 0xC7;
+ 345      =1  //--------------------------------------------------------------------------
+ 346      =1  // CMOM (0xC2) Bit Values
+ 347      =1  //--------------------------------------------------------------------------
+ 348      =1  #define PCA_ECF                 0x01
+ 349      =1  #define PCA_T0_OF               0x08
+ 350      =1  #define PCA_EXT_CLK             0x0E
+ 351      =1  #define PCA_GATE_OFF    0x80
+ 352      =1  //--------------------------------------------------------------------------
+ 353      =1  // CCON (0xC3) Bit Values
+ 354      =1  //--------------------------------------------------------------------------
+ 355      =1  #define PCA_CCF0                0x01
+ 356      =1  #define PCA_CCF1                0x02
+ 357      =1  #define PCA_CCF2                0x04
+ 358      =1  #define PCA_CCF3                0x08
+ 359      =1  #define PCA_CCF4                0x10
+ 360      =1  #define PCA_CR                  0x40
+ 361      =1  #define PCA_CF                  0x80
+ 362      =1  //--------------------------------------------------------------------------
+ 363      =1  // T2CON (0xC8) Bit Registers
+ 364      =1  //--------------------------------------------------------------------------
+ 365      =1  sbit CPRL2              = 0xC8;
+ 366      =1  sbit CT2                = 0xC9;
+ 367      =1  sbit TR2                = 0xCA;
+ 368      =1  sbit EXEN2              = 0xCB;
+ 369      =1  sbit TCLK               = 0xCC;
+ 370      =1  sbit RCLK               = 0xCD;
+ 371      =1  sbit EXF2               = 0xCE;
+ 372      =1  sbit TF2                = 0xCF;
+ 373      =1  //--------------------------------------------------------------------------
+ 374      =1  // PSW (0xD0) Bit Registers
+ 375      =1  //--------------------------------------------------------------------------
+ 376      =1  sbit P                  = 0xD0;
+ 377      =1  sbit F1                 = 0xD1;
+ 378      =1  sbit OV                 = 0xD2;
+ 379      =1  sbit RS0                = 0xD3;
+ 380      =1  sbit RS1                = 0xD4;
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 8   
+
+ 381      =1  sbit F0                 = 0xD5;
+ 382      =1  sbit AC                 = 0xD6;
+ 383      =1  sbit CY                 = 0xD7;
+ 384      =1  //--------------------------------------------------------------------------
+ 385      =1  // CCAPM0-4 (0xD1-0xD5) Bit Values
+ 386      =1  //--------------------------------------------------------------------------
+ 387      =1  #define ECCFs           0x01
+ 388      =1  #define PWMs            0x02
+ 389      =1  #define TOGs            0x04
+ 390      =1  #define MATs            0x08
+ 391      =1  #define CAPNs           0x10
+ 392      =1  #define CAPPs           0x20
+ 393      =1  #define ECOMs           0x40
+ 394      =1  #define CEXs            0x80
+ 395      =1  //--------------------------------------------------------------------------
+ 396      =1  // PSW (0xD8) Bit Registers
+ 397      =1  //--------------------------------------------------------------------------
+ 398      =1  sbit RWT                = 0xD8;
+ 399      =1  sbit EWT                = 0xD9;
+ 400      =1  sbit WTRF               = 0xDA;
+ 401      =1  sbit WDIF               = 0xDB;
+ 402      =1  
+ 403      =1  //--------------------------------------------------------------------------
+ 404      =1  // Interrupt Vectors:
+ 405      =1  // Interrupt Address = (Number * 8) + 3
+ 406      =1  //--------------------------------------------------------------------------
+ 407      =1  #define IE0_VECTOR            0                                                           // 0x03 External
+             - Interrupt 0
+ 408      =1  #define TF0_VECTOR            1                                                           // 0x0B Timer 0
+ 409      =1  #define IE1_VECTOR            2                                                           // 0x13 External
+             - Interrupt
+ 410      =1  #define TF1_VECTOR            3                                                           // 0x1B Timer 1
+ 411      =1  #define SIO_VECTOR            4                                                           // 0x23 Serial p
+             -ort
+ 412      =1  //--------------------------------------------------------------------------
+ 413      =1  // UR2_IER (0xE2) Bit Values
+ 414      =1  //--------------------------------------------------------------------------
+ 415      =1  #define UR2_RDI_ENB             0x01
+ 416      =1  #define UR2_THRI_ENB    0x02
+ 417      =1  #define UR2_RLSI_ENB    0x04
+ 418      =1  #define UR2_MSI_ENB             0x08
+ 419      =1  //--------------------------------------------------------------------------
+ 420      =1  // UR2_IIR (0xE3) Bit Values
+ 421      =1  //--------------------------------------------------------------------------
+ 422      =1  #define UR2_NONE_INTR           0x01
+ 423      =1  #define UR2_RLS_INTR            0x06
+ 424      =1  #define UR2_RD_TRIG_INTR        0x04
+ 425      =1  #define UR2_RD_TI_INTR          0x0C
+ 426      =1  #define UR2_THRE_INTR           0x02
+ 427      =1  #define UR2_MS_INTR                     0x00
+ 428      =1  //--------------------------------------------------------------------------
+ 429      =1  // UR2_FCR (0xE3) Bit Values
+ 430      =1  //--------------------------------------------------------------------------
+ 431      =1  #define UR2_FIFO_MODE   0x01
+ 432      =1  #define UR2_RXFIFO_RST  0x02
+ 433      =1  #define UR2_TXFIFO_RST  0x04
+ 434      =1  #define UR2_TRIG_01             0x00
+ 435      =1  #define UR2_TRIG_04             0x40
+ 436      =1  #define UR2_TRIG_08             0x80
+ 437      =1  #define UR2_TRIG_14             0xC0
+ 438      =1  //--------------------------------------------------------------------------
+ 439      =1  // UR2_LCR (0xE4) Bit Values
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 9   
+
+ 440      =1  //--------------------------------------------------------------------------
+ 441      =1  #define UR2_CHAR_5                      0x00
+ 442      =1  #define UR2_CHAR_6                      0x01
+ 443      =1  #define UR2_CHAR_7                      0x02
+ 444      =1  #define UR2_CHAR_8                      0x03
+ 445      =1  #define UR2_STOP_10                     0x00
+ 446      =1  #define UR2_STOP_15                     0x04
+ 447      =1  #define UR2_PARITY_ENB          0x08
+ 448      =1  #define UR2_EVEN_PARITY         0x10
+ 449      =1  #define UR2_STICK_PARITY        0x20
+ 450      =1  #define UR2_BREAK_ENB           0x40
+ 451      =1  #define UR2_DLAB_ENB            0x80
+ 452      =1  //--------------------------------------------------------------------------
+ 453      =1  // UR2_MCR (0xE5) Bit Values
+ 454      =1  //--------------------------------------------------------------------------
+ 455      =1  #define UR2_DTR                         0x01
+ 456      =1  #define UR2_RTS                         0x02
+ 457      =1  #define UR2_OUT1                        0x04
+ 458      =1  #define UR2_OUT2                        0x08
+ 459      =1  #define UR2_LOOPBACK            0x10
+ 460      =1  #define UR2_RS485_RECEIVE       0x40
+ 461      =1  #define UR2_RS485_DRIVE         0x80
+ 462      =1  //--------------------------------------------------------------------------
+ 463      =1  // UR2_LSR (0xE6) Bit Values
+ 464      =1  //--------------------------------------------------------------------------
+ 465      =1  #define UR2_DR                          0x01
+ 466      =1  #define UR2_OE                          0x02
+ 467      =1  #define UR2_PE                          0x04
+ 468      =1  #define UR2_FE                          0x08
+ 469      =1  #define UR2_BI                          0x10
+ 470      =1  #define UR2_THRE                        0x20
+ 471      =1  #define UR2_TEMT                        0x40
+ 472      =1  #define UR2_FRAME_ERR           0x80
+ 473      =1  //--------------------------------------------------------------------------
+ 474      =1  // UR2_MSR (0xE7) Bit Values
+ 475      =1  //--------------------------------------------------------------------------
+ 476      =1  #define UR2_DCTS                        0x01
+ 477      =1  #define UR2_DDSR                        0x02
+ 478      =1  #define UR2_TERI                        0x04
+ 479      =1  #define UR2_DDCD                        0x08
+ 480      =1  #define UR2_CTS                         0x10
+ 481      =1  #define UR2_DSR                         0x20
+ 482      =1  #define UR2_RI                          0x40
+ 483      =1  #define UR2_DCD                         0x80
+ 484      =1  //--------------------------------------------------------------------------
+ 485      =1  // EIE (0xE8) Bit Registers
+ 486      =1  //--------------------------------------------------------------------------
+ 487      =1  sbit EINT2              = 0xE8;
+ 488      =1  sbit EINT3              = 0xE9;
+ 489      =1  sbit EINT4              = 0xEA;
+ 490      =1  sbit EINT5              = 0xEB;
+ 491      =1  sbit EINT6              = 0xEC;
+ 492      =1  sbit EWDI               = 0xED;
+ 493      =1  //--------------------------------------------------------------------------
+ 494      =1  // EIP (0xF8) Bit Registers
+ 495      =1  //--------------------------------------------------------------------------
+ 496      =1  sbit PINT2              = 0xF8;
+ 497      =1  sbit PINT3              = 0xF9;
+ 498      =1  sbit PINT4              = 0xFA;
+ 499      =1  sbit PINT5              = 0xFB;
+ 500      =1  sbit PINT6              = 0xFC;
+ 501      =1  sbit PWDI               = 0xFD;
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 10  
+
+ 502      =1  //--------------------------------------------------------------------------
+ 503      =1  //--------------------------------------------------------------------------
+ 504      =1  #endif
+  28          #include        "types.h"
+   1      =1  //----------------------------------------------------------------------------------------
+   2      =1  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =1  //
+   4      =1  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =1  //
+   6      =1  //     The copyright notice above does not evidence any actual or intended
+   7      =1  //     publication of such source code.
+   8      =1  //----------------------------------------------------------------------------------------
+   9      =1  // Module Name : types.h
+  10      =1  // Purpose     : Definition of type.
+  11      =1  // Author      : Robin Lee
+  12      =1  // Date        : 2005-12-28
+  13      =1  // Notes       : None.
+  14      =1  // $Log: types.h,v $
+  15      =1  //----------------------------------------------------------------------------------------
+  16      =1  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =1  // no message
+  18      =1  //----------------------------------------------------------------------------------------
+  19      =1  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =1  // no message
+  21      =1  //----------------------------------------------------------------------------------------
+  22      =1  
+  23      =1  #ifndef TYPES_H
+  24      =1  #define TYPES_H
+  25      =1  
+  26      =1  typedef unsigned short int          bool;                                                 // boolean
+  27      =1  typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+  28      =1  typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+  29      =1  typedef short int                   sint;                                                 // 16-bit signed
+  30      =1  typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+  31      =1  typedef unsigned short int          word;                                                 // 16-bit unsign
+             -ed
+  32      =1  
+  33      =1  #ifndef NULL
+  34      =1    #define NULL ((void *) 0L)
+  35      =1  #endif
+  36      =1  
+  37      =1  #define TRUE                  1
+  38      =1  #define FALSE                 0
+  39      =1  #define ON                    1
+  40      =1  #define OFF                   0
+  41      =1  #define Client                1
+  42      =1  #define Server                0
+  43      =1  
+  44      =1  // Bit Definitions for Bitwise Operation //
+  45      =1  #define BIT0            0x01
+  46      =1  #define BIT1            0x02
+  47      =1  #define BIT2            0x04
+  48      =1  #define BIT3            0x08
+  49      =1  #define BIT4            0x10
+  50      =1  #define BIT5            0x20
+  51      =1  #define BIT6            0x40
+  52      =1  #define BIT7            0x80
+  53      =1  #define BIT8            0x0100
+  54      =1  #define BIT9            0x0200
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 11  
+
+  55      =1  #define BIT10           0x0400
+  56      =1  #define BIT11           0x0800
+  57      =1  #define BIT12           0x1000
+  58      =1  #define BIT13           0x2000
+  59      =1  #define BIT14           0x4000
+  60      =1  #define BIT15           0x8000
+  61      =1  #define BIT16           0x00010000
+  62      =1  #define BIT17           0x00020000
+  63      =1  #define BIT18           0x00040000
+  64      =1  #define BIT19           0x00080000
+  65      =1  #define BIT20           0x00100000
+  66      =1  #define BIT21           0x00200000
+  67      =1  #define BIT22           0x00400000
+  68      =1  #define BIT23           0x00800000
+  69      =1  #define BIT24           0x01000000
+  70      =1  #define BIT25           0x02000000
+  71      =1  #define BIT26           0x04000000
+  72      =1  #define BIT27           0x08000000
+  73      =1  #define BIT28           0x10000000
+  74      =1  #define BIT29           0x20000000
+  75      =1  #define BIT30           0x40000000
+  76      =1  #define BIT31           0x80000000
+  77      =1  
+  78      =1  #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+  79      =1  #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+  80      =1  
+  81      =1  #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+  82      =1  #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+  83      =1  #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+  84      =1  #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+  85      =1   
+  86      =1  // Keil compiler user define //
+  87      =1  #define     KEIL_CPL
+  88      =1  
+  89      =1  #ifdef KEIL_CPL
+  90      =1   #define XDATA    xdata
+  91      =1   #define IDATA    idata
+  92      =1   #define BDATA    bdata
+  93      =1   #define CODE     code
+  94      =1   #define FAR      far
+  95      =1  #else
+           =1  #define XDATA
+           =1  #define IDATA
+           =1  #define BDATA
+           =1  #define CODE
+           =1  #define FAR
+           =1 #endif
+ 102      =1  
+ 103      =1  // Serial interface command direction //
+ 104      =1  #define     SI_WR                   BIT0
+ 105      =1  #define     SI_RD                   BIT1
+ 106      =1  
+ 107      =1  #define     FLASH_WR_ENB            (PCON |= PWE_)
+ 108      =1  #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+ 109      =1  
+ 110      =1  #endif  // end of TYPES_H //
+  29          #include        "spi.h"
+   1      =1  /*
+   2      =1   *********************************************************************************
+   3      =1   *     Copyright (c) 2005       ASIX Electronic Corporation      All rights reserved.
+   4      =1   *
+   5      =1   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 12  
+
+   6      =1   *
+   7      =1   *     The copyright notice above does not evidence any actual or intended
+   8      =1   *     publication of such source code.
+   9      =1   *********************************************************************************
+  10      =1   */
+  11      =1  /*================================================================================
+  12      =1   * Module Name : spi.h
+  13      =1   * Purpose     : A header file of spi.c. It defines register address and bits.
+  14      =1   * Author      : Robin Lee
+  15      =1   * Date        : 2005-01-11
+  16      =1   * Notes       :
+  17      =1   * $Log: spi.h,v $
+  18      =1   * Revision 1.1  2006/04/07 11:39:02  robin6633
+  19      =1   * no message
+  20      =1   *
+  21      =1   *================================================================================
+  22      =1   */
+  23      =1  #ifndef SPI_H
+  24      =1  #define SPI_H
+  25      =1  
+  26      =1  /* INCLUDE FILE DECLARATIONS */
+  27      =1  #include        "spi_cfg.h"
+   1      =2  /*
+   2      =2   *********************************************************************************
+   3      =2   *     Copyright (c) 2005       ASIX Electronic Corporation      All rights reserved.
+   4      =2   *
+   5      =2   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6      =2   *
+   7      =2   *     The copyright notice above does not evidence any actual or intended
+   8      =2   *     publication of such source code.
+   9      =2   *********************************************************************************
+  10      =2   */
+  11      =2  /*================================================================================
+  12      =2   * Module Name : spi_cfg.h
+  13      =2   * Purpose     : A configuration setting for SPI module.
+  14      =2   * Author      : Robin Lee
+  15      =2   * Date        : 2006-01-11
+  16      =2   * Notes       :
+  17      =2   * $Log: spi_cfg.h,v $
+  18      =2   * Revision 1.1  2006/04/07 11:39:02  robin6633
+  19      =2   * no message
+  20      =2   *
+  21      =2   *================================================================================
+  22      =2   */
+  23      =2  #ifndef SPI_CFG_H
+  24      =2  #define SPI_CFG_H
+  25      =2  
+  26      =2  /* INCLUDE FILE DECLARATIONS */
+  27      =2  
+  28      =2  
+  29      =2  /* NAMING CONSTANT DECLARATIONS */
+  30      =2  #define SPI_SLAVE_ENABLE                0
+  31      =2  
+  32      =2  
+  33      =2  /* MACRO DECLARATIONS */
+  34      =2  
+  35      =2  
+  36      =2  /* TYPE DECLARATIONS */
+  37      =2  
+  38      =2  
+  39      =2  /* GLOBAL VARIABLES */
+  40      =2  
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 13  
+
+  41      =2  
+  42      =2  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+  43      =2  
+  44      =2  
+  45      =2  #endif /* End of SPI_CFG_H */
+  28      =1  
+  29      =1  
+  30      =1  /* NAMING CONSTANT DECLARATIONS */
+  31      =1  /* SPI register */
+  32      =1  #define SPIRBR                                  0x00    // SPI Receive Buffer Register
+  33      =1  #define SPITBR                                  0x04    // SPI Transmit Buffer Register
+  34      =1  #define SPICTRLR                                0x08    // SPI Control Register
+  35      =1  #define SPICMDR                                 0x09    // SPI Command Register
+  36      =1  #define SPIBRR                                  0x0A    // SPI Baud Rate Register
+  37      =1  #define SPISSR                                  0x0B    // SPI Slave Select Register
+  38      =1  #define SPIISR                                  0x0C    // SPI Interrupt Status Register
+  39      =1  #define SPIIER                                  0x0D    // SPI Interrupt Enable Register
+  40      =1  #define SPISCR                                  0x0E    // SPI Slave Command Register
+  41      =1  #define SPISB                                   0x10    // SPI Slave Buffer Register
+  42      =1  
+  43      =1  /* SPICTRLR */
+  44      =1  #define SPI_SSP_HIGH                    BIT0    // slave select is high active
+  45      =1  #define SPI_SSP_LOW                             0               // slave select is low active
+  46      =1  #define SPI_CPHA_BEG                    BIT1    // spi first clock edge is issued at the beginning of transfer cycle
+  47      =1  #define SPI_CPHA_HALF                   0               // spi first clock edge is issued one-half cycle of transfer cycle
+  48      =1  #define SPI_CPOL_LOW                    BIT2    // clock active low
+  49      =1  #define SPI_CPOL_HIGH                   0               // clock active high
+  50      =1  #define SPI_LSB_FIRST                   BIT3    // the LSB is sent first
+  51      =1  #define SPI_MSB_FIRST                   0               // the MSB is sent first
+  52      =1  #define SPI_ENB                                 BIT4    // spi module enable
+  53      =1  #define SPI_DISB                                0               // spi module disable
+  54      =1  #define SPI_SS_AUTO                             BIT5    // slave select signal generated automatically
+  55      =1  #define SPI_SS_NORM                             0               // slave select signal generated by SPISSR bits
+  56      =1  #define SPI_MST_SEL                             BIT6    // spi master mode
+  57      =1  #define SPI_SLV_SEL                             0               // spi slave mode
+  58      =1  #define SPI_SSO_ENB                             BIT7    // enable driving slave select signal
+  59      =1  #define SPI_SSO_DISB                    0               // put slave select signal to tri-state
+  60      =1  
+  61      =1  /* SPICMDR */
+  62      =1  #define SPI_LOST_CLK                    BIT5    // suppress the last clock
+  63      =1  #define SPI_LONG_LEN                    BIT6    // the current transfer length is small than desired length
+  64      =1  #define SPI_NORMAL_LEN                  0               // the current transfer length is the desired length
+  65      =1  #define SPI_GO_BSY                              BIT7    // start a transfer
+  66      =1  
+  67      =1  /* SPIBRR */
+  68      =1  #define SLAVE_SEL_0                             ~BIT0   // slave select signal used on bit0
+  69      =1  #define SLAVE_SEL_1                             ~BIT1   // slave select signal used on bit1
+  70      =1  #define SLAVE_SEL_2                             ~BIT2   // slave select signal used on bit2
+  71      =1  #define SLAVE_SEL_3                             ~BIT3   // slave select signal used on bit3
+  72      =1  #define SLAVE_SEL_4                             ~BIT4   // slave select signal used on bit4
+  73      =1  #define SLAVE_SEL_5                             ~BIT5   // slave select signal used on bit5
+  74      =1  #define SLAVE_SEL_6                             ~BIT6   // slave select signal used on bit6
+  75      =1  #define SLAVE_SEL_7                             ~BIT7   // slave select signal used on bit7
+  76      =1  
+  77      =1  /* SPIISR */
+  78      =1  #define SPI_MCF                                 BIT0    // spi master mode interrupt flag
+  79      =1  #define SPI_SCF                                 BIT4    // spi slave mode interrupt flag
+  80      =1  
+  81      =1  /* SPIIER */
+  82      =1  #define SPI_STCFIE                              BIT0    // spi master mode interrupt enable
+  83      =1  #define SPI_SRCFIE                              BIT4    // spi slave mode interrupt enable
+  84      =1  
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 14  
+
+  85      =1  /* SPISCR */
+  86      =1  #define SPI_SLV_RDY                             BIT0    // spi slave ready
+  87      =1  
+  88      =1  /* SPI Definition */
+  89      =1  #define SPI_MST_XMIT                    BIT0
+  90      =1  #define SPI_MST_RCVR                    BIT1
+  91      =1  #define SPI_SLV_XMIT                    BIT2
+  92      =1  #define SPI_SLV_RCVR                    BIT3
+  93      =1  
+  94      =1  /* SPI Action Flag */
+  95      =1  #define SPI_BUSY                                BIT0    // spi bus busy flag
+  96      =1  
+  97      =1  /* SPI Slave Command */
+  98      =1  #define SPI_SLV_RSR                             0                               // read status register command
+  99      =1  #define SPI_SLV_RDR                             BIT4                    // read data register command
+ 100      =1  #define SPI_SLV_SRSFR                   BIT5                    // single read SFR command
+ 101      =1  #define SPI_SLV_SWSFR                   BIT7+BIT5               // single write SFR command
+ 102      =1  #define SPI_SLV_IRSFR                   BIT5+BIT4               // indirect read SFR command
+ 103      =1  #define SPI_SLV_IWSFR                   BIT7+BIT5+BIT4  // indirect write SFR command
+ 104      =1  #define SPI_SLV_BRMEM                   BIT6                    // burst read memory command
+ 105      =1  #define SPI_SLV_BWMEM                   BIT7+BIT6               // burst write memory command
+ 106      =1  
+ 107      =1  
+ 108      =1  /* MACRO DECLARATIONS */
+ 109      =1  
+ 110      =1  
+ 111      =1  /* TYPE DECLARATIONS */
+ 112      =1  
+ 113      =1  
+ 114      =1  /* GLOBAL VARIABLES */
+ 115      =1  
+ 116      =1  
+ 117      =1  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+ 118      =1  void    SPI_Setup(unsigned char ctrlCmd, unsigned char intrEnb, unsigned char baudrate, unsigned char slvSel)
+             -;
+ 119      =1  void    SPI_Func(void);
+ 120      =1  void    SPI_MstXmit(unsigned char *ptSpiTxPkt, unsigned char xmitBit, unsigned char spiCmd);
+ 121      =1  void    SPI_SlvXmit(unsigned char spiSlvCmd);
+ 122      =1  bool    SPI_FlagChk(unsigned char chkBit);
+ 123      =1  void    SPI_FlagEnb(unsigned char enbBit);
+ 124      =1  void    SPI_FlagClr(unsigned char clrBit);
+ 125      =1  void    SPI_GetData(unsigned char *ptBuf);
+ 126      =1  void    SPI_Post(void);
+ 127      =1  void    SPI_Cmd(unsigned char cmdType, unsigned char spiCmdIndex, unsigned char *spiData);
+ 128      =1  
+ 129      =1  
+ 130      =1  #endif /* End of SPI_H */
+ 131      =1  
+ 132      =1  
+ 133      =1  
+ 134      =1  
+ 135      =1  
+ 136      =1  
+  30          #include        "spiapi.h"   
+   1      =1  /*
+   2      =1   *********************************************************************************
+   3      =1   *     Copyright (c) 2005       ASIX Electronic Corporation      All rights reserved.
+   4      =1   *
+   5      =1   *     This is unpublished proprietary source code of ASIX Electronic Corporation
+   6      =1   *
+   7      =1   *     The copyright notice above does not evidence any actual or intended
+   8      =1   *     publication of such source code.
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 15  
+
+   9      =1   *********************************************************************************
+  10      =1   */
+  11      =1  /*================================================================================
+  12      =1   * Module Name : spiapi.h
+  13      =1   * Purpose     : API header file. Definite the command code.
+  14      =1   * Author      : Robin Lee
+  15      =1   * Date        : 2006-01-10
+  16      =1   * Notes       :
+  17      =1   * $Log: spiapi.h,v $
+  18      =1   * Revision 1.1  2006/04/07 11:39:02  robin6633
+  19      =1   * no message
+  20      =1   *
+  21      =1   *================================================================================
+  22      =1   */
+  23      =1  #ifndef SPIAPI_H
+  24      =1  #define SPIAPI_H
+  25      =1  
+  26      =1  /* INCLUDE FILE DECLARATIONS */
+  27      =1  
+  28      =1  
+  29      =1  /* NAMING CONSTANT DECLARATIONS */
+  30      =1  #define         SPI_READ        0x03    // read command
+  31      =1  #define         SPI_WRITE       0x02    // write command
+  32      =1  #define         SPI_WRDI        0x04    // write disable command
+  33      =1  #define         SPI_WREN        0x06    // write enable command
+  34      =1  #define         SPI_RDSR        0x05    // read status command
+  35      =1  #define         SPI_WRSR        0x01    // write status command
+  36      =1  #define         SPI_WPEN        BIT7    // write protect enable
+  37      =1  #define         SPI_BP1         BIT3    // block protect control bit 1
+  38      =1  #define         SPI_BP0         BIT2    // block protect control bit 0
+  39      =1  #define         SPI_WEL         BIT1    // write enable latch
+  40      =1  #define         SPI_WIP         BIT0    // write cycle is in progress
+  41      =1  
+  42      =1  
+  43      =1  
+  44      =1  /* MACRO DECLARATIONS */
+  45      =1  
+  46      =1  
+  47      =1  /* TYPE DECLARATIONS */
+  48      =1  
+  49      =1  
+  50      =1  /* GLOBAL VARIABLES */
+  51      =1  
+  52      =1  
+  53      =1  /* EXPORTED SUBPROGRAM SPECIFICATIONS */
+  54      =1  bool    SPI_WriteEnable(void);
+  55      =1  bool    SPI_WriteDisable(void);
+  56      =1  bool    SPI_WriteStatus(unsigned char status);
+  57      =1  bool    SPI_ReadStatus(unsigned char *status);
+  58      =1  bool    SPI_ByteWrite(unsigned short addrofmem, unsigned char bytedata);
+  59      =1  bool    SPI_Write(unsigned char *ptbytedata, unsigned short wrlen); 
+  60      =1  bool    SPI_PageWrite(unsigned short addrofmem, unsigned char *ptbytedata, unsigned short wrlen);
+  61      =1  bool    SPI_ByteRead(unsigned short addrofmem, unsigned char *ptbytedata);
+  62      =1  bool    SPI_PageRead(unsigned short addrofmem, unsigned char *ptbytedata, unsigned short rdlen);
+  63      =1  
+  64      =1  
+  65      =1  #endif /* End of SPIAPI_H */
+  31          #include "printd.h"                                                                       //
+   1      =1  //--------------------------------------------------------------------------------
+   2      =1  //     Copyright (c) 2005   ASIX Electronic Corporation      All rights reserved.
+   3      =1  //
+   4      =1  //     This is unpublished proprietary source code of ASIX Electronic Corporation
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 16  
+
+   5      =1  //
+   6      =1  //     The copyright notice above does not evidence any actual or intended
+   7      =1  //     publication of such source code.
+   8      =1  //--------------------------------------------------------------------------------
+   9      =1  //================================================================================
+  10      =1  // File Name : printd.h
+  11      =1  // Purpose   :
+  12      =1  // Author    :
+  13      =1  // Date      :
+  14      =1  // Notes     :
+  15      =1  //    printd("justif: \"%-10s\"\n", "left");    =>    justif: "left      "
+  16      =1  //    printd("justif: \"%10s\"\n", "right");    =>    justif: "     right"
+  17      =1  //    printd(" 3: %04d zero padded\n",   3);     =>     3: 0003 zero padded
+  18      =1  //    printd(" 3: %-4d left justif.\n",  3);    =>     3: 3    left justif.
+  19      =1  //    printd(" 3: %4d right justif.\n",  3);    =>     3:    3 right justif.
+  20      =1  //    printd("-3: %04d zero padded\n",  -3);    =>    -3: -003 zero padded
+  21      =1  //    printd("-3: %-4d left justif.\n", -3);    =>    -3: -3   left justif.
+  22      =1  //    printd("-3: %4d right justif.\n", -3);    =>    -3:   -3 right justif.
+  23      =1  //================================================================================
+  24      =1  //
+  25      =1  #ifndef PRINTD_H
+  26      =1  #define PRINTD_H
+  27      =1  
+  28      =1  // INCLUDE FILE DECLARATIONS //
+  29      =1  
+  30      =1  // NAMING CONSTANT DECLARATIONS //
+  31      =1  #define UART0                             0
+  32      =1  #define UART1                             1
+  33      =1  #define DEBUG_PORT                      (UART1)
+  34      =1  #define PAD_RIGHT                               1
+  35      =1  #define PAD_ZERO                                2
+  36      =1  #define PRINT_BUF_LEN                     18
+  37      =1  
+  38      =1  #define DRIVER_MSG                              0x0001
+  39      =1  #define INIT_MSG                                0x0002
+  40      =1  #define TX_MSG                                  0x0004
+  41      =1  #define RX_MSG                                  0x0008
+  42      =1  #define INT_MSG                                 0x0010
+  43      =1  #define ERROR_MSG                               0x0020
+  44      =1  #define WARNING_MSG                             0x0040
+  45      =1  #define DEBUG_MSG                               0x0080
+  46      =1  #define TCP_MSG                                 0x0100
+  47      =1  #define ALL_MSG                                 0x01FF
+  48      =1  #define NO_MSG                                  0x0000
+  49      =1  #define DEFAULT_MSG                             (ALL_MSG) 
+  50      =1  #define DEBUG_FLAGS                             DEFAULT_MSG
+  51      =1  #define DEBUG_DISPLAY_DIAG              1
+  52      =1  
+  53      =1  // MACRO DECLARATIONS //
+  54      =1  #if   ( DEBUG_PORT == UART0 )
+           =1 #define     DEBUG_PORT_PUTCHR(x)    uart0_PutChar(x)
+           =1 #else
+  57      =1  #define DEBUG_PORT_PUTCHR(x)    uart1_PutChar(x)
+  58      =1  #endif
+  59      =1  
+  60      =1  #if DEBUG_DISPLAY_DIAG
+  61      =1  #define PRINTD(flag,x)                  if(flag & DEBUG_FLAGS) {printd x;}
+  62      =1  #else
+           =1 #define PRINTD(flag,x)
+           =1 #endif
+  65      =1  
+  66      =1  // GLOBAL VARIABLES //
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 17  
+
+  67      =1  extern byte DEBUG_MsgEnable;
+  68      =1  
+  69      =1  // EXPORTED SUBPROGRAM SPECIFICATIONS //
+  70      =1  int printd(const char *format, ...);
+  71      =1  
+  72      =1  #endif // End of PRINTD_H //
+  73      =1  
+  32          
+  33          
+  34          /* STATIC VARIABLE DECLARATIONS */
+  35          
+  36          
+  37          /* LOCAL SUBPROGRAM DECLARATIONS */
+  38          
+  39          
+  40          /* LOCAL SUBPROGRAM BODIES */
+  41          
+  42          
+  43          /* EXPORTED SUBPROGRAM BODIES */
+  44          
+  45          /*
+  46           *--------------------------------------------------------------------------------
+  47           * bool SPI_WriteEnable(void)
+  48           * Purpose : Enable a write process before sending a packet to write.
+  49           * Params  : none
+  50           * Returns : TRUE - successful
+  51           * Note    : Write Enable must be initial when executing all write function.
+  52           *--------------------------------------------------------------------------------
+  53           */
+  54          bool SPI_WriteEnable(void)
+  55          {
+  56   1              unsigned char   xmitByte = 0;
+  57   1      //    printd("got into writeEnable\n\r");                                         
+  58   1              xmitByte = SPI_WREN;               
+  59   1              SPI_FlagEnb(SPI_BUSY);
+  60   1              SPI_MstXmit(&xmitByte, 8, SPI_NORMAL_LEN|SPI_GO_BSY);
+  61   1      
+  62   1              while (SPI_FlagChk(SPI_BUSY)) {
+  63   2              SPI_Func();
+  64   2      //        printd("exit spi_func\n\r");
+  65   2          }                 //Stuck in this loop...
+  66   1      
+  67   1              return TRUE;
+  68   1      }
+  69          
+  70          /*
+  71           *--------------------------------------------------------------------------------
+  72           * bool SPI_WriteDisable(void)
+  73           * Purpose : Disable a write process.
+  74           * Params  : none
+  75           * Returns : TRUE - successful
+  76           * Note    : After WriteDisable executed, all writing function will be fail.
+  77           *--------------------------------------------------------------------------------
+  78           */
+  79          bool SPI_WriteDisable(void)
+  80          {
+  81   1              unsigned char   xmitByte = 0;
+  82   1              
+  83   1              xmitByte = SPI_WRDI;
+  84   1              SPI_FlagEnb(SPI_BUSY);
+  85   1              SPI_MstXmit(&xmitByte, 8, SPI_NORMAL_LEN|SPI_GO_BSY);
+  86   1      
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 18  
+
+  87   1              while (SPI_FlagChk(SPI_BUSY)) {}
+  88   1      
+  89   1              return TRUE;
+  90   1      }
+  91          
+  92          /*
+  93           *--------------------------------------------------------------------------------
+  94           * bool SPI_WriteStatus(unsigned char status)
+  95           * Purpose : Change a device status register.
+  96           * Params  : status - changed value.
+  97           * Returns : TRUE - successful.
+  98           * Note    :
+  99           *--------------------------------------------------------------------------------
+ 100           */
+ 101          bool SPI_WriteStatus(unsigned char status)
+ 102          {
+ 103   1              unsigned char   writeStatus[2];
+ 104   1              
+ 105   1              writeStatus[1] = SPI_WRSR;
+ 106   1              writeStatus[0] = status;
+ 107   1      
+ 108   1              if (!SPI_WriteEnable())
+ 109   1                      return FALSE;
+ 110   1              SPI_FlagEnb(SPI_BUSY);
+ 111   1              SPI_MstXmit(&writeStatus, 16, SPI_NORMAL_LEN|SPI_GO_BSY);
+ 112   1              while (SPI_FlagChk(SPI_BUSY)) {}
+ 113   1              
+ 114   1              return TRUE;
+ 115   1      }
+ 116          
+ 117          /*
+ 118           *--------------------------------------------------------------------------------
+ 119           * bool SPI_ReadStatus(unsigned char *status)
+ 120           * Purpose : Read a device status register.
+ 121           * Params  : *status - a pointer of status value.
+ 122           * Returns : TRUE - successful
+ 123           * Note    : 
+ 124           *--------------------------------------------------------------------------------
+ 125           */
+ 126          bool SPI_ReadStatus(unsigned char *status)
+ 127          {
+ 128   1              unsigned char   readStatus[2];
+ 129   1              
+ 130   1              readStatus[1] = SPI_RDSR;
+ 131   1              readStatus[0] = 0;
+ 132   1      //    printd("read status\n\r");
+ 133   1              
+ 134   1              SPI_FlagEnb(SPI_BUSY);
+ 135   1              SPI_MstXmit(&readStatus, 16, SPI_NORMAL_LEN|SPI_GO_BSY);
+ 136   1      //    printd("transmit\n\r");
+ 137   1      
+ 138   1              while (SPI_FlagChk(SPI_BUSY)) {SPI_Func();}
+ 139   1      //    printd("busy\n\r");
+ 140   1              SPI_GetData(&readStatus);
+ 141   1      //    printd("got data\n\r");
+ 142   1              *status = readStatus[0];
+ 143   1      //    printd("end of read status\n\r");
+ 144   1              return TRUE;
+ 145   1      }
+ 146          
+ 147          /*
+ 148           *--------------------------------------------------------------------------------
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 19  
+
+ 149           * bool SPI_ByteWrite(unsigned short addrOfMem, unsigned char byteData)
+ 150           * Purpose : Write one byte data into spi devices.
+ 151           * Params  : addrOfMem - address of accessing.
+ 152           *           byteData - data to be written.
+ 153           * Returns : TRUE - successful.
+ 154           * Note    :
+ 155           *--------------------------------------------------------------------------------
+ 156           */
+ 157          bool SPI_ByteWrite(unsigned short addrOfMem, unsigned char byteData)
+ 158          {
+ 159   1              unsigned char   byteWrite[4];
+ 160   1              unsigned char   status = 0;
+ 161   1              
+ 162   1              byteWrite[3] = SPI_WRITE;
+ 163   1              byteWrite[2] = (unsigned char)(addrOfMem >> 8);
+ 164   1              byteWrite[1] = (unsigned char)(addrOfMem);
+ 165   1              byteWrite[0] = byteData;
+ 166   1      
+ 167   1              if (!SPI_WriteEnable())
+ 168   1              {
+ 169   2                      return FALSE;
+ 170   2              }
+ 171   1              do
+ 172   1              {
+ 173   2                      SPI_ReadStatus(&status);
+ 174   2              } while (status & SPI_WIP);
+ 175   1              SPI_FlagEnb(SPI_BUSY);
+ 176   1              SPI_MstXmit(&byteWrite, 32, SPI_NORMAL_LEN|SPI_GO_BSY);
+ 177   1              while (SPI_FlagChk(SPI_BUSY)) {}
+ 178   1              
+ 179   1              return TRUE;
+ 180   1      }
+ 181          
+ 182          /*
+ 183           *--------------------------------------------------------------------------------
+ 184           * bool SPI_PageWrite(unsigned short addrOfMem, unsigned char *ptByteData, unsigned short wrLen)
+ 185           * Purpose : Write a data string into spi devices.
+ 186           * Params  : addrOfMem - address of accessing.
+ 187           *           *ptByteData - pointer of data string to be written.
+ 188           *           wrLen - write data length.
+ 189           * Returns : TRUE - successful.
+ 190           * Note    :
+ 191           *--------------------------------------------------------------------------------
+ 192           */
+ 193          bool SPI_PageWrite(unsigned short addrOfMem, unsigned char *ptByteData, unsigned short wrLen)
+ 194          {
+ 195   1              unsigned char           pageWrite[35];
+ 196   1              unsigned char           status = 0;
+ 197   1              unsigned short          i;                     
+ 198   1              
+ 199   1      //    printd("got into pagewrite\n\r");
+ 200   1              pageWrite[2] = SPI_WRITE;
+ 201   1              pageWrite[1] = (unsigned char)(addrOfMem >> 8);
+ 202   1              pageWrite[0] = (unsigned char)(addrOfMem);
+ 203   1              for (i=0 ; i<wrLen ; i++)
+ 204   1              {
+ 205   2                      pageWrite[3+i] = *(ptByteData+i);
+ 206   2              }                                        
+ 207   1              if (!SPI_WriteEnable())
+ 208   1          {                                
+ 209   2                      return FALSE;       
+ 210   2          }   
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 20  
+
+ 211   1      //    printd("got past Spi_writeEnable\n\r");           
+ 212   1      //      do
+ 213   1      //      {
+ 214   1      //        printd("looping\n\r");
+ 215   1      //              SPI_ReadStatus(&status);
+ 216   1      //               
+ 217   1      //      }
+ 218   1      //      while (status & SPI_WIP) ;
+ 219   1      //    printd("got past do-while\n\r");        
+ 220   1              SPI_FlagEnb(SPI_BUSY);             
+ 221   1              SPI_MstXmit(&pageWrite[0], 24, SPI_LONG_LEN|SPI_GO_BSY);
+ 222   1                                            
+ 223   1              while (SPI_FlagChk(SPI_BUSY)) {SPI_Func();}
+ 224   1      //    printd("got past flag check\n\r");                                   
+ 225   1              for (i=0 ; i<wrLen ; i++)
+ 226   1              {
+ 227   2                      SPI_FlagEnb(SPI_BUSY);
+ 228   2                      if (i == (wrLen-1))
+ 229   2                              SPI_MstXmit(&pageWrite[3+i], 8, SPI_NORMAL_LEN|SPI_GO_BSY);
+ 230   2                      else
+ 231   2                              SPI_MstXmit(&pageWrite[3+i], 8, SPI_LONG_LEN|SPI_GO_BSY);
+ 232   2                      while (SPI_FlagChk(SPI_BUSY)) {SPI_Func();}
+ 233   2              }
+ 234   1      //    printd("end of page write\n\r");
+ 235   1              return TRUE;
+ 236   1      }
+ 237          
+ 238          /*
+ 239           *--------------------------------------------------------------------------------
+ 240           * bool SPI_ByteRead(unsigned short addrOfMem, unsigned char *ptByteData)
+ 241           * Purpose : Read one byte data from spi devices.
+ 242           * Params  : addrOfMem - address of accessing.
+ 243           *           *ptByteData - pointer of data which be read.
+ 244           * Returns : TRUE - successful.
+ 245           * Note    :
+ 246           *--------------------------------------------------------------------------------
+ 247           */
+ 248          bool SPI_ByteRead(unsigned short addrOfMem, unsigned char *ptByteData)
+ 249          {
+ 250   1              unsigned char   byteRead[4];
+ 251   1              unsigned char   status = 0;
+ 252   1              
+ 253   1              byteRead[3] = SPI_READ;
+ 254   1              byteRead[2] = (unsigned char)(addrOfMem >> 8);
+ 255   1              byteRead[1] = (unsigned char)(addrOfMem);
+ 256   1              byteRead[0] = *ptByteData;
+ 257   1      
+ 258   1              do
+ 259   1              {
+ 260   2                      SPI_ReadStatus(&status);
+ 261   2              } while (status & SPI_WIP) ;
+ 262   1              SPI_FlagEnb(SPI_BUSY);
+ 263   1              SPI_MstXmit(&byteRead[0], 32, SPI_NORMAL_LEN|SPI_GO_BSY);
+ 264   1              while (SPI_FlagChk(SPI_BUSY)) {}
+ 265   1              SPI_GetData(&byteRead);
+ 266   1              *ptByteData = byteRead[0];
+ 267   1      
+ 268   1              return TRUE;
+ 269   1      }
+ 270          
+ 271          /*
+ 272           *--------------------------------------------------------------------------------
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 21  
+
+ 273           * bool MCP25C320_PageRead(unsigned short addrOfMem, unsigned char *ptByteData, unsigned short rdLen)
+ 274           * Purpose : read a data string from spi devices.
+ 275           * Params  : addrOfMem - address of accessing.
+ 276           *           *ptByteData - pointer of data string which be read.
+ 277           *           rdLen - read data length.
+ 278           * Returns : TRUE - successful.
+ 279           * Note    :
+ 280           *--------------------------------------------------------------------------------
+ 281           */
+ 282          bool SPI_PageRead(unsigned short addrOfMem, unsigned char *ptByteData, unsigned short rdLen)
+ 283          {
+ 284   1              unsigned char   pageRead[4], temp[4];
+ 285   1              unsigned char   status = 0;
+ 286   1              unsigned short  i;
+ 287   1              
+ 288   1              temp[0] = 0;
+ 289   1              temp[1] = 0;
+ 290   1              temp[2] = 0;
+ 291   1              temp[3] = 0;
+ 292   1              pageRead[3] = 0;
+ 293   1              pageRead[2] = SPI_READ;
+ 294   1              pageRead[1] = (unsigned char)(addrOfMem >> 8);
+ 295   1              pageRead[0] = (unsigned char)(addrOfMem);
+ 296   1      
+ 297   1              do
+ 298   1              {
+ 299   2                      SPI_ReadStatus(&status);
+ 300   2              }
+ 301   1              while (status & SPI_WIP) ;
+ 302   1              SPI_FlagEnb(SPI_BUSY);
+ 303   1              SPI_MstXmit(&pageRead[0], 24, SPI_LONG_LEN|SPI_GO_BSY);
+ 304   1              
+ 305   1              while (SPI_FlagChk(SPI_BUSY)) {}
+ 306   1      
+ 307   1              for (i=0 ; i<rdLen ; i++)
+ 308   1              {
+ 309   2                      SPI_FlagEnb(SPI_BUSY);
+ 310   2                      if (i==rdLen-1)
+ 311   2                              SPI_MstXmit(&pageRead[3], 8, SPI_NORMAL_LEN|SPI_GO_BSY);
+ 312   2                      else
+ 313   2                              SPI_MstXmit(&pageRead[3], 8, SPI_LONG_LEN|SPI_GO_BSY);
+ 314   2                      while (SPI_FlagChk(SPI_BUSY)) {}
+ 315   2                      SPI_GetData(&temp);
+ 316   2                      *(ptByteData + i) = temp[0];
+ 317   2              }
+ 318   1              
+ 319   1              return TRUE;
+ 320   1              
+ 321   1      }
+ 322          
+ 323           
+ 324          
+ 325          /*
+ 326           *--------------------------------------------------------------------------------
+ 327           * bool SPI_Write(unsigned char *ptByteData, unsigned short wrLen)
+ 328           * Purpose : Write a data string into spi devices.
+ 329           * Params  : addrOfMem - address of accessing.
+ 330           *           *ptByteData - pointer of data string to be written.
+ 331           *           wrLen - write data length.
+ 332           * Returns : TRUE - successful.
+ 333           * Note    :
+ 334           *--------------------------------------------------------------------------------
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 22  
+
+ 335           */
+ 336          bool SPI_Write(unsigned char *ptByteData, unsigned short wrLen)
+ 337          {
+ 338   1              unsigned char           pageWrite[35];
+ 339   1              unsigned char           status = 0;
+ 340   1              unsigned short          i;                     
+ 341   1          
+ 342   1              for (i=0 ; i<wrLen ; i++)
+ 343   1              {
+ 344   2                      pageWrite[i] = *(ptByteData+i);        
+ 345   2              }                                        
+ 346   1              if (!SPI_WriteEnable())
+ 347   1          {                                
+ 348   2                      return FALSE;       
+ 349   2          }   
+ 350   1                 
+ 351   1              for (i=0 ; i<wrLen ; i++)
+ 352   1              {                         
+ 353   2                      SPI_FlagEnb(SPI_BUSY);
+ 354   2      
+ 355   2                      if (i == (wrLen-1))
+ 356   2                              SPI_MstXmit(&pageWrite[i], 8, SPI_NORMAL_LEN|SPI_GO_BSY);
+ 357   2                      else
+ 358   2                              SPI_MstXmit(&pageWrite[i], 8, SPI_LONG_LEN|SPI_GO_BSY);
+ 359   2      
+ 360   2                      while (SPI_FlagChk(SPI_BUSY)) { SPI_Func();}
+ 361   2              }
+ 362   1              return TRUE;
+ 363   1      }
+ 364          
+ 365          /* End of spiapi.c */
+ 366          
+ 367          
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 23  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION SPI_WriteEnable (BEGIN)
+                                           ; SOURCE LINE # 54
+                                           ; SOURCE LINE # 55
+                                           ; SOURCE LINE # 56
+0000 90000000    R     MOV     DPTR,#xmitByte
+0004 E4                CLR     A
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 58
+0006 90000000    R     MOV     DPTR,#xmitByte
+000A 7406              MOV     A,#06H
+000C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 59
+000D 7F01              MOV     R7,#01H
+000F 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 60
+0013 7B00        R     MOV     R3,#MBYTE xmitByte
+0015 7A00        R     MOV     R2,#HIGH xmitByte
+0017 7900        R     MOV     R1,#LOW xmitByte
+0019 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+001D 7480              MOV     A,#080H
+001F F0                MOVX    @DPTR,A
+0020 7D08              MOV     R5,#08H
+0022 12000000    E     LCALL   _SPI_MstXmit
+0026         ?C0001:
+                                           ; SOURCE LINE # 62
+0026 7F01              MOV     R7,#01H
+0028 12000000    E     LCALL   _SPI_FlagChk
+002C EF                MOV     A,R7
+002D 4E                ORL     A,R6
+002E 6006              JZ      ?C0002
+                                           ; SOURCE LINE # 63
+0030 12000000    E     LCALL   SPI_Func
+                                           ; SOURCE LINE # 65
+0034 80F0              SJMP    ?C0001
+0036         ?C0002:
+                                           ; SOURCE LINE # 67
+0036 7E00              MOV     R6,#00H
+0038 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 68
+003A         ?C0003:
+003A 22                RET     
+             ; FUNCTION SPI_WriteEnable (END)
+
+             ; FUNCTION SPI_WriteDisable (BEGIN)
+                                           ; SOURCE LINE # 79
+                                           ; SOURCE LINE # 80
+                                           ; SOURCE LINE # 81
+0000 90000000    R     MOV     DPTR,#xmitByte
+0004 E4                CLR     A
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 83
+0006 90000000    R     MOV     DPTR,#xmitByte
+000A 7404              MOV     A,#04H
+000C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 84
+000D 7F01              MOV     R7,#01H
+000F 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 85
+0013 7B00        R     MOV     R3,#MBYTE xmitByte
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 24  
+
+0015 7A00        R     MOV     R2,#HIGH xmitByte
+0017 7900        R     MOV     R1,#LOW xmitByte
+0019 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+001D 7480              MOV     A,#080H
+001F F0                MOVX    @DPTR,A
+0020 7D08              MOV     R5,#08H
+0022 12000000    E     LCALL   _SPI_MstXmit
+0026         ?C0004:
+                                           ; SOURCE LINE # 87
+0026 7F01              MOV     R7,#01H
+0028 12000000    E     LCALL   _SPI_FlagChk
+002C EF                MOV     A,R7
+002D 4E                ORL     A,R6
+002E 70F6              JNZ     ?C0004
+0030         ?C0005:
+                                           ; SOURCE LINE # 89
+0030 7E00              MOV     R6,#00H
+0032 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 90
+0034         ?C0006:
+0034 22                RET     
+             ; FUNCTION SPI_WriteDisable (END)
+
+             ; FUNCTION _SPI_WriteStatus (BEGIN)
+                                           ; SOURCE LINE # 101
+0000 90000000    R     MOV     DPTR,#status
+0004 EF                MOV     A,R7
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 102
+                                           ; SOURCE LINE # 105
+0006 90000000    R     MOV     DPTR,#writeStatus+01H
+000A 7401              MOV     A,#01H
+000C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 106
+000D 90000000    R     MOV     DPTR,#status
+0011 E0                MOVX    A,@DPTR
+0012 FF                MOV     R7,A
+0013 90000000    R     MOV     DPTR,#writeStatus
+0017 EF                MOV     A,R7
+0018 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 108
+0019 12000000    R     LCALL   SPI_WriteEnable
+001D EF                MOV     A,R7
+001E 4E                ORL     A,R6
+001F 7006              JNZ     ?C0007
+                                           ; SOURCE LINE # 109
+0021 E4                CLR     A
+0022 7E00              MOV     R6,#00H
+0024 7F00              MOV     R7,#00H
+0026 22                RET     
+0027         ?C0007:
+                                           ; SOURCE LINE # 110
+0027 7F01              MOV     R7,#01H
+0029 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 111
+002D 7B00        R     MOV     R3,#MBYTE writeStatus
+002F 7A00        R     MOV     R2,#HIGH writeStatus
+0031 7900        R     MOV     R1,#LOW writeStatus
+0033 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+0037 7480              MOV     A,#080H
+0039 F0                MOVX    @DPTR,A
+003A 7D10              MOV     R5,#010H
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 25  
+
+003C 12000000    E     LCALL   _SPI_MstXmit
+0040         ?C0009:
+                                           ; SOURCE LINE # 112
+0040 7F01              MOV     R7,#01H
+0042 12000000    E     LCALL   _SPI_FlagChk
+0046 EF                MOV     A,R7
+0047 4E                ORL     A,R6
+0048 70F6              JNZ     ?C0009
+004A         ?C0010:
+                                           ; SOURCE LINE # 114
+004A 7E00              MOV     R6,#00H
+004C 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 115
+004E         ?C0008:
+004E 22                RET     
+             ; FUNCTION _SPI_WriteStatus (END)
+
+             ; FUNCTION _SPI_ReadStatus (BEGIN)
+                                           ; SOURCE LINE # 126
+0000 90000000    R     MOV     DPTR,#status
+0004 EB                MOV     A,R3
+0005 F0                MOVX    @DPTR,A
+0006 A3                INC     DPTR
+0007 EA                MOV     A,R2
+0008 F0                MOVX    @DPTR,A
+0009 A3                INC     DPTR
+000A E9                MOV     A,R1
+000B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 127
+                                           ; SOURCE LINE # 130
+000C 90000000    R     MOV     DPTR,#readStatus+01H
+0010 7405              MOV     A,#05H
+0012 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 131
+0013 90000000    R     MOV     DPTR,#readStatus
+0017 E4                CLR     A
+0018 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 134
+0019 7F01              MOV     R7,#01H
+001B 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 135
+001F 7B00        R     MOV     R3,#MBYTE readStatus
+0021 7A00        R     MOV     R2,#HIGH readStatus
+0023 7900        R     MOV     R1,#LOW readStatus
+0025 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+0029 7480              MOV     A,#080H
+002B F0                MOVX    @DPTR,A
+002C 7D10              MOV     R5,#010H
+002E 12000000    E     LCALL   _SPI_MstXmit
+0032         ?C0011:
+                                           ; SOURCE LINE # 138
+0032 7F01              MOV     R7,#01H
+0034 12000000    E     LCALL   _SPI_FlagChk
+0038 EF                MOV     A,R7
+0039 4E                ORL     A,R6
+003A 6006              JZ      ?C0012
+003C 12000000    E     LCALL   SPI_Func
+0040 80F0              SJMP    ?C0011
+0042         ?C0012:
+                                           ; SOURCE LINE # 140
+0042 7B00        R     MOV     R3,#MBYTE readStatus
+0044 7A00        R     MOV     R2,#HIGH readStatus
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 26  
+
+0046 7900        R     MOV     R1,#LOW readStatus
+0048 12000000    E     LCALL   _SPI_GetData
+                                           ; SOURCE LINE # 142
+004C 90000000    R     MOV     DPTR,#readStatus
+0050 E0                MOVX    A,@DPTR
+0051 FF                MOV     R7,A
+0052 90000000    R     MOV     DPTR,#status
+0056 E0                MOVX    A,@DPTR
+0057 FB                MOV     R3,A
+0058 A3                INC     DPTR
+0059 E0                MOVX    A,@DPTR
+005A FA                MOV     R2,A
+005B A3                INC     DPTR
+005C E0                MOVX    A,@DPTR
+005D F9                MOV     R1,A
+005E EF                MOV     A,R7
+005F 12000000    E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 144
+0063 7E00              MOV     R6,#00H
+0065 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 145
+0067         ?C0013:
+0067 22                RET     
+             ; FUNCTION _SPI_ReadStatus (END)
+
+             ; FUNCTION _SPI_ByteWrite (BEGIN)
+                                           ; SOURCE LINE # 157
+0000 90000000    R     MOV     DPTR,#addrOfMem
+0004 EE                MOV     A,R6
+0005 F0                MOVX    @DPTR,A
+0006 A3                INC     DPTR
+0007 EF                MOV     A,R7
+0008 F0                MOVX    @DPTR,A
+0009 90000000    R     MOV     DPTR,#byteData
+000D ED                MOV     A,R5
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 158
+                                           ; SOURCE LINE # 160
+000F 90000000    R     MOV     DPTR,#status
+0013 E4                CLR     A
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 162
+0015 90000000    R     MOV     DPTR,#byteWrite+03H
+0019 7402              MOV     A,#02H
+001B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 163
+001C 90000000    R     MOV     DPTR,#addrOfMem
+0020 E0                MOVX    A,@DPTR
+0021 FE                MOV     R6,A
+0022 A3                INC     DPTR
+0023 E0                MOVX    A,@DPTR
+0024 FF                MOV     R7,A
+0025 EE                MOV     A,R6
+0026 FF                MOV     R7,A
+0027 7E00              MOV     R6,#00H
+0029 90000000    R     MOV     DPTR,#byteWrite+02H
+002D EF                MOV     A,R7
+002E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 164
+002F 90000000    R     MOV     DPTR,#addrOfMem
+0033 E0                MOVX    A,@DPTR
+0034 FE                MOV     R6,A
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 27  
+
+0035 A3                INC     DPTR
+0036 E0                MOVX    A,@DPTR
+0037 FF                MOV     R7,A
+0038 90000000    R     MOV     DPTR,#byteWrite+01H
+003C EF                MOV     A,R7
+003D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 165
+003E 90000000    R     MOV     DPTR,#byteData
+0042 E0                MOVX    A,@DPTR
+0043 FF                MOV     R7,A
+0044 90000000    R     MOV     DPTR,#byteWrite
+0048 EF                MOV     A,R7
+0049 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 167
+004A 12000000    R     LCALL   SPI_WriteEnable
+004E EF                MOV     A,R7
+004F 4E                ORL     A,R6
+0050 7006              JNZ     ?C0018
+                                           ; SOURCE LINE # 168
+                                           ; SOURCE LINE # 169
+0052 E4                CLR     A
+0053 7E00              MOV     R6,#00H
+0055 7F00              MOV     R7,#00H
+0057 22                RET     
+                                           ; SOURCE LINE # 170
+0058         ?C0014:
+0058         ?C0018:
+                                           ; SOURCE LINE # 172
+                                           ; SOURCE LINE # 173
+0058 7B00        R     MOV     R3,#MBYTE status
+005A 7A00        R     MOV     R2,#HIGH status
+005C 7900        R     MOV     R1,#LOW status
+005E 12000000    R     LCALL   _SPI_ReadStatus
+                                           ; SOURCE LINE # 174
+0062         ?C0016:
+0062 90000000    R     MOV     DPTR,#status
+0066 E0                MOVX    A,@DPTR
+0067 FF                MOV     R7,A
+0068 EF                MOV     A,R7
+0069 20E0EC            JB      ACC.0,?C0018
+006C         ?C0017:
+                                           ; SOURCE LINE # 175
+006C 7F01              MOV     R7,#01H
+006E 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 176
+0072 7B00        R     MOV     R3,#MBYTE byteWrite
+0074 7A00        R     MOV     R2,#HIGH byteWrite
+0076 7900        R     MOV     R1,#LOW byteWrite
+0078 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+007C 7480              MOV     A,#080H
+007E F0                MOVX    @DPTR,A
+007F 7D20              MOV     R5,#020H
+0081 12000000    E     LCALL   _SPI_MstXmit
+0085         ?C0019:
+                                           ; SOURCE LINE # 177
+0085 7F01              MOV     R7,#01H
+0087 12000000    E     LCALL   _SPI_FlagChk
+008B EF                MOV     A,R7
+008C 4E                ORL     A,R6
+008D 70F6              JNZ     ?C0019
+008F         ?C0020:
+                                           ; SOURCE LINE # 179
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 28  
+
+008F 7E00              MOV     R6,#00H
+0091 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 180
+0093         ?C0015:
+0093 22                RET     
+             ; FUNCTION _SPI_ByteWrite (END)
+
+             ; FUNCTION _SPI_PageWrite (BEGIN)
+                                           ; SOURCE LINE # 193
+0000 90000000    R     MOV     DPTR,#addrOfMem
+0004 EE                MOV     A,R6
+0005 F0                MOVX    @DPTR,A
+0006 A3                INC     DPTR
+0007 EF                MOV     A,R7
+0008 F0                MOVX    @DPTR,A
+0009 90000000    R     MOV     DPTR,#ptByteData
+000D EB                MOV     A,R3
+000E F0                MOVX    @DPTR,A
+000F A3                INC     DPTR
+0010 EA                MOV     A,R2
+0011 F0                MOVX    @DPTR,A
+0012 A3                INC     DPTR
+0013 E9                MOV     A,R1
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 194
+                                           ; SOURCE LINE # 196
+0015 90000000    R     MOV     DPTR,#status
+0019 E4                CLR     A
+001A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 200
+001B 90000000    R     MOV     DPTR,#pageWrite+02H
+001F 7402              MOV     A,#02H
+0021 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 201
+0022 90000000    R     MOV     DPTR,#addrOfMem
+0026 E0                MOVX    A,@DPTR
+0027 FE                MOV     R6,A
+0028 A3                INC     DPTR
+0029 E0                MOVX    A,@DPTR
+002A FF                MOV     R7,A
+002B EE                MOV     A,R6
+002C FF                MOV     R7,A
+002D 7E00              MOV     R6,#00H
+002F 90000000    R     MOV     DPTR,#pageWrite+01H
+0033 EF                MOV     A,R7
+0034 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 202
+0035 90000000    R     MOV     DPTR,#addrOfMem
+0039 E0                MOVX    A,@DPTR
+003A FE                MOV     R6,A
+003B A3                INC     DPTR
+003C E0                MOVX    A,@DPTR
+003D FF                MOV     R7,A
+003E 90000000    R     MOV     DPTR,#pageWrite
+0042 EF                MOV     A,R7
+0043 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 203
+0044 90000000    R     MOV     DPTR,#i
+0048 E4                CLR     A
+0049 F0                MOVX    @DPTR,A
+004A A3                INC     DPTR
+004B E4                CLR     A
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 29  
+
+004C F0                MOVX    @DPTR,A
+004D         ?C0021:
+004D 90000000    R     MOV     DPTR,#wrLen
+0051 E0                MOVX    A,@DPTR
+0052 FE                MOV     R6,A
+0053 A3                INC     DPTR
+0054 E0                MOVX    A,@DPTR
+0055 FF                MOV     R7,A
+0056 90000000    R     MOV     DPTR,#i
+005A E0                MOVX    A,@DPTR
+005B FC                MOV     R4,A
+005C A3                INC     DPTR
+005D E0                MOVX    A,@DPTR
+005E FD                MOV     R5,A
+005F C3                CLR     C
+0060 ED                MOV     A,R5
+0061 9F                SUBB    A,R7
+0062 EC                MOV     A,R4
+0063 9E                SUBB    A,R6
+0064 504C              JNC     ?C0022
+                                           ; SOURCE LINE # 204
+                                           ; SOURCE LINE # 205
+0066 90000000    R     MOV     DPTR,#ptByteData
+006A E0                MOVX    A,@DPTR
+006B FB                MOV     R3,A
+006C A3                INC     DPTR
+006D E0                MOVX    A,@DPTR
+006E FA                MOV     R2,A
+006F A3                INC     DPTR
+0070 E0                MOVX    A,@DPTR
+0071 F9                MOV     R1,A
+0072 90000000    R     MOV     DPTR,#i
+0076 E0                MOVX    A,@DPTR
+0077 FE                MOV     R6,A
+0078 A3                INC     DPTR
+0079 E0                MOVX    A,@DPTR
+007A FF                MOV     R7,A
+007B E9                MOV     A,R1
+007C 2F                ADD     A,R7
+007D F9                MOV     R1,A
+007E EA                MOV     A,R2
+007F 3E                ADDC    A,R6
+0080 FA                MOV     R2,A
+0081 12000000    E     LCALL   ?C?CLDPTR
+0085 FF                MOV     R7,A
+0086 90000000    R     MOV     DPTR,#i
+008A E0                MOVX    A,@DPTR
+008B FC                MOV     R4,A
+008C A3                INC     DPTR
+008D E0                MOVX    A,@DPTR
+008E FD                MOV     R5,A
+008F AE05              MOV     R6,AR5
+0091 7400        R     MOV     A,#LOW pageWrite+03H
+0093 2E                ADD     A,R6
+0094 F582              MOV     DPL,A
+0096 E4                CLR     A
+0097 3400        R     ADDC    A,#HIGH pageWrite+03H
+0099 F583              MOV     DPH,A
+009B 759300      E     MOV     DPX,#?C?XDATASEG
+009E EF                MOV     A,R7
+009F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 206
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 30  
+
+00A0         ?C0023:
+00A0 90000000    R     MOV     DPTR,#i+01H
+00A4 E0                MOVX    A,@DPTR
+00A5 04                INC     A
+00A6 F0                MOVX    @DPTR,A
+00A7 7007              JNZ     ?C0066
+00A9 90000000    R     MOV     DPTR,#i
+00AD E0                MOVX    A,@DPTR
+00AE 04                INC     A
+00AF F0                MOVX    @DPTR,A
+00B0         ?C0066:
+00B0 809B              SJMP    ?C0021
+00B2         ?C0022:
+                                           ; SOURCE LINE # 207
+00B2 12000000    R     LCALL   SPI_WriteEnable
+00B6 EF                MOV     A,R7
+00B7 4E                ORL     A,R6
+00B8 7006              JNZ     ?C0024
+                                           ; SOURCE LINE # 208
+                                           ; SOURCE LINE # 209
+00BA E4                CLR     A
+00BB 7E00              MOV     R6,#00H
+00BD 7F00              MOV     R7,#00H
+00BF 22                RET     
+                                           ; SOURCE LINE # 210
+00C0         ?C0024:
+                                           ; SOURCE LINE # 220
+00C0 7F01              MOV     R7,#01H
+00C2 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 221
+00C6 7B00        R     MOV     R3,#MBYTE pageWrite
+00C8 7A00        R     MOV     R2,#HIGH pageWrite
+00CA 7900        R     MOV     R1,#LOW pageWrite
+00CC 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+00D0 74C0              MOV     A,#0C0H
+00D2 F0                MOVX    @DPTR,A
+00D3 7D18              MOV     R5,#018H
+00D5 12000000    E     LCALL   _SPI_MstXmit
+00D9         ?C0026:
+                                           ; SOURCE LINE # 223
+00D9 7F01              MOV     R7,#01H
+00DB 12000000    E     LCALL   _SPI_FlagChk
+00DF EF                MOV     A,R7
+00E0 4E                ORL     A,R6
+00E1 6006              JZ      ?C0027
+00E3 12000000    E     LCALL   SPI_Func
+00E7 80F0              SJMP    ?C0026
+00E9         ?C0027:
+                                           ; SOURCE LINE # 225
+00E9 90000000    R     MOV     DPTR,#i
+00ED E4                CLR     A
+00EE F0                MOVX    @DPTR,A
+00EF A3                INC     DPTR
+00F0 E4                CLR     A
+00F1 F0                MOVX    @DPTR,A
+00F2         ?C0028:
+00F2 90000000    R     MOV     DPTR,#wrLen
+00F6 E0                MOVX    A,@DPTR
+00F7 FE                MOV     R6,A
+00F8 A3                INC     DPTR
+00F9 E0                MOVX    A,@DPTR
+00FA FF                MOV     R7,A
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 31  
+
+00FB 90000000    R     MOV     DPTR,#i
+00FF E0                MOVX    A,@DPTR
+0100 FC                MOV     R4,A
+0101 A3                INC     DPTR
+0102 E0                MOVX    A,@DPTR
+0103 FD                MOV     R5,A
+0104 C3                CLR     C
+0105 ED                MOV     A,R5
+0106 9F                SUBB    A,R7
+0107 EC                MOV     A,R4
+0108 9E                SUBB    A,R6
+0109 4003              JC      $ + 5H
+010B 010000      R     AJMP    ?C0029
+                                           ; SOURCE LINE # 226
+                                           ; SOURCE LINE # 227
+010E 7F01              MOV     R7,#01H
+0110 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 228
+0114 90000000    R     MOV     DPTR,#wrLen
+0118 E0                MOVX    A,@DPTR
+0119 FE                MOV     R6,A
+011A A3                INC     DPTR
+011B E0                MOVX    A,@DPTR
+011C FF                MOV     R7,A
+011D C3                CLR     C
+011E EF                MOV     A,R7
+011F 9401              SUBB    A,#01H
+0121 FF                MOV     R7,A
+0122 EE                MOV     A,R6
+0123 9400              SUBB    A,#00H
+0125 FE                MOV     R6,A
+0126 90000000    R     MOV     DPTR,#i
+012A E0                MOVX    A,@DPTR
+012B FC                MOV     R4,A
+012C A3                INC     DPTR
+012D E0                MOVX    A,@DPTR
+012E FD                MOV     R5,A
+012F EF                MOV     A,R7
+0130 B50526            CJNE    A,AR5,?C0031
+0133 EE                MOV     A,R6
+0134 B50422            CJNE    A,AR4,?C0031
+                                           ; SOURCE LINE # 229
+0137 90000000    R     MOV     DPTR,#i
+013B E0                MOVX    A,@DPTR
+013C FE                MOV     R6,A
+013D A3                INC     DPTR
+013E E0                MOVX    A,@DPTR
+013F FF                MOV     R7,A
+0140 7400        R     MOV     A,#LOW pageWrite+03H
+0142 2F                ADD     A,R7
+0143 F9                MOV     R1,A
+0144 E4                CLR     A
+0145 3400        R     ADDC    A,#HIGH pageWrite+03H
+0147 FA                MOV     R2,A
+0148 7B00        R     MOV     R3,#MBYTE pageWrite
+014A 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+014E 7480              MOV     A,#080H
+0150 F0                MOVX    @DPTR,A
+0151 7D08              MOV     R5,#08H
+0153 12000000    E     LCALL   _SPI_MstXmit
+0157 8020              SJMP    ?C0033
+0159         ?C0031:
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 32  
+
+                                           ; SOURCE LINE # 231
+0159 90000000    R     MOV     DPTR,#i
+015D E0                MOVX    A,@DPTR
+015E FE                MOV     R6,A
+015F A3                INC     DPTR
+0160 E0                MOVX    A,@DPTR
+0161 FF                MOV     R7,A
+0162 7400        R     MOV     A,#LOW pageWrite+03H
+0164 2F                ADD     A,R7
+0165 F9                MOV     R1,A
+0166 E4                CLR     A
+0167 3400        R     ADDC    A,#HIGH pageWrite+03H
+0169 FA                MOV     R2,A
+016A 7B00        R     MOV     R3,#MBYTE pageWrite
+016C 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+0170 74C0              MOV     A,#0C0H
+0172 F0                MOVX    @DPTR,A
+0173 7D08              MOV     R5,#08H
+0175 12000000    E     LCALL   _SPI_MstXmit
+0179         ?C0032:
+0179         ?C0033:
+                                           ; SOURCE LINE # 232
+0179 7F01              MOV     R7,#01H
+017B 12000000    E     LCALL   _SPI_FlagChk
+017F EF                MOV     A,R7
+0180 4E                ORL     A,R6
+0181 6006              JZ      ?C0030
+0183 12000000    E     LCALL   SPI_Func
+0187 80F0              SJMP    ?C0033
+0189         ?C0034:
+                                           ; SOURCE LINE # 233
+0189         ?C0030:
+0189 90000000    R     MOV     DPTR,#i+01H
+018D E0                MOVX    A,@DPTR
+018E 04                INC     A
+018F F0                MOVX    @DPTR,A
+0190 7007              JNZ     ?C0068
+0192 90000000    R     MOV     DPTR,#i
+0196 E0                MOVX    A,@DPTR
+0197 04                INC     A
+0198 F0                MOVX    @DPTR,A
+0199         ?C0068:
+0199 010000      R     AJMP    ?C0028
+019C         ?C0029:
+                                           ; SOURCE LINE # 235
+019C 7E00              MOV     R6,#00H
+019E 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 236
+01A0         ?C0025:
+01A0 22                RET     
+             ; FUNCTION _SPI_PageWrite (END)
+
+             ; FUNCTION _SPI_ByteRead (BEGIN)
+                                           ; SOURCE LINE # 248
+0000 90000000    R     MOV     DPTR,#addrOfMem
+0004 EE                MOV     A,R6
+0005 F0                MOVX    @DPTR,A
+0006 A3                INC     DPTR
+0007 EF                MOV     A,R7
+0008 F0                MOVX    @DPTR,A
+0009 90000000    R     MOV     DPTR,#ptByteData
+000D EB                MOV     A,R3
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 33  
+
+000E F0                MOVX    @DPTR,A
+000F A3                INC     DPTR
+0010 EA                MOV     A,R2
+0011 F0                MOVX    @DPTR,A
+0012 A3                INC     DPTR
+0013 E9                MOV     A,R1
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 249
+                                           ; SOURCE LINE # 251
+0015 90000000    R     MOV     DPTR,#status
+0019 E4                CLR     A
+001A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 253
+001B 90000000    R     MOV     DPTR,#byteRead+03H
+001F 7403              MOV     A,#03H
+0021 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 254
+0022 90000000    R     MOV     DPTR,#addrOfMem
+0026 E0                MOVX    A,@DPTR
+0027 FE                MOV     R6,A
+0028 A3                INC     DPTR
+0029 E0                MOVX    A,@DPTR
+002A FF                MOV     R7,A
+002B EE                MOV     A,R6
+002C FF                MOV     R7,A
+002D 7E00              MOV     R6,#00H
+002F 90000000    R     MOV     DPTR,#byteRead+02H
+0033 EF                MOV     A,R7
+0034 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 255
+0035 90000000    R     MOV     DPTR,#addrOfMem
+0039 E0                MOVX    A,@DPTR
+003A FE                MOV     R6,A
+003B A3                INC     DPTR
+003C E0                MOVX    A,@DPTR
+003D FF                MOV     R7,A
+003E 90000000    R     MOV     DPTR,#byteRead+01H
+0042 EF                MOV     A,R7
+0043 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 256
+0044 90000000    R     MOV     DPTR,#ptByteData
+0048 E0                MOVX    A,@DPTR
+0049 FB                MOV     R3,A
+004A A3                INC     DPTR
+004B E0                MOVX    A,@DPTR
+004C FA                MOV     R2,A
+004D A3                INC     DPTR
+004E E0                MOVX    A,@DPTR
+004F F9                MOV     R1,A
+0050 12000000    E     LCALL   ?C?CLDPTR
+0054 FF                MOV     R7,A
+0055 90000000    R     MOV     DPTR,#byteRead
+0059 EF                MOV     A,R7
+005A F0                MOVX    @DPTR,A
+005B         ?C0037:
+                                           ; SOURCE LINE # 259
+                                           ; SOURCE LINE # 260
+005B 7B00        R     MOV     R3,#MBYTE status
+005D 7A00        R     MOV     R2,#HIGH status
+005F 7900        R     MOV     R1,#LOW status
+0061 12000000    R     LCALL   _SPI_ReadStatus
+                                           ; SOURCE LINE # 261
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 34  
+
+0065         ?C0035:
+0065 90000000    R     MOV     DPTR,#status
+0069 E0                MOVX    A,@DPTR
+006A FF                MOV     R7,A
+006B EF                MOV     A,R7
+006C 20E0EC            JB      ACC.0,?C0037
+006F         ?C0036:
+                                           ; SOURCE LINE # 262
+006F 7F01              MOV     R7,#01H
+0071 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 263
+0075 7B00        R     MOV     R3,#MBYTE byteRead
+0077 7A00        R     MOV     R2,#HIGH byteRead
+0079 7900        R     MOV     R1,#LOW byteRead
+007B 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+007F 7480              MOV     A,#080H
+0081 F0                MOVX    @DPTR,A
+0082 7D20              MOV     R5,#020H
+0084 12000000    E     LCALL   _SPI_MstXmit
+0088         ?C0038:
+                                           ; SOURCE LINE # 264
+0088 7F01              MOV     R7,#01H
+008A 12000000    E     LCALL   _SPI_FlagChk
+008E EF                MOV     A,R7
+008F 4E                ORL     A,R6
+0090 70F6              JNZ     ?C0038
+0092         ?C0039:
+                                           ; SOURCE LINE # 265
+0092 7B00        R     MOV     R3,#MBYTE byteRead
+0094 7A00        R     MOV     R2,#HIGH byteRead
+0096 7900        R     MOV     R1,#LOW byteRead
+0098 12000000    E     LCALL   _SPI_GetData
+                                           ; SOURCE LINE # 266
+009C 90000000    R     MOV     DPTR,#byteRead
+00A0 E0                MOVX    A,@DPTR
+00A1 FF                MOV     R7,A
+00A2 90000000    R     MOV     DPTR,#ptByteData
+00A6 E0                MOVX    A,@DPTR
+00A7 FB                MOV     R3,A
+00A8 A3                INC     DPTR
+00A9 E0                MOVX    A,@DPTR
+00AA FA                MOV     R2,A
+00AB A3                INC     DPTR
+00AC E0                MOVX    A,@DPTR
+00AD F9                MOV     R1,A
+00AE EF                MOV     A,R7
+00AF 12000000    E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 268
+00B3 7E00              MOV     R6,#00H
+00B5 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 269
+00B7         ?C0040:
+00B7 22                RET     
+             ; FUNCTION _SPI_ByteRead (END)
+
+             ; FUNCTION _SPI_PageRead (BEGIN)
+                                           ; SOURCE LINE # 282
+0000 90000000    R     MOV     DPTR,#addrOfMem
+0004 EE                MOV     A,R6
+0005 F0                MOVX    @DPTR,A
+0006 A3                INC     DPTR
+0007 EF                MOV     A,R7
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 35  
+
+0008 F0                MOVX    @DPTR,A
+0009 90000000    R     MOV     DPTR,#ptByteData
+000D EB                MOV     A,R3
+000E F0                MOVX    @DPTR,A
+000F A3                INC     DPTR
+0010 EA                MOV     A,R2
+0011 F0                MOVX    @DPTR,A
+0012 A3                INC     DPTR
+0013 E9                MOV     A,R1
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 283
+                                           ; SOURCE LINE # 285
+0015 90000000    R     MOV     DPTR,#status
+0019 E4                CLR     A
+001A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 288
+001B 90000000    R     MOV     DPTR,#temp
+001F E4                CLR     A
+0020 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 289
+0021 90000000    R     MOV     DPTR,#temp+01H
+0025 E4                CLR     A
+0026 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 290
+0027 90000000    R     MOV     DPTR,#temp+02H
+002B E4                CLR     A
+002C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 291
+002D 90000000    R     MOV     DPTR,#temp+03H
+0031 E4                CLR     A
+0032 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 292
+0033 90000000    R     MOV     DPTR,#pageRead+03H
+0037 E4                CLR     A
+0038 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 293
+0039 90000000    R     MOV     DPTR,#pageRead+02H
+003D 7403              MOV     A,#03H
+003F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 294
+0040 90000000    R     MOV     DPTR,#addrOfMem
+0044 E0                MOVX    A,@DPTR
+0045 FE                MOV     R6,A
+0046 A3                INC     DPTR
+0047 E0                MOVX    A,@DPTR
+0048 FF                MOV     R7,A
+0049 EE                MOV     A,R6
+004A FF                MOV     R7,A
+004B 7E00              MOV     R6,#00H
+004D 90000000    R     MOV     DPTR,#pageRead+01H
+0051 EF                MOV     A,R7
+0052 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 295
+0053 90000000    R     MOV     DPTR,#addrOfMem
+0057 E0                MOVX    A,@DPTR
+0058 FE                MOV     R6,A
+0059 A3                INC     DPTR
+005A E0                MOVX    A,@DPTR
+005B FF                MOV     R7,A
+005C 90000000    R     MOV     DPTR,#pageRead
+0060 EF                MOV     A,R7
+0061 F0                MOVX    @DPTR,A
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 36  
+
+0062         ?C0043:
+                                           ; SOURCE LINE # 298
+                                           ; SOURCE LINE # 299
+0062 7B00        R     MOV     R3,#MBYTE status
+0064 7A00        R     MOV     R2,#HIGH status
+0066 7900        R     MOV     R1,#LOW status
+0068 12000000    R     LCALL   _SPI_ReadStatus
+                                           ; SOURCE LINE # 300
+006C         ?C0041:
+                                           ; SOURCE LINE # 301
+006C 90000000    R     MOV     DPTR,#status
+0070 E0                MOVX    A,@DPTR
+0071 FF                MOV     R7,A
+0072 EF                MOV     A,R7
+0073 20E0EC            JB      ACC.0,?C0043
+0076         ?C0042:
+                                           ; SOURCE LINE # 302
+0076 7F01              MOV     R7,#01H
+0078 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 303
+007C 7B00        R     MOV     R3,#MBYTE pageRead
+007E 7A00        R     MOV     R2,#HIGH pageRead
+0080 7900        R     MOV     R1,#LOW pageRead
+0082 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+0086 74C0              MOV     A,#0C0H
+0088 F0                MOVX    @DPTR,A
+0089 7D18              MOV     R5,#018H
+008B 12000000    E     LCALL   _SPI_MstXmit
+008F         ?C0044:
+                                           ; SOURCE LINE # 305
+008F 7F01              MOV     R7,#01H
+0091 12000000    E     LCALL   _SPI_FlagChk
+0095 EF                MOV     A,R7
+0096 4E                ORL     A,R6
+0097 70F6              JNZ     ?C0044
+0099         ?C0045:
+                                           ; SOURCE LINE # 307
+0099 90000000    R     MOV     DPTR,#i
+009D E4                CLR     A
+009E F0                MOVX    @DPTR,A
+009F A3                INC     DPTR
+00A0 E4                CLR     A
+00A1 F0                MOVX    @DPTR,A
+00A2         ?C0046:
+00A2 90000000    R     MOV     DPTR,#rdLen
+00A6 E0                MOVX    A,@DPTR
+00A7 FE                MOV     R6,A
+00A8 A3                INC     DPTR
+00A9 E0                MOVX    A,@DPTR
+00AA FF                MOV     R7,A
+00AB 90000000    R     MOV     DPTR,#i
+00AF E0                MOVX    A,@DPTR
+00B0 FC                MOV     R4,A
+00B1 A3                INC     DPTR
+00B2 E0                MOVX    A,@DPTR
+00B3 FD                MOV     R5,A
+00B4 C3                CLR     C
+00B5 ED                MOV     A,R5
+00B6 9F                SUBB    A,R7
+00B7 EC                MOV     A,R4
+00B8 9E                SUBB    A,R6
+00B9 4003              JC      $ + 5H
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 37  
+
+00BB 010000      R     AJMP    ?C0047
+                                           ; SOURCE LINE # 308
+                                           ; SOURCE LINE # 309
+00BE 7F01              MOV     R7,#01H
+00C0 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 310
+00C4 90000000    R     MOV     DPTR,#rdLen
+00C8 E0                MOVX    A,@DPTR
+00C9 FE                MOV     R6,A
+00CA A3                INC     DPTR
+00CB E0                MOVX    A,@DPTR
+00CC FF                MOV     R7,A
+00CD C3                CLR     C
+00CE EF                MOV     A,R7
+00CF 9401              SUBB    A,#01H
+00D1 FF                MOV     R7,A
+00D2 EE                MOV     A,R6
+00D3 9400              SUBB    A,#00H
+00D5 FE                MOV     R6,A
+00D6 90000000    R     MOV     DPTR,#i
+00DA E0                MOVX    A,@DPTR
+00DB FC                MOV     R4,A
+00DC A3                INC     DPTR
+00DD E0                MOVX    A,@DPTR
+00DE FD                MOV     R5,A
+00DF EF                MOV     A,R7
+00E0 B50519            CJNE    A,AR5,?C0049
+00E3 EE                MOV     A,R6
+00E4 B50415            CJNE    A,AR4,?C0049
+                                           ; SOURCE LINE # 311
+00E7 7B00        R     MOV     R3,#MBYTE pageRead
+00E9 7A00        R     MOV     R2,#HIGH pageRead+03H
+00EB 7900        R     MOV     R1,#LOW pageRead+03H
+00ED 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+00F1 7480              MOV     A,#080H
+00F3 F0                MOVX    @DPTR,A
+00F4 7D08              MOV     R5,#08H
+00F6 12000000    E     LCALL   _SPI_MstXmit
+00FA 8013              SJMP    ?C0051
+00FC         ?C0049:
+                                           ; SOURCE LINE # 313
+00FC 7B00        R     MOV     R3,#MBYTE pageRead
+00FE 7A00        R     MOV     R2,#HIGH pageRead+03H
+0100 7900        R     MOV     R1,#LOW pageRead+03H
+0102 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+0106 74C0              MOV     A,#0C0H
+0108 F0                MOVX    @DPTR,A
+0109 7D08              MOV     R5,#08H
+010B 12000000    E     LCALL   _SPI_MstXmit
+010F         ?C0050:
+010F         ?C0051:
+                                           ; SOURCE LINE # 314
+010F 7F01              MOV     R7,#01H
+0111 12000000    E     LCALL   _SPI_FlagChk
+0115 EF                MOV     A,R7
+0116 4E                ORL     A,R6
+0117 70F6              JNZ     ?C0051
+0119         ?C0052:
+                                           ; SOURCE LINE # 315
+0119 7B00        R     MOV     R3,#MBYTE temp
+011B 7A00        R     MOV     R2,#HIGH temp
+011D 7900        R     MOV     R1,#LOW temp
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 38  
+
+011F 12000000    E     LCALL   _SPI_GetData
+                                           ; SOURCE LINE # 316
+0123 90000000    R     MOV     DPTR,#temp
+0127 E0                MOVX    A,@DPTR
+0128 FF                MOV     R7,A
+0129 90000000    R     MOV     DPTR,#ptByteData
+012D E0                MOVX    A,@DPTR
+012E FB                MOV     R3,A
+012F A3                INC     DPTR
+0130 E0                MOVX    A,@DPTR
+0131 FA                MOV     R2,A
+0132 A3                INC     DPTR
+0133 E0                MOVX    A,@DPTR
+0134 F9                MOV     R1,A
+0135 90000000    R     MOV     DPTR,#i
+0139 E0                MOVX    A,@DPTR
+013A FC                MOV     R4,A
+013B A3                INC     DPTR
+013C E0                MOVX    A,@DPTR
+013D FD                MOV     R5,A
+013E E9                MOV     A,R1
+013F 2D                ADD     A,R5
+0140 F9                MOV     R1,A
+0141 EA                MOV     A,R2
+0142 3C                ADDC    A,R4
+0143 FA                MOV     R2,A
+0144 EF                MOV     A,R7
+0145 12000000    E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 317
+0149         ?C0048:
+0149 90000000    R     MOV     DPTR,#i+01H
+014D E0                MOVX    A,@DPTR
+014E 04                INC     A
+014F F0                MOVX    @DPTR,A
+0150 7007              JNZ     ?C0070
+0152 90000000    R     MOV     DPTR,#i
+0156 E0                MOVX    A,@DPTR
+0157 04                INC     A
+0158 F0                MOVX    @DPTR,A
+0159         ?C0070:
+0159 010000      R     AJMP    ?C0046
+015C         ?C0047:
+                                           ; SOURCE LINE # 319
+015C 7E00              MOV     R6,#00H
+015E 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 321
+0160         ?C0053:
+0160 22                RET     
+             ; FUNCTION _SPI_PageRead (END)
+
+             ; FUNCTION _SPI_Write (BEGIN)
+                                           ; SOURCE LINE # 336
+0000 90000000    R     MOV     DPTR,#ptByteData
+0004 EB                MOV     A,R3
+0005 F0                MOVX    @DPTR,A
+0006 A3                INC     DPTR
+0007 EA                MOV     A,R2
+0008 F0                MOVX    @DPTR,A
+0009 A3                INC     DPTR
+000A E9                MOV     A,R1
+000B F0                MOVX    @DPTR,A
+000C 90000000    R     MOV     DPTR,#wrLen
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 39  
+
+0010 EC                MOV     A,R4
+0011 F0                MOVX    @DPTR,A
+0012 A3                INC     DPTR
+0013 ED                MOV     A,R5
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 337
+                                           ; SOURCE LINE # 339
+0015 90000000    R     MOV     DPTR,#status
+0019 E4                CLR     A
+001A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 342
+001B 90000000    R     MOV     DPTR,#i
+001F E4                CLR     A
+0020 F0                MOVX    @DPTR,A
+0021 A3                INC     DPTR
+0022 E4                CLR     A
+0023 F0                MOVX    @DPTR,A
+0024         ?C0054:
+0024 90000000    R     MOV     DPTR,#wrLen
+0028 E0                MOVX    A,@DPTR
+0029 FE                MOV     R6,A
+002A A3                INC     DPTR
+002B E0                MOVX    A,@DPTR
+002C FF                MOV     R7,A
+002D 90000000    R     MOV     DPTR,#i
+0031 E0                MOVX    A,@DPTR
+0032 FC                MOV     R4,A
+0033 A3                INC     DPTR
+0034 E0                MOVX    A,@DPTR
+0035 FD                MOV     R5,A
+0036 C3                CLR     C
+0037 ED                MOV     A,R5
+0038 9F                SUBB    A,R7
+0039 EC                MOV     A,R4
+003A 9E                SUBB    A,R6
+003B 504C              JNC     ?C0055
+                                           ; SOURCE LINE # 343
+                                           ; SOURCE LINE # 344
+003D 90000000    R     MOV     DPTR,#ptByteData
+0041 E0                MOVX    A,@DPTR
+0042 FB                MOV     R3,A
+0043 A3                INC     DPTR
+0044 E0                MOVX    A,@DPTR
+0045 FA                MOV     R2,A
+0046 A3                INC     DPTR
+0047 E0                MOVX    A,@DPTR
+0048 F9                MOV     R1,A
+0049 90000000    R     MOV     DPTR,#i
+004D E0                MOVX    A,@DPTR
+004E FE                MOV     R6,A
+004F A3                INC     DPTR
+0050 E0                MOVX    A,@DPTR
+0051 FF                MOV     R7,A
+0052 E9                MOV     A,R1
+0053 2F                ADD     A,R7
+0054 F9                MOV     R1,A
+0055 EA                MOV     A,R2
+0056 3E                ADDC    A,R6
+0057 FA                MOV     R2,A
+0058 12000000    E     LCALL   ?C?CLDPTR
+005C FF                MOV     R7,A
+005D 90000000    R     MOV     DPTR,#i
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 40  
+
+0061 E0                MOVX    A,@DPTR
+0062 FC                MOV     R4,A
+0063 A3                INC     DPTR
+0064 E0                MOVX    A,@DPTR
+0065 FD                MOV     R5,A
+0066 AE05              MOV     R6,AR5
+0068 7400        R     MOV     A,#LOW pageWrite
+006A 2E                ADD     A,R6
+006B F582              MOV     DPL,A
+006D E4                CLR     A
+006E 3400        R     ADDC    A,#HIGH pageWrite
+0070 F583              MOV     DPH,A
+0072 759300      E     MOV     DPX,#?C?XDATASEG
+0075 EF                MOV     A,R7
+0076 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 345
+0077         ?C0056:
+0077 90000000    R     MOV     DPTR,#i+01H
+007B E0                MOVX    A,@DPTR
+007C 04                INC     A
+007D F0                MOVX    @DPTR,A
+007E 7007              JNZ     ?C0071
+0080 90000000    R     MOV     DPTR,#i
+0084 E0                MOVX    A,@DPTR
+0085 04                INC     A
+0086 F0                MOVX    @DPTR,A
+0087         ?C0071:
+0087 809B              SJMP    ?C0054
+0089         ?C0055:
+                                           ; SOURCE LINE # 346
+0089 12000000    R     LCALL   SPI_WriteEnable
+008D EF                MOV     A,R7
+008E 4E                ORL     A,R6
+008F 7006              JNZ     ?C0057
+                                           ; SOURCE LINE # 347
+                                           ; SOURCE LINE # 348
+0091 E4                CLR     A
+0092 7E00              MOV     R6,#00H
+0094 7F00              MOV     R7,#00H
+0096 22                RET     
+                                           ; SOURCE LINE # 349
+0097         ?C0057:
+                                           ; SOURCE LINE # 351
+0097 90000000    R     MOV     DPTR,#i
+009B E4                CLR     A
+009C F0                MOVX    @DPTR,A
+009D A3                INC     DPTR
+009E E4                CLR     A
+009F F0                MOVX    @DPTR,A
+00A0         ?C0059:
+00A0 90000000    R     MOV     DPTR,#wrLen
+00A4 E0                MOVX    A,@DPTR
+00A5 FE                MOV     R6,A
+00A6 A3                INC     DPTR
+00A7 E0                MOVX    A,@DPTR
+00A8 FF                MOV     R7,A
+00A9 90000000    R     MOV     DPTR,#i
+00AD E0                MOVX    A,@DPTR
+00AE FC                MOV     R4,A
+00AF A3                INC     DPTR
+00B0 E0                MOVX    A,@DPTR
+00B1 FD                MOV     R5,A
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 41  
+
+00B2 C3                CLR     C
+00B3 ED                MOV     A,R5
+00B4 9F                SUBB    A,R7
+00B5 EC                MOV     A,R4
+00B6 9E                SUBB    A,R6
+00B7 4003              JC      $ + 5H
+00B9 010000      R     AJMP    ?C0060
+                                           ; SOURCE LINE # 352
+                                           ; SOURCE LINE # 353
+00BC 7F01              MOV     R7,#01H
+00BE 12000000    E     LCALL   _SPI_FlagEnb
+                                           ; SOURCE LINE # 355
+00C2 90000000    R     MOV     DPTR,#wrLen
+00C6 E0                MOVX    A,@DPTR
+00C7 FE                MOV     R6,A
+00C8 A3                INC     DPTR
+00C9 E0                MOVX    A,@DPTR
+00CA FF                MOV     R7,A
+00CB C3                CLR     C
+00CC EF                MOV     A,R7
+00CD 9401              SUBB    A,#01H
+00CF FF                MOV     R7,A
+00D0 EE                MOV     A,R6
+00D1 9400              SUBB    A,#00H
+00D3 FE                MOV     R6,A
+00D4 90000000    R     MOV     DPTR,#i
+00D8 E0                MOVX    A,@DPTR
+00D9 FC                MOV     R4,A
+00DA A3                INC     DPTR
+00DB E0                MOVX    A,@DPTR
+00DC FD                MOV     R5,A
+00DD EF                MOV     A,R7
+00DE B50526            CJNE    A,AR5,?C0062
+00E1 EE                MOV     A,R6
+00E2 B50422            CJNE    A,AR4,?C0062
+                                           ; SOURCE LINE # 356
+00E5 90000000    R     MOV     DPTR,#i
+00E9 E0                MOVX    A,@DPTR
+00EA FE                MOV     R6,A
+00EB A3                INC     DPTR
+00EC E0                MOVX    A,@DPTR
+00ED FF                MOV     R7,A
+00EE 7400        R     MOV     A,#LOW pageWrite
+00F0 2F                ADD     A,R7
+00F1 F9                MOV     R1,A
+00F2 E4                CLR     A
+00F3 3400        R     ADDC    A,#HIGH pageWrite
+00F5 FA                MOV     R2,A
+00F6 7B00        R     MOV     R3,#MBYTE pageWrite
+00F8 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+00FC 7480              MOV     A,#080H
+00FE F0                MOVX    @DPTR,A
+00FF 7D08              MOV     R5,#08H
+0101 12000000    E     LCALL   _SPI_MstXmit
+0105 8020              SJMP    ?C0064
+0107         ?C0062:
+                                           ; SOURCE LINE # 358
+0107 90000000    R     MOV     DPTR,#i
+010B E0                MOVX    A,@DPTR
+010C FE                MOV     R6,A
+010D A3                INC     DPTR
+010E E0                MOVX    A,@DPTR
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 42  
+
+010F FF                MOV     R7,A
+0110 7400        R     MOV     A,#LOW pageWrite
+0112 2F                ADD     A,R7
+0113 F9                MOV     R1,A
+0114 E4                CLR     A
+0115 3400        R     ADDC    A,#HIGH pageWrite
+0117 FA                MOV     R2,A
+0118 7B00        R     MOV     R3,#MBYTE pageWrite
+011A 90000000    E     MOV     DPTR,#?_SPI_MstXmit?BYTE+04H
+011E 74C0              MOV     A,#0C0H
+0120 F0                MOVX    @DPTR,A
+0121 7D08              MOV     R5,#08H
+0123 12000000    E     LCALL   _SPI_MstXmit
+0127         ?C0063:
+0127         ?C0064:
+                                           ; SOURCE LINE # 360
+0127 7F01              MOV     R7,#01H
+0129 12000000    E     LCALL   _SPI_FlagChk
+012D EF                MOV     A,R7
+012E 4E                ORL     A,R6
+012F 6006              JZ      ?C0061
+0131 12000000    E     LCALL   SPI_Func
+0135 80F0              SJMP    ?C0064
+0137         ?C0065:
+                                           ; SOURCE LINE # 361
+0137         ?C0061:
+0137 90000000    R     MOV     DPTR,#i+01H
+013B E0                MOVX    A,@DPTR
+013C 04                INC     A
+013D F0                MOVX    @DPTR,A
+013E 7007              JNZ     ?C0073
+0140 90000000    R     MOV     DPTR,#i
+0144 E0                MOVX    A,@DPTR
+0145 04                INC     A
+0146 F0                MOVX    @DPTR,A
+0147         ?C0073:
+0147 010000      R     AJMP    ?C0059
+014A         ?C0060:
+                                           ; SOURCE LINE # 362
+014A 7E00              MOV     R6,#00H
+014C 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 363
+014E         ?C0058:
+014E 22                RET     
+             ; FUNCTION _SPI_Write (END)
+
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 43  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+TB08 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009BH  1
+TB18 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C3H  1
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+SM00 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009FH  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+SM10 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C7H  1
+SM01 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009EH  1
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+SM11 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C6H  1
+SM02 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009DH  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+AC . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D6H  1
+SM12 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C5H  1
+T0 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B4H  1
+SPIDR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CFH  1
+T1 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B5H  1
+EA . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AFH  1
+OWCIR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D6H  1
+CH . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C5H  1
+DPH0 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0083H  1
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+DPH1 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0085H  1
+CL . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C4H  1
+P0_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0080H  1
+P1_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0090H  1
+P0_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0081H  1
+CCAPH0 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B9H  1
+DPL0 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0082H  1
+P2_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A0H  1
+P1_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0091H  1
+P0_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0082H  1
+CCAPH1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BAH  1
+DPL1 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0084H  1
+P3_0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B0H  1
+P2_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A1H  1
+P1_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0092H  1
+P0_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0083H  1
+UR2_DLH. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E2H  1
+CCAPH2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BBH  1
+XMRHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A7H  1
+P3_1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B1H  1
+P2_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A2H  1
+P1_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0093H  1
+P0_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0084H  1
+CCAPH3 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BCH  1
+SPI_WriteDisable . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  xmitByte . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+P3_2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B2H  1
+P2_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A3H  1
+P1_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0094H  1
+P0_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0085H  1
+TA . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00EBH  1
+CCAPH4 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BDH  1
+CCAPL0 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B1H  1
+EXF2 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CEH  1
+RD . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B7H  1
+P3_3 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B3H  1
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 44  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+P2_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A4H  1
+REN0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009CH  1
+P1_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0095H  1
+P0_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0086H  1
+UR2_FCR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E3H  1
+CCAPM0 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D1H  1
+T2IF . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C9H  1
+CCAPL1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B2H  1
+REN1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C4H  1
+P3_4 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B4H  1
+P2_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A5H  1
+P1_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0096H  1
+P0_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0087H  1
+UR2_DLL. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E1H  1
+CCAPM1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D2H  1
+CCAPL2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B3H  1
+XMRLR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A6H  1
+P3_5 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B5H  1
+P2_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A6H  1
+P1_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0097H  1
+CCAPM2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D3H  1
+CCAPL3 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B4H  1
+XMWHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A5H  1
+P3_6 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B6H  1
+P2_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A7H  1
+CCAPM3 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D4H  1
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+CCAPL4 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B5H  1
+P3_7 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B7H  1
+CCAPM4 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D5H  1
+DBAR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009AH  1
+UR2_IER. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E2H  1
+CY . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D7H  1
+INT0 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B2H  1
+UR2_LCR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E4H  1
+XMWLR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A4H  1
+INT1 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B3H  1
+UR2_MCR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E5H  1
+DPX0 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0093H  1
+I2CCIR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0096H  1
+DPX1 . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0095H  1
+UR2_IIR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E3H  1
+UR2_RBR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E1H  1
+ACON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009DH  1
+DCIR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009BH  1
+SP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0081H  1
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C3H  1
+CMOD . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C2H  1
+OV . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D2H  1
+SPI_WriteEnable. . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  xmitByte . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+_SPI_MstXmit . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+ulong. . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+WR . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B6H  1
+UR2_THR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E1H  1
+EWDI . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00EDH  1
+WDIF . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00DBH  1
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 45  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+RLDH . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CBH  1
+EPCR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BEH  1
+LDHR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AAH  1
+UR2_LSR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E6H  1
+EPDR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00BFH  1
+MCIR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B6H  1
+RCLK . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CDH  1
+UR2_MSR. . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E7H  1
+bool . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+TCLK . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CCH  1
+RLDL . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CAH  1
+LDLR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A9H  1
+PCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0087H  1
+CANCIR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00DEH  1
+TCIR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AEH  1
+PWDI . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FDH  1
+LSCR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A2H  1
+TMOD . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0089H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+byte . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+OWDR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D7H  1
+word . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+IE0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0089H  1
+IE1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008BH  1
+MXAX . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00EAH  1
+LMSR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A1H  1
+sint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+MD0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F9H  1
+B. . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F0H  1
+uint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+MD1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FAH  1
+LSAIER . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A1H  1
+MD2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FBH  1
+WTRF . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00DAH  1
+MD3. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FCH  1
+PISSR1 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009EH  1
+MD4. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FDH  1
+LSSR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A3H  1
+PISSR2 . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009FH  1
+MD5. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FEH  1
+ACC. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E0H  1
+ES0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ACH  1
+CT2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C9H  1
+ES1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AEH  1
+ET0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A9H  1
+ET1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ABH  1
+TF0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008DH  1
+_SPI_PageRead. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  addrOfMem. . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0000H  2
+  ptByteData . . . . . . . . . . . . .  AUTO     XDATA  PTR      0002H  3
+  rdLen. . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0005H  2
+  pageRead . . . . . . . . . . . . . .  AUTO     XDATA  ARRAY    0007H  4
+  temp . . . . . . . . . . . . . . . .  AUTO     XDATA  ARRAY    000BH  4
+  status . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   000FH  1
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0010H  2
+ET2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ADH  1
+RI0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0098H  1
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 46  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+TF1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008FH  1
+TF2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CFH  1
+RI1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C0H  1
+SPICIR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CEH  1
+TH0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008CH  1
+EX0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A8H  1
+TI0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0099H  1
+IT0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0088H  1
+TH1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008DH  1
+TI1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C1H  1
+EX1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00AAH  1
+IT1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008AH  1
+TH2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CDH  1
+P. . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D0H  1
+TL0. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008AH  1
+CSREPR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008FH  1
+TL1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008BH  1
+TL2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00CCH  1
+PS0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BCH  1
+EIE. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E8H  1
+WTST . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0092H  1
+_SPI_ReadStatus. . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  status . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  readStatus . . . . . . . . . . . . .  AUTO     XDATA  ARRAY    0003H  2
+PS1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BEH  1
+PT0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B9H  1
+EIF. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0091H  1
+RS0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D3H  1
+PT1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BBH  1
+I2CDR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0097H  1
+RS1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D4H  1
+PT2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BDH  1
+TR0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008CH  1
+TR1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008EH  1
+TR2. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CAH  1
+PX0. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B8H  1
+PX1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00BAH  1
+DDR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009CH  1
+_SPI_PageWrite . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  addrOfMem. . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0000H  2
+  ptByteData . . . . . . . . . . . . .  AUTO     XDATA  PTR      0002H  3
+  wrLen. . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0005H  2
+  pageWrite. . . . . . . . . . . . . .  AUTO     XDATA  ARRAY    0007H  35
+  status . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   002AH  1
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    002BH  2
+_SPI_Write . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  ptByteData . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  wrLen. . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0003H  2
+  pageWrite. . . . . . . . . . . . . .  AUTO     XDATA  ARRAY    0005H  35
+  status . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0028H  1
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0029H  2
+SPI_Func . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+DPH. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0083H  1
+EIP. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F8H  1
+_SPI_FlagEnb . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+DPL. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0082H  1
+_SPI_FlagChk . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 47  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+LCR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A2H  1
+SBUF0. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0099H  1
+_SPI_ByteRead. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  addrOfMem. . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0000H  2
+  ptByteData . . . . . . . . . . . . .  AUTO     XDATA  PTR      0002H  3
+  byteRead . . . . . . . . . . . . . .  AUTO     XDATA  ARRAY    0005H  4
+  status . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0009H  1
+SBUF1. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C1H  1
+EINT2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00E8H  1
+EXEN2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00CBH  1
+MDR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B7H  1
+_SPI_WriteStatus . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  status . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  writeStatus. . . . . . . . . . . . .  AUTO     XDATA  ARRAY    0001H  2
+EINT3. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00E9H  1
+CPRL2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C8H  1
+SCON0. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+EINT4. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00EAH  1
+SCON1. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+SDSTSR . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0094H  1
+EINT5. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00EBH  1
+STATUS . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E9H  1
+EINT6. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ECH  1
+T2CON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+DPS. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0086H  1
+CANDR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00DFH  1
+TDR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AFH  1
+_SPI_GetData . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+LDAHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A5H  1
+DPX. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0093H  1
+DMAHR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ADH  1
+PINT2. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00F8H  1
+RXD. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B0H  1
+PINT3. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00F9H  1
+CKCON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008EH  1
+PINT4. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FAH  1
+EWT. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D9H  1
+TXD. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00B1H  1
+LDALR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A4H  1
+PINT5. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FBH  1
+DMALR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ABH  1
+LSR. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A3H  1
+_SPI_ByteWrite . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  addrOfMem. . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0000H  2
+  byteData . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0002H  1
+  byteWrite. . . . . . . . . . . . . .  AUTO     XDATA  ARRAY    0003H  4
+  status . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0007H  1
+PINT6. . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00FCH  1
+DMAMR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ACH  1
+ARCON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00FFH  1
+F0 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D5H  1
+F1 . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D1H  1
+LDCSR. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A6H  1
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+RB08 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      009AH  1
+WDCON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+RWT. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00D8H  1
+C51 COMPILER V8.06   SPIAPI                                                                03/13/2026 10:21:46 PAGE 48  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+RB18 . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C2H  1
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1732    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    134    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

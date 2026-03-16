@@ -1,0 +1,9 @@
+@W: CD729 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":429:8:429:19|Component declaration has 3 generics but entity declares only 2 generics
+@W: CD638 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":346:7:346:12|Signal pout01 is undriven. Either assign the signal a value or remove the signal declaration.
+@W: CD434 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":83:18:83:22|Signal reset in the sensitivity list is not used in the process. Make sure all variables in the sensitivity list are referenced in the process.
+@W: CL271 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":85:3:85:4|Pruning unused bits 4 to 1 of DataRegU1Ch1_5(16 downto 1). If this is not the intended behavior, drive the inputs with valid values, or inputs from the top level.
+@W: CL271 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":85:3:85:4|Pruning unused bits 4 to 1 of DataRegU1Ch0_5(16 downto 1). If this is not the intended behavior, drive the inputs with valid values, or inputs from the top level.
+@W: CL260 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\divider.vhd":38:3:38:4|Pruning register bit 1 of counter(1 downto 0). If this is not the intended behavior, drive the input with valid values, or an input from the top level.
+@W: CL240 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":23:12:23:18|Signal HrtBeat is floating; a simulation mismatch is possible.
+@W: CL279 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\revsion.vhd":73:2:73:3|Pruning register bits 5 to 4 of parallelholdreg(7 downto 0). If this is not the intended behavior, drive the inputs with valid values, or inputs from the top level.
+

@@ -1,0 +1,168 @@
+//========================================================================================//
+//========================================================================================//
+//========================================================================================//
+//     Copyright (c) 2016     Simtek, Incorporated      All rights reserved.              //
+//                                                                                        //
+//     This is unpublished proprietary source code of Simtek, Inc                         //
+//                                                                                        //
+//     The copyright notice above does not evidence any actual or intended                //
+//     publication of such source code.                                                   //
+//========================================================================================//
+//========================================================================================//
+//========================================================================================//
+// 75-0640  for 10-8139-01                                                                //
+//========================================================================================//
+// Author      : C. Mason                                                                 //
+// Date        : April  8, 2016                                                           //
+// Revision    : -                                                                        //
+// Notes       : Shipped with instrument.                                                 //
+//========================================================================================//
+//                                                                                        //
+//========================================================================================//
+//          include file declarations                                                     //
+//========================================================================================//
+#include "types.h"
+#include "reg80390.h"
+#include "intrins.h"
+#include "CIRCUIT.H"
+#include "printd.h"
+#include "fpga.h"                                                                         //
+
+sbit A_0                = 0xE0;
+sbit A_1                = 0xE1;
+sbit A_2                = 0xE2;
+sbit A_3                = 0xE3;
+sbit A_4                = 0xE4;
+sbit A_5                = 0xE5;
+sbit A_6                = 0xE6;
+sbit A_7                = 0xE7;
+
+#define tmpvar1             0x35
+//#define tmpvar3                0x36
+byte IDATA AssyVarPass1 _at_ tmpvar1;
+//#define tmpvar2                0x37
+//byte IDATA AssyVarPass2 _at_ tmpvar2;
+//#define tmpvar4                0x38
+//static byte IDATA AssyVarPass3 _at_ tmpvar4;
+
+void x100nSDelay(void);
+void x001uSDelay(void);
+void ext1_5thHardwareDelay(void);
+void extHardwareDelay(void);
+byte nibbleswap(byte dat);
+
+// ----------------------------------------------------------------------------
+// name    : x001uSDelay(void)
+// Purpose       : create a 1uS delay
+// Params        : void
+// Returns       : void
+// notes   : 
+// ----------------------------------------------------------------------------
+void x001uSDelay(void)
+{
+      x100nSDelay();                                                                      // 100nS 100nS
+      x100nSDelay();                                                                      // 100nS 200nS
+      x100nSDelay();                                                                      // 100nS 300nS
+      x100nSDelay();                                                                      // 100nS 400nS
+      x100nSDelay();                                                                      // 100nS 500nS
+      x100nSDelay();                                                                      // 100nS 600nS
+      x100nSDelay();                                                                      // 100nS 700nS
+      x100nSDelay();                                                                      // 100nS 800nS
+      x100nSDelay();                                                                      // 100nS 900nS
+      _nop_();                                                                            //  20nS 920nS
+}
+
+// ----------------------------------------------------------------------------
+// name    : x100nSDelay(void)
+// Purpose       : create a 100nS delay
+// Params        : void
+// Returns       : void
+// notes   : the call and return both take 40nS each
+// ----------------------------------------------------------------------------
+void x100nSDelay(void)
+{
+      _nop_();                                                                            // 20nS 020nS
+}
+
+// ----------------------------------------------------------------------------
+// name    : ext1_5thHardwareDelay(void)
+// Purpose       : create a delay
+// Params        : void
+// Returns       : void
+// notes   : 
+// ----------------------------------------------------------------------------
+void ext1_5thHardwareDelay(void)                                                          // give the hardware some time to react
+{
+      _nop_();                                                                            // 20nS 020nS
+      _nop_();                                                                            // 20nS 040nS
+      _nop_();                                                                            // 20nS 060nS
+      _nop_();                                                                            // 20nS 080nS
+      _nop_();                                                                            // 20nS 100nS
+      _nop_();                                                                            // 20nS 120nS
+      _nop_();                                                                            // 20nS 140nS
+      _nop_();                                                                            // 20nS 160nS
+      _nop_();                                                                            // 20nS 180nS
+      _nop_();                                                                            // 20nS 200nS
+      _nop_();                                                                            // 20nS 220nS
+      _nop_();                                                                            // 20nS 240nS
+      _nop_();                                                                            // 20nS 260nS
+      _nop_();                                                                            // 20nS 280nS
+      _nop_();                                                                            // 20nS 300nS
+      _nop_();                                                                            // 20nS 320nS
+      _nop_();                                                                            // 20nS 340nS
+      _nop_();                                                                            // 20nS 360nS
+      _nop_();                                                                            // 20nS 380nS
+      _nop_();                                                                            // 20nS 400nS
+}
+
+// ---------------------------------------------------------------------------------------
+// Function Name : nibbleswap      
+// Purpose       : swap the high and low nibbles of the given byte
+// Params        : byte to swapped
+// Returns       : swapped byte     
+// Note          : 
+// ---------------------------------------------------------------------------------------
+byte nibbleswap(byte dat)
+{
+      AssyVarPass1 = dat;
+#pragma asm
+      push  Acc
+      mov   Acc,tmpvar1
+      swap  a
+      mov   tmpvar1,Acc
+      pop   Acc
+#pragma endasm
+      return AssyVarPass1;
+}
+
+// ----------------------------------------------------------------------------
+// name    : ext1_10thHardwareDelay(void)
+// purpose : create a delay
+// params  : void
+// returns : void
+// notes   :
+// ----------------------------------------------------------------------------
+void ext1_10thHardwareDelay(void)		// give the hardware some time to react	
+{
+      ext1_5thHardwareDelay();
+      ext1_5thHardwareDelay();
+}
+
+// ----------------------------------------------------------------------------
+// name    : extHardwareDelay(void)
+// Purpose       : create a delay
+// Params        : void
+// Returns       : void
+// notes   : 
+// ----------------------------------------------------------------------------
+void extHardwareDelay(void)                                                               // give the hardware some time to react
+{
+      ext1_5thHardwareDelay();                                                            // 01
+      ext1_5thHardwareDelay();                                                            // 02
+      ext1_5thHardwareDelay();                                                            // 03
+      ext1_5thHardwareDelay();                                                            // 04
+      ext1_5thHardwareDelay();                                                            // 05
+      ext1_5thHardwareDelay();                                                            // 06
+      ext1_5thHardwareDelay();                                                            // 07
+      ext1_5thHardwareDelay();                                                            // 08
+}
