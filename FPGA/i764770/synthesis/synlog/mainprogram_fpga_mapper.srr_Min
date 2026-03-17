@@ -1,0 +1,77 @@
+
+
+@S |##### START OF TIMING REPORT #####[
+# Timing Report written on Fri Aug 25 11:31:31 2017
+#
+
+
+Top view:               mainprogram
+Operating conditions:   IGLOO.COMWCSTD
+Requested Frequency:    100.0 MHz
+Wire load mode:         top
+Wire load model:        IGLOO
+Paths requested:        5
+Constraint File(s):    
+@N: MT320 |Timing report estimates place and route data. Please look at the place and route timing report for final timing.
+
+@N: MT322 |Clock constraints cover only FF-to-FF paths associated with the clock.
+
+
+
+Performance Summary 
+*******************
+
+
+Worst slack in design: NA
+
+                                           Requested     Estimated     Requested     Estimated                 Clock        Clock              
+Starting Clock                             Frequency     Frequency     Period        Period        Slack       Type         Group              
+-----------------------------------------------------------------------------------------------------------------------------------------------
+ClockMaster|counter_inferred_clock[0]      100.0 MHz     71.7 MHz      10.000        13.944        -3.944      inferred     Inferred_clkgroup_2
+ClockMaster|counter_inferred_clock[1]      100.0 MHz     91.9 MHz      10.000        10.879        -0.879      inferred     Inferred_clkgroup_3
+ClockMaster|counter_inferred_clock[2]      100.0 MHz     36.1 MHz      10.000        27.713        -17.713     inferred     Inferred_clkgroup_0
+ClockMaster|counter_inferred_clock[12]     100.0 MHz     96.4 MHz      10.000        10.371        -0.372      inferred     Inferred_clkgroup_4
+divider|counter_inferred_clock[0]          100.0 MHz     73.1 MHz      10.000        13.681        -3.681      inferred     Inferred_clkgroup_5
+mainprogram|SerialClock                    100.0 MHz     109.6 MHz     10.000        9.125         0.875       inferred     Inferred_clkgroup_1
+mainprogram|XCLK                           100.0 MHz     198.8 MHz     10.000        5.030         4.970       inferred     Inferred_clkgroup_6
+===============================================================================================================================================
+
+
+
+Clock Relationships
+*******************
+
+Clocks                                                                          |    rise  to  rise   |    fall  to  fall   |    rise  to  fall   |    fall  to  rise 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Starting                                Ending                                  |  constraint  slack  |  constraint  slack  |  constraint  slack  |  constraint  slack
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ClockMaster|counter_inferred_clock[2]   ClockMaster|counter_inferred_clock[2]   |  0.000       False  |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[2]   ClockMaster|counter_inferred_clock[0]   |  Diff grp    -      |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[2]   ClockMaster|counter_inferred_clock[1]   |  Diff grp    -      |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[2]   ClockMaster|counter_inferred_clock[12]  |  Diff grp    -      |  No paths    -      |  No paths    -      |  No paths    -    
+mainprogram|SerialClock                 mainprogram|SerialClock                 |  0.000       False  |  No paths    -      |  No paths    -      |  No paths    -    
+mainprogram|SerialClock                 ClockMaster|counter_inferred_clock[0]   |  Diff grp    -      |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[0]   ClockMaster|counter_inferred_clock[2]   |  Diff grp    -      |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[0]   mainprogram|SerialClock                 |  Diff grp    -      |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[0]   ClockMaster|counter_inferred_clock[0]   |  0.000       False  |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[0]   ClockMaster|counter_inferred_clock[12]  |  Diff grp    -      |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[1]   ClockMaster|counter_inferred_clock[0]   |  Diff grp    -      |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[1]   ClockMaster|counter_inferred_clock[1]   |  0.000       False  |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[1]   ClockMaster|counter_inferred_clock[12]  |  Diff grp    -      |  No paths    -      |  No paths    -      |  No paths    -    
+ClockMaster|counter_inferred_clock[12]  ClockMaster|counter_inferred_clock[12]  |  0.000       False  |  No paths    -      |  No paths    -      |  No paths    -    
+divider|counter_inferred_clock[0]       divider|counter_inferred_clock[0]       |  0.000       False  |  No paths    -      |  No paths    -      |  No paths    -    
+mainprogram|XCLK                        mainprogram|XCLK                        |  0.000       False  |  No paths    -      |  No paths    -      |  No paths    -    
+======================================================================================================================================================================
+ Note: 'No paths' indicates there are no paths in the design for that pair of clock edges.
+       'Diff grp' indicates that paths exist but the starting clock and ending clock are in different clock groups.
+
+
+
+Interface Information 
+*********************
+
+No IO constraint found
+
+
+##### END OF TIMING REPORT #####]
+

@@ -1,0 +1,17 @@
+@N: MF248 |Running in 64-bit mode.
+@N: MF667 |Clock conversion disabled. (Command "set_option -fix_gated_and_generated_clocks 0" in the project file.)
+@N: BN225 |Writing default property annotation file C:\_swork\10-\9800\9824\FPGA\i764841\synthesis\mainprogram.sap.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":82:2:82:3|Removing sequential instance output[5] (in view: work.sipoZ0(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":82:2:82:3|Removing sequential instance output[6] (in view: work.sipoZ0(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":82:2:82:3|Removing sequential instance output[7] (in view: work.sipoZ0(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":53:2:53:3|Removing sequential instance paralleldata[5] (in view: work.sipoZ0(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":53:2:53:3|Removing sequential instance paralleldata[6] (in view: work.sipoZ0(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":53:2:53:3|Removing sequential instance paralleldata[7] (in view: work.sipoZ0(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":82:2:82:3|Removing sequential instance output[6] (in view: work.sipoZ1(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":82:2:82:3|Removing sequential instance output[7] (in view: work.sipoZ1(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":53:2:53:3|Removing sequential instance paralleldata[6] (in view: work.sipoZ1(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":53:2:53:3|Removing sequential instance paralleldata[7] (in view: work.sipoZ1(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":82:2:82:3|Removing sequential instance output[6] (in view: work.sipoZ3(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":82:2:82:3|Removing sequential instance output[5] (in view: work.sipoZ3(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":53:2:53:3|Removing sequential instance paralleldata[6] (in view: work.sipoZ3(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.
+@N: BN362 :"c:\_swork\10-\9800\9824\fpga\i764841\hdl\sipo.vhd":53:2:53:3|Removing sequential instance paralleldata[5] (in view: work.sipoZ3(architecture_sipo)) of type view:PrimLib.sdffre(prim) because it does not drive other instances.

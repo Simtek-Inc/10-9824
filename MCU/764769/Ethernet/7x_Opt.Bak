@@ -1,0 +1,92 @@
+### uVision2 Project, (C) Keil Software
+### Do not modify !
+
+ cExt (*.c)
+ aExt (*.s*; *.src; *.a*)
+ oExt (*.obj)
+ lExt (*.lib)
+ tExt (*.txt; *.h; *.inc)
+ pExt (*.plm)
+ CppX (*.cpp)
+ DaveTm { 0,0,0,0,0,0,0,0 }
+
+Target (75), 0x0000 // Tools: 'MCS-51'
+GRPOPT 1,(cpu),1,0,0
+GRPOPT 2,(ethernet),1,0,0
+GRPOPT 3,(swdma),0,0,0
+GRPOPT 4,(mstimer),1,0,0
+GRPOPT 5,(uart),1,0,0
+GRPOPT 6,(main),1,0,0
+GRPOPT 7,(tcpip),0,0,0
+GRPOPT 8,(gs2e),1,0,0
+GRPOPT 9,(debug),1,0,0
+GRPOPT 10,(dhcp),0,0,0
+GRPOPT 11,(adapter),0,0,0
+GRPOPT 12,(eeprom),0,0,0
+GRPOPT 13,(si2c),0,0,0
+GRPOPT 14,(menu),1,0,0
+GRPOPT 15,(spi),0,0,0
+
+OPTFFF 1,1,1,16777216,0,0,0,0,<.\src\cpu\interrupt.c><interrupt.c> 
+OPTFFF 1,2,2,0,0,0,0,0,<.\src\cpu\START390.A51><START390.A51> 
+OPTFFF 1,3,1,83886080,0,0,0,0,<.\src\cpu\ax11000.c><ax11000.c> 
+OPTFFF 2,4,1,83886080,0,0,0,0,<.\src\ethernet\stoe.c><stoe.c> 
+OPTFFF 2,5,1,352321536,0,0,0,0,<.\src\ethernet\mac.c><mac.c> 
+OPTFFF 2,6,1,218103808,0,0,0,0,<.\src\ethernet\phy.c><phy.c> 
+OPTFFF 3,7,5,0,0,0,0,0,<.\src\swdma\dma_cfg.h><dma_cfg.h> 
+OPTFFF 3,8,2,0,0,0,0,0,<.\src\swdma\busreq.asm><busreq.asm> 
+OPTFFF 3,9,1,83886080,0,0,0,0,<.\src\swdma\dma.c><dma.c> 
+OPTFFF 4,10,1,100663296,0,0,0,0,<.\src\mstimer\mstimer.c><mstimer.c> 
+OPTFFF 4,11,1,218103808,0,0,0,0,<.\src\mstimer\delay.c><delay.c> 
+OPTFFF 5,12,1,318767104,0,1014,1014,0,<.\src\uart\uart.c><uart.c> { 44,0,0,0,0,0,0,0,1,0,0,0,255,255,255,255,255,255,255,255,248,255,255,255,225,255,255,255,208,0,0,0,208,0,0,0,14,6,0,0,175,2,0,0 }
+OPTFFF 6,13,1,2,0,23,26,0,<.\src\main\main.c><main.c> { 44,0,0,0,2,0,0,0,3,0,0,0,255,255,255,255,255,255,255,255,248,255,255,255,225,255,255,255,26,0,0,0,26,0,0,0,159,5,0,0,186,1,0,0 }
+OPTFFF 6,14,1,0,0,0,0,0,<.\src\main\CIRCUIT.C><CIRCUIT.C> 
+OPTFFF 6,15,1,654311425,0,0,0,0,<.\src\fpga\fpga.c><fpga.c> 
+OPTFFF 6,16,1,469762049,0,0,0,0,<.\src\main\hi8045.c><hi8045.c> 
+OPTFFF 7,17,4,0,0,0,0,0,<.\src\tcpip\tcpip.LIB><tcpip.LIB> 
+OPTFFF 7,18,1,436207616,0,0,0,0,<.\src\tcpip\uip_arp.c><uip_arp.c> 
+OPTFFF 7,19,1,218103808,0,0,0,0,<.\src\tcpip\uip_arch.c><uip_arch.c> 
+OPTFFF 7,20,1,1,0,0,0,0,<.\src\tcpip\uip.c><uip.c> 
+OPTFFF 8,21,1,956301312,0,0,0,0,<.\src\gs2e\gconfig.c><gconfig.c> 
+OPTFFF 8,22,1,1241513984,0,0,0,0,<.\src\gs2e\gs2e.c><gs2e.c> 
+OPTFFF 8,23,1,100663296,0,0,0,0,<.\src\gs2e\gudpbc.c><gudpbc.c> 
+OPTFFF 8,24,1,637534209,0,0,0,0,<.\src\gs2e\gudpdat.c><gudpdat.c> 
+OPTFFF 8,25,1,855638016,0,0,0,0,<.\src\gs2e\gudpuc.c><gudpuc.c> 
+OPTFFF 9,26,1,67108865,0,0,0,0,<.\src\debug\printd.c><printd.c> 
+OPTFFF 10,27,1,0,0,0,0,0,<.\src\dhcp\dhcpc.c><dhcpc.c> 
+OPTFFF 11,28,1,83886080,0,0,0,0,<.\src\adapter\adapter.c><adapter.c> 
+OPTFFF 12,29,1,0,0,0,0,0,<.\src\eeprom\eeprom.c><eeprom.c> 
+OPTFFF 13,30,1,1040187392,0,0,0,0,<.\src\si2c\si2c.c><si2c.c> 
+OPTFFF 14,31,1,83886080,0,0,0,0,<.\src\menu\util_menus.c><util_menus.c> 
+OPTFFF 15,32,1,1090519041,0,0,0,0,<.\src\spi\spi.c><spi.c> 
+OPTFFF 15,33,1,100663297,0,0,0,0,<.\src\spi\ax11000slv.c><ax11000slv.c> 
+OPTFFF 15,34,1,0,0,0,0,0,<.\src\spi\spiapi.c><spiapi.c> 
+
+
+TARGOPT 1, (75)
+ CLK51=50000000
+  OPTTT 1,1,1,0
+  OPTHX 1,65535,0,0,0
+  OPTLX 120,65,8,<.\>
+  OPTOX 16
+  OPTLT 1,1,1,0,1,1,1,1,1,1,1,1
+  OPTXL 1,1,1,1,1,1,1,1,0
+  OPTFL 1,0,1
+  OPTAX 0
+  OPTBL 0,(Data Sheet)<DATASHTS\DCD\dp80390_ds.pdf>
+  OPTBL 1,(Instructions Set Details)<DATASHTS\DCD\dp80390_instr.pdf>
+  OPTDL (S8051.DLL)(-c390)(DCORE51.DLL)(-p251int -dAX11025)(S8051.DLL)(-c390)(DCORE51.DLL)(-p251int -dAX11025 -h)
+  OPTDBG 44029,0,()()()()()()()()()() (BIN\MON51.DLL)()()()
+  OPTKEY 0,(DLGDC51)((94=-1,-1,-1,-1,0))
+  OPTKEY 0,(DLGDP51)((98=-1,-1,-1,-1,0)(82=-1,-1,-1,-1,0)(83=-1,-1,-1,-1,0)(84=-1,-1,-1,-1,0)(85=-1,-1,-1,-1,0)(99=-1,-1,-1,-1,0)(91=-1,-1,-1,-1,0)(92=-1,-1,-1,-1,0)(5067=-1,-1,-1,-1,0))
+  OPTBB 0,0,882,1,0,0,0,0,0,0,<main.c>()()
+  OPTBB 1,0,606,1,0,0,0,0,0,0,<main.c>()()
+  OPTBB 2,0,587,1,0,0,0,0,0,0,<main.c>()()
+  OPTBB 3,0,690,1,0,0,0,0,0,0,<main.c>()()
+  OPTBB 4,0,476,1,0,0,0,0,0,0,<gudpdat.c>()()
+  OPTBB 5,0,576,1,-16619511,0,0,0,0,1,<gconfig.c>()()
+  OPTDF 0x40000084
+  OPTLE <>
+  OPTLC <>
+EndOpt
+

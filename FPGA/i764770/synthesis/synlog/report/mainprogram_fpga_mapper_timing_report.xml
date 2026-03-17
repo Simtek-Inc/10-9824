@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- *************************************************************************************
+FILE DESCRIPTION
+Max Top 5 critical clocks will be reported. For rest user needs to refer to Detailed report
+*******************************************************************************************-->
+<report_table display_priority="2" name="Timing Summary">
+<report_link name="Detailed report">
+<data>C:\_swork\10-\9800\9824\FPGA\i764841\synthesis\synlog\mainprogram_fpga_mapper.srr</data>
+<title>START OF TIMING REPORT</title>
+</report_link>
+<row>
+<data tcl_name="clock_name">Clock Name</data>
+<data tcl_name="req_freq">Req Freq</data>
+<data tcl_name="est_freq">Est Freq</data>
+<data tcl_name="slack">Slack</data>
+</row>
+<row>
+<data>ClockMaster|counter_inferred_clock[0]</data>
+<data>100.0 MHz</data>
+<data>79.3 MHz</data>
+<data>-2.612</data>
+</row>
+<row>
+<data>ClockMaster|counter_inferred_clock[1]</data>
+<data>100.0 MHz</data>
+<data>87.4 MHz</data>
+<data>-1.445</data>
+</row>
+<row>
+<data>ClockMaster|counter_inferred_clock[2]</data>
+<data>100.0 MHz</data>
+<data>67.8 MHz</data>
+<data>-4.746</data>
+</row>
+<row>
+<data>ClockMaster|counter_inferred_clock[3]</data>
+<data>100.0 MHz</data>
+<data>36.4 MHz</data>
+<data>-17.475</data>
+</row>
+<row>
+<data>divider|counter_inferred_clock[0]</data>
+<data>100.0 MHz</data>
+<data>112.4 MHz</data>
+<data>1.105</data>
+</row>
+<row>
+<data>mainprogram|SerialClock</data>
+<data>100.0 MHz</data>
+<data>113.8 MHz</data>
+<data>1.209</data>
+</row>
+<row>
+<data>mainprogram|XCLK</data>
+<data>100.0 MHz</data>
+<data>246.0 MHz</data>
+<data>5.934</data>
+</row>
+</report_table>

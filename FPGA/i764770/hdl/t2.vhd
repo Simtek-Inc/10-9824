@@ -1,0 +1,176 @@
+----------------------------------------------------------------------------------
+---- Company: <Name>
+----
+---- File: t2.vhd
+---- File history:
+----      <Revision number>: <Date>: <Comments>
+----      <Revision number>: <Date>: <Comments>
+----      <Revision number>: <Date>: <Comments>
+----
+---- Description: 
+----
+---- <Description here>
+----
+---- Targeted device: <Family::IGLOO> <Die::AGLN250V5> <Package::100 VQFP>
+---- Author: <Name>
+----
+----------------------------------------------------------------------------------
+--
+--library IEEE;
+--
+--use IEEE.std_logic_1164.all;
+--
+--entity t2 is
+--port (
+    ----<port_name> : <direction> <type>;
+	--port_name1 : IN  std_logic; -- example
+    --port_name2 : OUT std_logic_vector(1 downto 0)  -- example
+    ----<other_ports>;
+--);
+--end t2;
+--architecture architecture_t2 of t2 is
+   ---- signal, component etc. declarations
+	--signal signal_name1 : std_logic; -- example
+	--signal signal_name2 : std_logic_vector(1 downto 0) ; -- example
+--
+--begin
+--
+   ---- architecture body
+--end architecture_t2;
+--
+--entity SerialIO is
+--port (
+----  master clock input for whole system
+    --clock          : in    std_logic;
+---- data output ports from module
+---- hardware control signals
+    --HardwareCntrl  :   out std_logic_vector(5 downto 0); -- default is disabled = 0x25
+    ----rs232ModePs    :   out std_logic; -- default is disabled = 0
+    ----rs232RE        :   out std_logic; -- default is disabled = 1
+    ----rs232DE        :   out std_logic; -- default is disabled = 0
+    ----SwCmnLow       :   out std_logic; -- default is disabled = 1
+    ----SwCmnHigh      :   out std_logic; -- default is disabled = 0
+    ----canStby        :   out std_logic; -- default is disabled = 1
+---- PWM control signals
+    --PWMChOn        :   out std_logic_vector(2 downto 0); -- default is disabled = 0
+    --PWMChNot       :   out std_logic_vector(2 downto 0); -- default is enabled = 7
+    --PWMDutyCycle0 :   out std_logic_vector(11 downto 0); -- default is off = 0
+    --PWMDutyCycle1 :   out std_logic_vector(11 downto 0); -- default is off = 0
+    --PWMDutyCycle2 :   out std_logic_vector(11 downto 0); -- default is off = 0
+---- data input ports to module
+    --IOBank01       : in    std_logic_vector(6 downto 0);
+    --IOBank02       : in    std_logic_vector(6 downto 0);
+    --IOBank03       : in    std_logic_vector(6 downto 0);
+    --IOBank04       : in    std_logic_vector(3 downto 0);
+---- module control lines
+    --dclock         : in    std_logic;
+    --ddatain        : in    std_logic;
+    --ddataout       :   out std_logic;
+    --dload          : in    std_logic;
+    --reset          : in    std_logic
+--);
+--end SerialIO;
+--
+--architecture architecture_SerialIO of SerialIO is
+--
+---- constant declarations
+  ---- for input variables
+    --constant array_size      : integer := 48; -- equals the greater of datainput or output
+    --constant IOLength        : integer := array_size - 1;--IOBank01'range + IOBank02'range + IOBank03'range + IOBank04'range + 1);
+    --constant pad             : std_logic_vector(IOlength downto 0);--
+--
+    --constant pwmnot          : std_logic_vector(2 downto 0):= "111";
+    --constant pwmoff          : std_logic_vector(2 downto 0):= "000";
+    --constant pwmzero         : std_logic_vector(11 downto 0):= X"000";
+    --constant defaulthardware : std_logic_vector(5 downto 0):= "010101";
+    --constant defaultsettings : std_logic_vector(array_size downto 1):= defaulthardware&pwmoff&pwmnot&pwmzero&pwmzero&pwmzero;--6+3+3+12+12+12
+--
+  ---- for output variables
+    --constant firmwarerev     : std_logic_vector(array_size downto 1):= x"7512342d0000";
+  ---- variable declarations
+    --signal   xDataIn         : std_logic_vector(array_size downto 1); -- data input from microcontroller
+    --signal   xDataOut        : std_logic_vector(array_size downto 1); -- data output to microcontroller
+    --signal   iDataIn         : std_logic_vector(array_size downto 1); -- data input from microcontroller
+    --shared   variable index  : integer range 1 to array_size;
+--
+--begin
+--
+--IndexUpdate :
+--process(clock, reset, dload, dclock)
+--begin
+  --if (rising_edge(clock)) then
+    --if (reset = '1') or (dload = '1') then
+      --index := 1;
+    --else
+      --if rising_edge(dclock) then
+        --index := index + 1;
+      --end if;--if rising_edge(dclock) then
+    --end if;--if reset = '1' then
+  --end if;--if (rising_edge(clock)) then
+--end process IndexUpdate;
+--
+--SerialInput :
+--process(clock, reset, dclock, ddatain)
+--begin
+  --if (rising_edge(clock)) then
+    --if reset = '1' then
+      --xDataIn <= defaultsettings;
+    --else
+      --if rising_edge(dclock) then
+        --xDataIn(index) <= ddatain;
+      --end if;--if rising_edge(dclock) then
+    --end if;--if reset = '1' then
+  --end if;--if (rising_edge(clock)) then
+--end process SerialInput;
+--
+--SerialOutput :
+--process(clock, reset, dload, IOBank01, IOBank02, IOBank03, IOBank04)
+--begin
+  --if (rising_edge(clock)) then
+    --if reset = '1' then
+      --xDataOut <= firmwarerev;
+    --elsif dload = '1' then
+      --xDataOut <= IOBank01 & IOBank02 & IOBank03 & IOBank04 & pad;
+    --else
+      --ddataout <= xDataOut(index);
+    --end if;--if reset = '1' or dload = '1' then
+  --end if;--if (rising_edge(clock)) then
+--end process SerialOutput;
+--
+--DataInLoad:
+--process(clock, reset, dload, xDataIn)
+--begin
+  --if (rising_edge(clock)) then
+    --if reset = '1' then
+      --iDataIn <= defaultsettings;
+    --else
+      --if dload = '1' then
+        --iDataIn <= xDataIn;
+      --end if;--if dload = '1' then
+    --end if;--if reset = '1' then
+  --end if;--if (rising_edge(clock)) then
+--end process DataInLoad;
+--
+--DataInOutput :
+--process(clock, reset)
+--begin
+  --if (rising_edge(clock)) then
+    --if reset = '1' then
+      --HardwareCntrl  <= defaulthardware;
+      --PWMChOn        <= pwmoff;
+      --PWMChNot       <= pwmnot;
+      --PWMDutyCycle0  <= pwmzero;
+      --PWMDutyCycle1  <= pwmzero;
+      --PWMDutyCycle2  <= pwmzero;
+    --else
+      --HardwareCntrl  <= iDataIn(48 downto 43);
+      --PWMChOn        <= iDataIn(42 downto 40);
+      --PWMChNot       <= iDataIn(39 downto 37);
+      --PWMDutyCycle0  <= iDataIn(36 downto 25);
+      --PWMDutyCycle1  <= iDataIn(24 downto 13);
+      --PWMDutyCycle2  <= iDataIn(12 downto 1);
+    --end if;--if reset = '1' then
+  --end if;--if (rising_edge(clock)) then
+--end process DataInOutput;
+--
+--end architecture_SerialIO;

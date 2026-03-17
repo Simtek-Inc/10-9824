@@ -1,0 +1,160 @@
+//========================================================================================//
+//========================================================================================//
+//========================================================================================//
+//     Copyright (c) 2018     Simtek, Incorporated      All rights reserved.              //
+//                                                                                        //
+//     This is unpublished proprietary source code of Simtek, Inc                         //
+//                                                                                        //
+//     The copyright notice above does not evidence any actual or intended                //
+//     publication of such source code.                                                   //
+//========================================================================================//
+//========================================================================================//
+//========================================================================================//
+// Module Name     : revision.h                                                           //
+// Purpose         : definition of firmware number.date.release.rev.build                 //
+// Author          : C. Mason                                                             //
+// Date            : April 20, 2018                                                       //
+// Notes           :                                                                      //
+//========================================================================================//
+//========================================================================================//
+//========================================================================================//
+#ifndef INSTRUMENT_H                                                                      //
+#define INSTRUMENT_H                                                                      //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          simtek microcontroller date and firmware revision number                      //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define SIMTEK_Inst_Number   "10_9055"                                                    //
+#define SIMTEK_CFG           "_01"                                                        //
+#define SIMTEK_SN            "_xxx  "                                                     //
+extern  byte DefaultDevName[16];                                                          //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define defaultServerStaticIP 0xC0A8885A                                                  //
+#define defaultClientDestIP   0xC0A88801                                                  //
+#define defaultsubnetmask     0xFFFFFF00                                                  //
+#define defaultDNSServer      0xa85f0101                                                  //
+#define defaultGateway        0xc0a80001                                                  //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define defaultDataPort       51020                                                       //
+#define defaultHostPort       51021                                                       //
+#define defaultDeviceName     "10-9055_01_1XX"                                //
+#define a2dCh1Max             4095                                                        //
+#define a2dCh1Min             0                                                           //
+#define a2dCh1Offset          10                                                          //
+#define a2dCh1MaxReading      3866                                                        //
+#define a2dCh1scalefactor     1.0619813278008298755186721991701                           // a2dCh1Max/(a2dCh1MaxReading - a2dCh1Offset)
+#define DebugBuild            0                                                           //
+#define numof5841used        16
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          port pin name static definition                                               //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define PORT0_PIN_NAMES    "P0_0,P0_1,P0_2,P0_3,P0_4,P0_5,P0_6,P0_7,"                     //
+#define PORT1_PIN_NAMES    "P1_0,P1_1,P1_2,P1_3,P1_4,P1_5,P1_6,P1_7,"                     //
+#define PORT2_PIN_NAMES    "P2_0,P2_1,P2_2,P2_3,P2_4,P2_5,P2_6,P2_7,"                     //
+#define PORT3_PIN_NAMES    "P3_0,P3_1,P3_2,P3_3,P3_4,P3_5,P3_6,P3_7,\0"                   //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          host message header                                                           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define StartByte          0xFF                                                           // start byte
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          first byte of the display data array                                          //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define ResetRequest       0xF0                                                           //
+#define StatusRequest      0xF1                                                           //
+#define IndicatorRequest   0xF3                                                           //
+#define DimmingRequest                     0xF6                                           //
+#define DisplayRequest                     0xF5                                           //
+#define IntailizeRequest                   0xFD                                           //
+#define FirmwareRequest    0xFE                                                           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          default message buffer definitions                                            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define resetdefault                      "\xF0"                                          // F0
+//                                            1   2   3   4   5   6   7   8   9  10  11   // 
+#define statusdefault                     "\xF1\x00\x00\x00\x00\x00\x00\x00\x00"          // F1 x05
+#define indicatordefault                  "\xF3\x20\x20"                                  // F3
+#define dimmingdefault                    "\xF6\x00\x00"                                  // F4
+//                                            1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49"  // F5
+#define displaydefault                    "\xF5\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20"  // F5
+#define firmwaredefault                   "\xFE\x75\x79\x23\x41\x75\x00\x00\x41"          // FE * 9
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          lengths of messages sent from and to the host                                 //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define DefaultMsgLen                      sizeof(resetdefault) - 1                           // smallest of slave response messages
+#define LargestMsgLen                      (sizeof(displaydefault)+sizeof(dimmingdefault))*2                        // 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// buffer length longest message between the request message and the response message     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#define bufResetReqLength                  sizeof(resetdefault) - 1                       // 
+#define bufFirmwareReqLength               1                                              // 
+#define bufFirmwareRspLength               sizeof(firmwaredefault) - 1                    // 
+#define bufStatusReqLength                 1                                              //
+#define bufStatusRspLength                 sizeof(statusdefault) - 1                      //
+#define bufDimmingReqLength                sizeof(dimmingdefault) - 1                     //
+#define bufIndicatorReqLength              sizeof(indicatordefault) - 1                   //
+#define bufDisplayReqLength                sizeof(displaydefault) - 1                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          A2D number of samples to take and number of loops to delay between reads      //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define a2dsamples         4                                                              //
+#define a2ddelay           20                                                             //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//                                                                                        //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define FPGADataLen                          20                                           // 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          data array index poinx                                                        //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define ix01                             0                                                //
+#define ix02                             1                                                //
+#define ix03                             2                                                //
+#define ix04                             3                                                //
+#define ix05                             4                                                //
+#define ix06                             5                                                //
+#define ix07                             6                                                //
+#define ix08                             7                                                //
+#define ix09                             8                                                //
+#define ix10                             9                                                //
+#define ix11                            10                                                //
+#define ix12                            11                                                //
+#define ix13                            12                                                //
+#define ix14                            13                                                //
+#define ix15                            14                                                //
+#define ix16                            15                                                //
+#define ix17                            16                                                //
+#define ix18                            17                                                //
+#define ix19                            18                                                //
+#define ix20                            19                                                //
+#define ix21                            20                                                //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          debug routines message constants                                              //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define DebugStrLen                   0x10                                                // debug commands response string length
+#define dbCmd                         ix07                                                // define the position of the debug response command byte
+#define dbDat01                       ix08                                                // define the position of the 1st debug response data byte
+#define dbDat02                       ix09                                                // define the position of the 2nd debug response data byte
+#define dbDat03                       ix10                                                // define the position of the 3rd debug response data byte
+#define dbDat04                       ix11                                                // define the position of the 4th debug response data byte
+#define DebugDefStrLen                   8                                                // define the number of bytes to send for default command response
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          realtime message array index points                                           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define rt01                          ix02                                                //
+#define rt02                          ix03                                                //
+#define rt03                          ix04                                                //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//                bit masks                                                               //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//#define DebugModeMask                      0x04                                           //
+//#define TransmitModeMask                   0x08                                           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          debug routines message constants                                              //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+static byte oP0;                                                                          //
+static byte oP1;                                                                          //
+static byte oP2;                                                                          //
+static byte oP3;                                                                          //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          realtime switch action codes                                                  //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+#define     SwXxPosX                       0x0B                                           // example
+#endif      // end of INSTRUMENT_H

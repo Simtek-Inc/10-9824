@@ -1,0 +1,7 @@
+CKID0001:@|S:clock_master.counter[3]@|E:A2DRead.DataRegU1Ch0n[12]@|F:@syn_sample_clock_path==CKID0001@|M:ClockId0001 
+CKID0002:@|S:clock_master.counter[2]@|E:gen_pwm_control.6.snkpout_inst.PWMOut@|F:@syn_sample_clock_path==CKID0002@|M:ClockId0002 
+CKID0003:@|S:clock_master.counter[0]@|E:ioBank61reader.parallelholdreg[3]@|F:@syn_sample_clock_path==CKID0003@|M:ClockId0003 
+CKID0004:@|S:clock_master.counter[1]@|E:iobank61debounce.PreviousPosition[3]@|F:@syn_sample_clock_path==CKID0004@|M:ClockId0004 
+CKID0005:@|S:clockdivider.counter[0]@|E:clock_master.counter[3]@|F:@syn_sample_clock_path1==CKID0005@|M:ClockId0005 
+CKID0006:@|S:SerialClock@|E:ioBank61reader.cellindex[1]@|F:@syn_sample_clock_path==CKID0006@|M:ClockId0006 
+CKID0007:@|S:XCLK@|E:clockdivider.counter[0]@|F:@syn_sample_clock_path==CKID0007@|M:ClockId0007 

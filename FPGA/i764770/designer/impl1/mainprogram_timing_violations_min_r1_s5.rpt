@@ -1,0 +1,822 @@
+Timing Violation Report Min Delay Analysis
+
+SmartTime Version v11.7 SP1.1
+Microsemi Corporation - Microsemi Libero Software Release v11.7 SP1.1 (Version 11.7.1.14)
+Date: Thu Jul 27 09:21:18 2017
+
+
+Design: mainprogram
+Family: IGLOO
+Die: AGLN250V5
+Package: 100 VQFP
+Temperature Range: 0 - 70 C
+Voltage Range: 1.425 - 1.575 V
+Speed Grade: STD
+Design State: Post-Layout
+Data source: Silicon verified
+Min Operating Conditions: BEST - 1.575 V - 0 C
+Max Operating Conditions: WORST - 1.425 V - 70 C
+Using Enhanced Min Delay Analysis
+Scenario for Timing Analysis: Primary
+
+
+Path 1
+  From:                        A2DRead/DataRegU1Ch1e[4]:CLK
+  To:                          A2DRead/DataRegU1Ch1f[4]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.114
+  Arrival (ns):                2.843
+  Required (ns):               2.729
+
+Path 2
+  From:                        A2DRead/DataRegU1Ch1o[11]:CLK
+  To:                          A2DRead/DataRegU1Ch1p[11]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.142
+  Arrival (ns):                2.871
+  Required (ns):               2.729
+
+Path 3
+  From:                        A2DRead/DataRegU1Ch0o[11]:CLK
+  To:                          A2DRead/DataRegU1Ch0p[11]:D
+  Delay (ns):                  0.370
+  Slack (ns):                  0.173
+  Arrival (ns):                2.902
+  Required (ns):               2.729
+
+Path 4
+  From:                        A2DRead/DataRegU1Ch1o[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1p[9]:D
+  Delay (ns):                  0.427
+  Slack (ns):                  0.207
+  Arrival (ns):                2.936
+  Required (ns):               2.729
+
+Path 5
+  From:                        A2DRead/DataInReg[2]:CLK
+  To:                          A2DRead/DataRegU1Ch1a[2]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.208
+  Arrival (ns):                2.927
+  Required (ns):               2.719
+
+Path 6
+  From:                        A2DRead/DataRegU1Ch0k[9]:CLK
+  To:                          A2DRead/DataRegU1Ch0l[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.208
+  Arrival (ns):                2.927
+  Required (ns):               2.719
+
+Path 7
+  From:                        A2DRead/DataRegU1Ch1e[1]:CLK
+  To:                          A2DRead/DataRegU1Ch1f[1]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.208
+  Arrival (ns):                2.927
+  Required (ns):               2.719
+
+Path 8
+  From:                        A2DRead/DataRegU1Ch1o[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1p[5]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.208
+  Arrival (ns):                2.927
+  Required (ns):               2.719
+
+Path 9
+  From:                        A2DRead/DataRegU1Ch1k[6]:CLK
+  To:                          A2DRead/DataRegU1Ch1l[6]:D
+  Delay (ns):                  0.435
+  Slack (ns):                  0.215
+  Arrival (ns):                2.944
+  Required (ns):               2.729
+
+Path 10
+  From:                        A2DRead/DataRegU1Ch0h[6]:CLK
+  To:                          A2DRead/DataRegU1Ch0i[6]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.215
+  Arrival (ns):                2.887
+  Required (ns):               2.672
+
+Path 11
+  From:                        A2DRead/DataRegU1Ch1c[3]:CLK
+  To:                          A2DRead/DataRegU1Ch1d[3]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.221
+  Arrival (ns):                2.954
+  Required (ns):               2.733
+
+Path 12
+  From:                        A2DRead/DataRegU1Ch1b[12]:CLK
+  To:                          A2DRead/DataRegU1Ch1c[12]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.221
+  Arrival (ns):                2.954
+  Required (ns):               2.733
+
+Path 13
+  From:                        A2DRead/DataRegU1Ch1m[10]:CLK
+  To:                          A2DRead/DataRegU1Ch1n[10]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.221
+  Arrival (ns):                2.954
+  Required (ns):               2.733
+
+Path 14
+  From:                        A2DRead/DataRegU1Ch1f[6]:CLK
+  To:                          A2DRead/DataRegU1Ch1g[6]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.221
+  Arrival (ns):                2.954
+  Required (ns):               2.733
+
+Path 15
+  From:                        A2DRead/DataRegU1Ch0l[5]:CLK
+  To:                          A2DRead/DataRegU1Ch0m[5]:D
+  Delay (ns):                  0.426
+  Slack (ns):                  0.222
+  Arrival (ns):                2.939
+  Required (ns):               2.717
+
+Path 16
+  From:                        A2DRead/DataRegU1Ch0e[5]:CLK
+  To:                          A2DRead/DataRegU1Ch0f[5]:D
+  Delay (ns):                  0.427
+  Slack (ns):                  0.223
+  Arrival (ns):                2.940
+  Required (ns):               2.717
+
+Path 17
+  From:                        A2DRead/DataRegU1Ch1m[7]:CLK
+  To:                          A2DRead/DataRegU1Ch1n[7]:D
+  Delay (ns):                  0.425
+  Slack (ns):                  0.225
+  Arrival (ns):                2.899
+  Required (ns):               2.674
+
+Path 18
+  From:                        A2DRead/DataRegU1Ch1[13]:CLK
+  To:                          A2DRead/DatHldRegU1Ch1[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.228
+  Arrival (ns):                2.892
+  Required (ns):               2.664
+
+Path 19
+  From:                        A2DRead/DataRegU1Ch0k[2]:CLK
+  To:                          A2DRead/DataRegU1Ch0l[2]:D
+  Delay (ns):                  0.435
+  Slack (ns):                  0.231
+  Arrival (ns):                2.948
+  Required (ns):               2.717
+
+Path 20
+  From:                        A2DRead/DataRegU1Ch0n[3]:CLK
+  To:                          A2DRead/DataRegU1Ch0o[3]:D
+  Delay (ns):                  0.435
+  Slack (ns):                  0.231
+  Arrival (ns):                2.948
+  Required (ns):               2.717
+
+Path 21
+  From:                        A2DRead/DataRegU1Ch0h[1]:CLK
+  To:                          A2DRead/DataRegU1Ch0i[1]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.238
+  Arrival (ns):                2.955
+  Required (ns):               2.717
+
+Path 22
+  From:                        A2DRead/DataRegU1Ch0g[3]:CLK
+  To:                          A2DRead/DataRegU1Ch0h[3]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.238
+  Arrival (ns):                2.955
+  Required (ns):               2.717
+
+Path 23
+  From:                        A2DRead/DataRegU1Ch0d[2]:CLK
+  To:                          A2DRead/DataRegU1Ch0e[2]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.238
+  Arrival (ns):                2.955
+  Required (ns):               2.717
+
+Path 24
+  From:                        A2DRead/DataRegU1Ch0f[1]:CLK
+  To:                          A2DRead/DataRegU1Ch0g[1]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.238
+  Arrival (ns):                2.955
+  Required (ns):               2.717
+
+Path 25
+  From:                        matrix_read04/data00[1]:CLK
+  To:                          matrix_read04/dataOut00[1]:D
+  Delay (ns):                  0.369
+  Slack (ns):                  0.242
+  Arrival (ns):                2.603
+  Required (ns):               2.361
+
+Path 26
+  From:                        matrix_read03/data00[0]:CLK
+  To:                          matrix_read03/dataOut00[0]:D
+  Delay (ns):                  0.364
+  Slack (ns):                  0.246
+  Arrival (ns):                2.587
+  Required (ns):               2.341
+
+Path 27
+  From:                        matrix_read04/data02[0]:CLK
+  To:                          matrix_read04/dataOut02[0]:D
+  Delay (ns):                  0.371
+  Slack (ns):                  0.247
+  Arrival (ns):                2.574
+  Required (ns):               2.327
+
+Path 28
+  From:                        A2DRead/DataRegU1Ch1e[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1f[5]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.259
+  Arrival (ns):                2.992
+  Required (ns):               2.733
+
+Path 29
+  From:                        A2DRead/DataRegU1Ch1h[1]:CLK
+  To:                          A2DRead/DataRegU1Ch1i[1]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.265
+  Arrival (ns):                2.994
+  Required (ns):               2.729
+
+Path 30
+  From:                        A2DRead/DataRegU1Ch0c[9]:CLK
+  To:                          A2DRead/DataRegU1Ch0d[9]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.265
+  Arrival (ns):                2.994
+  Required (ns):               2.729
+
+Path 31
+  From:                        A2DRead/DataRegU1Ch0j[10]:CLK
+  To:                          A2DRead/DataRegU1Ch0k[10]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.265
+  Arrival (ns):                2.994
+  Required (ns):               2.729
+
+Path 32
+  From:                        A2DRead/DataInReg[10]:CLK
+  To:                          A2DRead/DataRegU1Ch0a[10]:D
+  Delay (ns):                  0.399
+  Slack (ns):                  0.266
+  Arrival (ns):                2.985
+  Required (ns):               2.719
+
+Path 33
+  From:                        A2DRead/DataRegU1Ch1h[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1i[5]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.267
+  Arrival (ns):                3.000
+  Required (ns):               2.733
+
+Path 34
+  From:                        A2DRead/DataRegU1Ch1i[3]:CLK
+  To:                          A2DRead/DataRegU1Ch1j[3]:D
+  Delay (ns):                  0.428
+  Slack (ns):                  0.267
+  Arrival (ns):                2.908
+  Required (ns):               2.641
+
+Path 35
+  From:                        A2DRead/DataRegU1Ch1b[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1c[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.267
+  Arrival (ns):                3.000
+  Required (ns):               2.733
+
+Path 36
+  From:                        A2DRead/DataRegU1Ch1n[6]:CLK
+  To:                          A2DRead/DataRegU1Ch1o[6]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.267
+  Arrival (ns):                3.000
+  Required (ns):               2.733
+
+Path 37
+  From:                        A2DRead/DataRegU1Ch1f[12]:CLK
+  To:                          A2DRead/DataRegU1Ch1g[12]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.267
+  Arrival (ns):                3.000
+  Required (ns):               2.733
+
+Path 38
+  From:                        A2DRead/DataRegU1Ch1j[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1k[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.267
+  Arrival (ns):                3.000
+  Required (ns):               2.733
+
+Path 39
+  From:                        A2DRead/DataRegU1Ch0k[7]:CLK
+  To:                          A2DRead/DataRegU1Ch0l[7]:D
+  Delay (ns):                  0.368
+  Slack (ns):                  0.269
+  Arrival (ns):                2.998
+  Required (ns):               2.729
+
+Path 40
+  From:                        A2DRead/DataRegU1Ch1g[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1h[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 41
+  From:                        A2DRead/DataRegU1Ch1n[10]:CLK
+  To:                          A2DRead/DataRegU1Ch1o[10]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 42
+  From:                        A2DRead/DataRegU1Ch1c[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1d[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 43
+  From:                        A2DRead/DataRegU1Ch1f[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1g[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 44
+  From:                        A2DRead/DataRegU1Ch1j[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1k[5]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 45
+  From:                        A2DRead/DataRegU1Ch1o[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1p[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 46
+  From:                        A2DRead/DataRegU1Ch1d[12]:CLK
+  To:                          A2DRead/DataRegU1Ch1e[12]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 47
+  From:                        A2DRead/DataRegU1Ch1d[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1e[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 48
+  From:                        A2DRead/DataRegU1Ch1b[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1c[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 49
+  From:                        A2DRead/DataRegU1Ch1g[10]:CLK
+  To:                          A2DRead/DataRegU1Ch1h[10]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 50
+  From:                        A2DRead/DataRegU1Ch1e[3]:CLK
+  To:                          A2DRead/DataRegU1Ch1f[3]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 51
+  From:                        A2DRead/DataRegU1Ch1l[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1m[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 52
+  From:                        A2DRead/DataRegU1Ch1a[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1b[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 53
+  From:                        A2DRead/DataRegU1Ch1b[10]:CLK
+  To:                          A2DRead/DataRegU1Ch1c[10]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.270
+  Arrival (ns):                3.003
+  Required (ns):               2.733
+
+Path 54
+  From:                        A2DRead/DataRegU1Ch1g[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1h[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 55
+  From:                        A2DRead/DataRegU1Ch1k[1]:CLK
+  To:                          A2DRead/DataRegU1Ch1l[1]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 56
+  From:                        A2DRead/DataRegU1Ch1h[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1i[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 57
+  From:                        A2DRead/DataRegU1Ch1j[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1k[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 58
+  From:                        A2DRead/DataRegU1Ch1b[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1c[5]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 59
+  From:                        A2DRead/DataRegU1Ch1i[2]:CLK
+  To:                          A2DRead/DataRegU1Ch1j[2]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 60
+  From:                        A2DRead/DataRegU1Ch0e[12]:CLK
+  To:                          A2DRead/DataRegU1Ch0f[12]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                2.935
+  Required (ns):               2.664
+
+Path 61
+  From:                        A2DRead/DataRegU1Ch1l[2]:CLK
+  To:                          A2DRead/DataRegU1Ch1m[2]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 62
+  From:                        A2DRead/DataRegU1Ch1d[10]:CLK
+  To:                          A2DRead/DataRegU1Ch1e[10]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 63
+  From:                        A2DRead/DataRegU1Ch1n[12]:CLK
+  To:                          A2DRead/DataRegU1Ch1o[12]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 64
+  From:                        A2DRead/DataRegU1Ch0e[9]:CLK
+  To:                          A2DRead/DataRegU1Ch0f[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 65
+  From:                        A2DRead/DataRegU1Ch0j[12]:CLK
+  To:                          A2DRead/DataRegU1Ch0k[12]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                2.935
+  Required (ns):               2.664
+
+Path 66
+  From:                        A2DRead/DataRegU1Ch0k[8]:CLK
+  To:                          A2DRead/DataRegU1Ch0l[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 67
+  From:                        A2DRead/DataRegU1Ch1i[12]:CLK
+  To:                          A2DRead/DataRegU1Ch1j[12]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 68
+  From:                        A2DRead/DataRegU1Ch0d[9]:CLK
+  To:                          A2DRead/DataRegU1Ch0e[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 69
+  From:                        A2DRead/DataRegU1Ch1n[2]:CLK
+  To:                          A2DRead/DataRegU1Ch1o[2]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 70
+  From:                        A2DRead/DataRegU1Ch1[14]:CLK
+  To:                          A2DRead/DatHldRegU1Ch1[10]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                2.935
+  Required (ns):               2.664
+
+Path 71
+  From:                        A2DRead/DataRegU1Ch0o[4]:CLK
+  To:                          A2DRead/DataRegU1Ch0p[4]:D
+  Delay (ns):                  0.370
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 72
+  From:                        A2DRead/DataRegU1Ch1l[6]:CLK
+  To:                          A2DRead/DataRegU1Ch1m[6]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 73
+  From:                        A2DRead/DataRegU1Ch0l[8]:CLK
+  To:                          A2DRead/DataRegU1Ch0m[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 74
+  From:                        A2DRead/DataRegU1Ch1l[1]:CLK
+  To:                          A2DRead/DataRegU1Ch1m[1]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 75
+  From:                        A2DRead/DataRegU1Ch1e[10]:CLK
+  To:                          A2DRead/DataRegU1Ch1f[10]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 76
+  From:                        A2DRead/DataRegU1Ch0k[10]:CLK
+  To:                          A2DRead/DataRegU1Ch0l[10]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 77
+  From:                        A2DRead/DataRegU1Ch1g[4]:CLK
+  To:                          A2DRead/DataRegU1Ch1h[4]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 78
+  From:                        A2DRead/DataRegU1Ch0g[8]:CLK
+  To:                          A2DRead/DataRegU1Ch0h[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 79
+  From:                        A2DRead/DataRegU1Ch1l[11]:CLK
+  To:                          A2DRead/DataRegU1Ch1m[11]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 80
+  From:                        A2DRead/DataRegU1Ch1f[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1g[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 81
+  From:                        A2DRead/DataRegU1Ch0h[8]:CLK
+  To:                          A2DRead/DataRegU1Ch0i[8]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 82
+  From:                        A2DRead/DataRegU1Ch0f[9]:CLK
+  To:                          A2DRead/DataRegU1Ch0g[9]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 83
+  From:                        A2DRead/DataRegU1Ch1j[12]:CLK
+  To:                          A2DRead/DataRegU1Ch1k[12]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.271
+  Arrival (ns):                3.000
+  Required (ns):               2.729
+
+Path 84
+  From:                        A2DRead/DataRegU1Ch1o[10]:CLK
+  To:                          A2DRead/DataRegU1Ch1p[10]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 85
+  From:                        A2DRead/DataRegU1Ch1m[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1n[8]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 86
+  From:                        A2DRead/DataRegU1Ch1g[6]:CLK
+  To:                          A2DRead/DataRegU1Ch1h[6]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 87
+  From:                        A2DRead/DataRegU1Ch1i[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1j[5]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 88
+  From:                        A2DRead/DataRegU1Ch1c[12]:CLK
+  To:                          A2DRead/DataRegU1Ch1d[12]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 89
+  From:                        A2DRead/DataRegU1Ch1e[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1f[9]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 90
+  From:                        A2DRead/DataRegU1Ch1k[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1l[8]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 91
+  From:                        A2DRead/DataRegU1Ch1d[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1e[9]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 92
+  From:                        A2DRead/DataRegU1Ch1d[3]:CLK
+  To:                          A2DRead/DataRegU1Ch1e[3]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 93
+  From:                        A2DRead/DataRegU1Ch1h[10]:CLK
+  To:                          A2DRead/DataRegU1Ch1i[10]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 94
+  From:                        A2DRead/DataRegU1Ch1n[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1o[8]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 95
+  From:                        A2DRead/DataRegU1Ch1o[6]:CLK
+  To:                          A2DRead/DataRegU1Ch1p[6]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 96
+  From:                        A2DRead/DataRegU1Ch1c[8]:CLK
+  To:                          A2DRead/DataRegU1Ch1d[8]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.272
+  Arrival (ns):                3.005
+  Required (ns):               2.733
+
+Path 97
+  From:                        A2DRead/DataRegU1Ch1j[2]:CLK
+  To:                          A2DRead/DataRegU1Ch1k[2]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.273
+  Arrival (ns):                3.002
+  Required (ns):               2.729
+
+Path 98
+  From:                        A2DRead/DataRegU1Ch1i[9]:CLK
+  To:                          A2DRead/DataRegU1Ch1j[9]:D
+  Delay (ns):                  0.362
+  Slack (ns):                  0.273
+  Arrival (ns):                3.002
+  Required (ns):               2.729
+
+Path 99
+  From:                        A2DRead/DataRegU1Ch0i[1]:CLK
+  To:                          A2DRead/DataRegU1Ch0j[1]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.273
+  Arrival (ns):                2.990
+  Required (ns):               2.717
+
+Path 100
+  From:                        A2DRead/DataRegU1Ch0i[4]:CLK
+  To:                          A2DRead/DataRegU1Ch0j[4]:D
+  Delay (ns):                  0.360
+  Slack (ns):                  0.273
+  Arrival (ns):                2.990
+  Required (ns):               2.717
+

@@ -1,0 +1,822 @@
+Timing Violation Report Max Delay Analysis
+
+SmartTime Version v11.7 SP1.1
+Microsemi Corporation - Microsemi Libero Software Release v11.7 SP1.1 (Version 11.7.1.14)
+Date: Thu Jul 27 09:52:32 2017
+
+
+Design: mainprogram
+Family: IGLOO
+Die: AGLN250V5
+Package: 100 VQFP
+Temperature Range: 0 - 70 C
+Voltage Range: 1.425 - 1.575 V
+Speed Grade: STD
+Design State: Post-Layout
+Data source: Silicon verified
+Min Operating Conditions: BEST - 1.575 V - 0 C
+Max Operating Conditions: WORST - 1.425 V - 70 C
+Using Enhanced Min Delay Analysis
+Scenario for Timing Analysis: Primary
+
+
+Path 1
+  From:                        clock_master/counter[2]:CLK
+  To:                          clock_master/counter[4]:D
+  Delay (ns):                  10.749
+  Slack (ns):                  -6.306
+  Arrival (ns):                12.566
+  Required (ns):               6.260
+
+Path 2
+  From:                        clock_master/counter[0]:CLK
+  To:                          clock_master/counter[4]:D
+  Delay (ns):                  9.620
+  Slack (ns):                  -5.599
+  Arrival (ns):                11.859
+  Required (ns):               6.260
+
+Path 3
+  From:                        clock_master/counter[2]:CLK
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  10.912
+  Slack (ns):                  -5.537
+  Arrival (ns):                12.729
+  Required (ns):               7.192
+
+Path 4
+  From:                        clock_master/counter[0]:CLK
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  10.487
+  Slack (ns):                  -5.534
+  Arrival (ns):                12.726
+  Required (ns):               7.192
+
+Path 5
+  From:                        clock_master/counter[2]:CLK
+  To:                          clock_master/counter[5]:D
+  Delay (ns):                  9.775
+  Slack (ns):                  -5.130
+  Arrival (ns):                11.592
+  Required (ns):               6.462
+
+Path 6
+  From:                        clock_master/counter[1]:CLK
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  10.195
+  Slack (ns):                  -5.046
+  Arrival (ns):                12.238
+  Required (ns):               7.192
+
+Path 7
+  From:                        clock_master/counter[2]:CLK
+  To:                          clock_master/counter[6]:D
+  Delay (ns):                  9.775
+  Slack (ns):                  -4.707
+  Arrival (ns):                11.592
+  Required (ns):               6.885
+
+Path 8
+  From:                        clock_master/counter[3]:CLK
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  9.621
+  Slack (ns):                  -4.472
+  Arrival (ns):                11.664
+  Required (ns):               7.192
+
+Path 9
+  From:                        clock_master/counter[0]:CLK
+  To:                          clock_master/counter[5]:D
+  Delay (ns):                  8.646
+  Slack (ns):                  -4.423
+  Arrival (ns):                10.885
+  Required (ns):               6.462
+
+Path 10
+  From:                        clock_master/counter[2]:CLK
+  To:                          clock_master/counter[3]:D
+  Delay (ns):                  8.682
+  Slack (ns):                  -4.240
+  Arrival (ns):                10.499
+  Required (ns):               6.259
+
+Path 11
+  From:                        clock_master/counter[3]:CLK
+  To:                          clock_master/counter[4]:D
+  Delay (ns):                  8.431
+  Slack (ns):                  -4.214
+  Arrival (ns):                10.474
+  Required (ns):               6.260
+
+Path 12
+  From:                        clock_master/counter[0]:CLK
+  To:                          clock_master/counter[3]:D
+  Delay (ns):                  8.102
+  Slack (ns):                  -4.082
+  Arrival (ns):                10.341
+  Required (ns):               6.259
+
+Path 13
+  From:                        clock_master/counter[0]:CLK
+  To:                          clock_master/counter[6]:D
+  Delay (ns):                  8.646
+  Slack (ns):                  -4.000
+  Arrival (ns):                10.885
+  Required (ns):               6.885
+
+Path 14
+  From:                        clock_master/counter[1]:CLK
+  To:                          clock_master/counter[4]:D
+  Delay (ns):                  7.741
+  Slack (ns):                  -3.524
+  Arrival (ns):                9.784
+  Required (ns):               6.260
+
+Path 15
+  From:                        clock_master/counter[5]:CLK
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  8.328
+  Slack (ns):                  -3.382
+  Arrival (ns):                10.574
+  Required (ns):               7.192
+
+Path 16
+  From:                        clock_master/counter[1]:CLK
+  To:                          clock_master/counter[2]:D
+  Delay (ns):                  7.198
+  Slack (ns):                  -3.260
+  Arrival (ns):                9.241
+  Required (ns):               5.981
+
+Path 17
+  From:                        clock_master/counter[0]:CLK
+  To:                          clock_master/counter[2]:D
+  Delay (ns):                  6.896
+  Slack (ns):                  -3.154
+  Arrival (ns):                9.135
+  Required (ns):               5.981
+
+Path 18
+  From:                        addresslatch/output[6]:CLK
+  To:                          discretedutycycle01/output[5]:D
+  Delay (ns):                  12.267
+  Slack (ns):                  -3.089
+  Arrival (ns):                18.302
+  Required (ns):               15.213
+
+Path 19
+  From:                        addresslatch/output[6]:CLK
+  To:                          discretedutycycle01/output[6]:D
+  Delay (ns):                  12.262
+  Slack (ns):                  -3.065
+  Arrival (ns):                18.297
+  Required (ns):               15.232
+
+Path 20
+  From:                        clock_master/counter[3]:CLK
+  To:                          clock_master/counter[5]:D
+  Delay (ns):                  7.457
+  Slack (ns):                  -3.038
+  Arrival (ns):                9.500
+  Required (ns):               6.462
+
+Path 21
+  From:                        addresslatch/output[2]:CLK
+  To:                          ioBank65reader/parallelholdreg[2]:D
+  Delay (ns):                  12.128
+  Slack (ns):                  -2.904
+  Arrival (ns):                18.163
+  Required (ns):               15.259
+
+Path 22
+  From:                        addresslatch/output[7]:CLK
+  To:                          ioBank65reader/parallelholdreg[2]:D
+  Delay (ns):                  12.097
+  Slack (ns):                  -2.844
+  Arrival (ns):                18.103
+  Required (ns):               15.259
+
+Path 23
+  From:                        addresslatch/output[6]:CLK
+  To:                          discretedutycycle01/output[10]:D
+  Delay (ns):                  12.022
+  Slack (ns):                  -2.825
+  Arrival (ns):                18.057
+  Required (ns):               15.232
+
+Path 24
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[5]:D
+  Delay (ns):                  11.992
+  Slack (ns):                  -2.785
+  Arrival (ns):                17.998
+  Required (ns):               15.213
+
+Path 25
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[6]:D
+  Delay (ns):                  11.987
+  Slack (ns):                  -2.761
+  Arrival (ns):                17.993
+  Required (ns):               15.232
+
+Path 26
+  From:                        addresslatch/output[5]:CLK
+  To:                          ioBank68reader/parallelholdreg[0]:D
+  Delay (ns):                  11.900
+  Slack (ns):                  -2.657
+  Arrival (ns):                17.897
+  Required (ns):               15.240
+
+Path 27
+  From:                        addresslatch/output[6]:CLK
+  To:                          ioBank69reader/parallelholdreg[0]:D
+  Delay (ns):                  11.848
+  Slack (ns):                  -2.634
+  Arrival (ns):                17.883
+  Required (ns):               15.249
+
+Path 28
+  From:                        addresslatch/output[2]:CLK
+  To:                          discretedutycycle01/output[5]:D
+  Delay (ns):                  11.794
+  Slack (ns):                  -2.616
+  Arrival (ns):                17.829
+  Required (ns):               15.213
+
+Path 29
+  From:                        clock_master/counter[3]:CLK
+  To:                          clock_master/counter[6]:D
+  Delay (ns):                  7.457
+  Slack (ns):                  -2.615
+  Arrival (ns):                9.500
+  Required (ns):               6.885
+
+Path 30
+  From:                        addresslatch/output[2]:CLK
+  To:                          discretedutycycle01/output[6]:D
+  Delay (ns):                  11.789
+  Slack (ns):                  -2.592
+  Arrival (ns):                17.824
+  Required (ns):               15.232
+
+Path 31
+  From:                        addresslatch/output[6]:CLK
+  To:                          pwmdisable01latch/output[1]:D
+  Delay (ns):                  11.786
+  Slack (ns):                  -2.581
+  Arrival (ns):                17.821
+  Required (ns):               15.240
+
+Path 32
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[10]:D
+  Delay (ns):                  11.747
+  Slack (ns):                  -2.521
+  Arrival (ns):                17.753
+  Required (ns):               15.232
+
+Path 33
+  From:                        addresslatch/output[6]:CLK
+  To:                          pwmdisable01latch/output[3]:D
+  Delay (ns):                  11.719
+  Slack (ns):                  -2.514
+  Arrival (ns):                17.754
+  Required (ns):               15.240
+
+Path 34
+  From:                        addresslatch/output[2]:CLK
+  To:                          pwmdisable01latch/output[1]:D
+  Delay (ns):                  11.705
+  Slack (ns):                  -2.500
+  Arrival (ns):                17.740
+  Required (ns):               15.240
+
+Path 35
+  From:                        addresslatch/output[6]:CLK
+  To:                          pwmdisable01latch/output[5]:D
+  Delay (ns):                  11.690
+  Slack (ns):                  -2.485
+  Arrival (ns):                17.725
+  Required (ns):               15.240
+
+Path 36
+  From:                        addresslatch/output[2]:CLK
+  To:                          pwmdisable01latch/output[3]:D
+  Delay (ns):                  11.638
+  Slack (ns):                  -2.433
+  Arrival (ns):                17.673
+  Required (ns):               15.240
+
+Path 37
+  From:                        addresslatch/output[4]:CLK
+  To:                          ioBank65reader/parallelholdreg[2]:D
+  Delay (ns):                  11.655
+  Slack (ns):                  -2.419
+  Arrival (ns):                17.678
+  Required (ns):               15.259
+
+Path 38
+  From:                        addresslatch/output[2]:CLK
+  To:                          pwmdisable01latch/output[5]:D
+  Delay (ns):                  11.609
+  Slack (ns):                  -2.404
+  Arrival (ns):                17.644
+  Required (ns):               15.240
+
+Path 39
+  From:                        addresslatch/output[4]:CLK
+  To:                          discretedutycycle01/output[5]:D
+  Delay (ns):                  11.587
+  Slack (ns):                  -2.397
+  Arrival (ns):                17.610
+  Required (ns):               15.213
+
+Path 40
+  From:                        addresslatch/output[6]:CLK
+  To:                          ioBank68reader/parallelholdreg[0]:D
+  Delay (ns):                  11.590
+  Slack (ns):                  -2.385
+  Arrival (ns):                17.625
+  Required (ns):               15.240
+
+Path 41
+  From:                        addresslatch/output[6]:CLK
+  To:                          ioBank69reader/parallelholdreg[2]:D
+  Delay (ns):                  11.607
+  Slack (ns):                  -2.383
+  Arrival (ns):                17.642
+  Required (ns):               15.259
+
+Path 42
+  From:                        addresslatch/output[4]:CLK
+  To:                          discretedutycycle01/output[6]:D
+  Delay (ns):                  11.582
+  Slack (ns):                  -2.373
+  Arrival (ns):                17.605
+  Required (ns):               15.232
+
+Path 43
+  From:                        addresslatch/output[2]:CLK
+  To:                          discretedutycycle01/output[10]:D
+  Delay (ns):                  11.549
+  Slack (ns):                  -2.352
+  Arrival (ns):                17.584
+  Required (ns):               15.232
+
+Path 44
+  From:                        clock_master/counter[1]:CLK
+  To:                          clock_master/counter[5]:D
+  Delay (ns):                  6.767
+  Slack (ns):                  -2.348
+  Arrival (ns):                8.810
+  Required (ns):               6.462
+
+Path 45
+  From:                        addresslatch/output[3]:CLK
+  To:                          discretedutycycle01/output[5]:D
+  Delay (ns):                  11.511
+  Slack (ns):                  -2.333
+  Arrival (ns):                17.546
+  Required (ns):               15.213
+
+Path 46
+  From:                        addresslatch/output[3]:CLK
+  To:                          discretedutycycle01/output[6]:D
+  Delay (ns):                  11.506
+  Slack (ns):                  -2.309
+  Arrival (ns):                17.541
+  Required (ns):               15.232
+
+Path 47
+  From:                        addresslatch/output[0]:CLK
+  To:                          ioBank63reader/parallelholdreg[0]:D
+  Delay (ns):                  11.469
+  Slack (ns):                  -2.291
+  Arrival (ns):                17.504
+  Required (ns):               15.213
+
+Path 48
+  From:                        clock_master/counter[0]:CLK
+  To:                          clock_master/counter[1]:D
+  Delay (ns):                  6.311
+  Slack (ns):                  -2.291
+  Arrival (ns):                8.550
+  Required (ns):               6.259
+
+Path 49
+  From:                        addresslatch/output[6]:CLK
+  To:                          pwmdisable01latch/output[7]:D
+  Delay (ns):                  11.481
+  Slack (ns):                  -2.276
+  Arrival (ns):                17.516
+  Required (ns):               15.240
+
+Path 50
+  From:                        addresslatch/output[6]:CLK
+  To:                          discretedutycycle01/output[11]:D
+  Delay (ns):                  11.424
+  Slack (ns):                  -2.227
+  Arrival (ns):                17.459
+  Required (ns):               15.232
+
+Path 51
+  From:                        addresslatch/output[3]:CLK
+  To:                          pwmdisable01latch/output[1]:D
+  Delay (ns):                  11.422
+  Slack (ns):                  -2.217
+  Arrival (ns):                17.457
+  Required (ns):               15.240
+
+Path 52
+  From:                        addresslatch/output[6]:CLK
+  To:                          ioBank65reader/parallelholdreg[2]:D
+  Delay (ns):                  11.433
+  Slack (ns):                  -2.209
+  Arrival (ns):                17.468
+  Required (ns):               15.259
+
+Path 53
+  From:                        addresslatch/output[1]:CLK
+  To:                          ioBank63reader/parallelholdreg[0]:D
+  Delay (ns):                  11.384
+  Slack (ns):                  -2.206
+  Arrival (ns):                17.419
+  Required (ns):               15.213
+
+Path 54
+  From:                        addresslatch/output[6]:CLK
+  To:                          discretedutycycle01/output[2]:D
+  Delay (ns):                  11.382
+  Slack (ns):                  -2.204
+  Arrival (ns):                17.417
+  Required (ns):               15.213
+
+Path 55
+  From:                        addresslatch/output[6]:CLK
+  To:                          discretedutycycle01/output[9]:D
+  Delay (ns):                  11.382
+  Slack (ns):                  -2.204
+  Arrival (ns):                17.417
+  Required (ns):               15.213
+
+Path 56
+  From:                        addresslatch/output[6]:CLK
+  To:                          discretedutycycle01/output[3]:D
+  Delay (ns):                  11.382
+  Slack (ns):                  -2.204
+  Arrival (ns):                17.417
+  Required (ns):               15.213
+
+Path 57
+  From:                        addresslatch/output[2]:CLK
+  To:                          pwmdisable01latch/output[7]:D
+  Delay (ns):                  11.400
+  Slack (ns):                  -2.195
+  Arrival (ns):                17.435
+  Required (ns):               15.240
+
+Path 58
+  From:                        addresslatch/output[6]:CLK
+  To:                          discretedutycycle01/output[7]:D
+  Delay (ns):                  11.380
+  Slack (ns):                  -2.183
+  Arrival (ns):                17.415
+  Required (ns):               15.232
+
+Path 59
+  From:                        addresslatch/output[6]:CLK
+  To:                          discretedutycycle01/output[8]:D
+  Delay (ns):                  11.380
+  Slack (ns):                  -2.183
+  Arrival (ns):                17.415
+  Required (ns):               15.232
+
+Path 60
+  From:                        clock_master/counter[4]:CLK
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  7.316
+  Slack (ns):                  -2.168
+  Arrival (ns):                9.360
+  Required (ns):               7.192
+
+Path 61
+  From:                        addresslatch/output[3]:CLK
+  To:                          pwmdisable01latch/output[3]:D
+  Delay (ns):                  11.355
+  Slack (ns):                  -2.150
+  Arrival (ns):                17.390
+  Required (ns):               15.240
+
+Path 62
+  From:                        addresslatch/output[4]:CLK
+  To:                          discretedutycycle01/output[10]:D
+  Delay (ns):                  11.342
+  Slack (ns):                  -2.133
+  Arrival (ns):                17.365
+  Required (ns):               15.232
+
+Path 63
+  From:                        addresslatch/output[6]:CLK
+  To:                          ioBank69reader/parallelholdreg[1]:D
+  Delay (ns):                  11.336
+  Slack (ns):                  -2.122
+  Arrival (ns):                17.371
+  Required (ns):               15.249
+
+Path 64
+  From:                        addresslatch/output[3]:CLK
+  To:                          ioBank65reader/parallelholdreg[2]:D
+  Delay (ns):                  11.346
+  Slack (ns):                  -2.122
+  Arrival (ns):                17.381
+  Required (ns):               15.259
+
+Path 65
+  From:                        addresslatch/output[3]:CLK
+  To:                          pwmdisable01latch/output[5]:D
+  Delay (ns):                  11.326
+  Slack (ns):                  -2.121
+  Arrival (ns):                17.361
+  Required (ns):               15.240
+
+Path 66
+  From:                        addresslatch/output[5]:CLK
+  To:                          ioBank65reader/parallelholdreg[2]:D
+  Delay (ns):                  11.369
+  Slack (ns):                  -2.107
+  Arrival (ns):                17.366
+  Required (ns):               15.259
+
+Path 67
+  From:                        addresslatch/output[3]:CLK
+  To:                          discretedutycycle01/output[10]:D
+  Delay (ns):                  11.266
+  Slack (ns):                  -2.069
+  Arrival (ns):                17.301
+  Required (ns):               15.232
+
+Path 68
+  From:                        addresslatch/output[7]:CLK
+  To:                          pwmdisable01latch/output[1]:D
+  Delay (ns):                  11.299
+  Slack (ns):                  -2.065
+  Arrival (ns):                17.305
+  Required (ns):               15.240
+
+Path 69
+  From:                        addresslatch/output[6]:CLK
+  To:                          A2D01reader/parallelholdreg[6]:D
+  Delay (ns):                  11.233
+  Slack (ns):                  -2.046
+  Arrival (ns):                17.268
+  Required (ns):               15.222
+
+Path 70
+  From:                        addresslatch/output[0]:CLK
+  To:                          discretedutycycle01/output[5]:D
+  Delay (ns):                  11.189
+  Slack (ns):                  -2.011
+  Arrival (ns):                17.224
+  Required (ns):               15.213
+
+Path 71
+  From:                        clock_master/counter[1]:CLK
+  To:                          clock_master/counter[3]:D
+  Delay (ns):                  6.223
+  Slack (ns):                  -2.007
+  Arrival (ns):                8.266
+  Required (ns):               6.259
+
+Path 72
+  From:                        addresslatch/output[7]:CLK
+  To:                          pwmdisable01latch/output[3]:D
+  Delay (ns):                  11.232
+  Slack (ns):                  -1.998
+  Arrival (ns):                17.238
+  Required (ns):               15.240
+
+Path 73
+  From:                        addresslatch/output[0]:CLK
+  To:                          discretedutycycle01/output[6]:D
+  Delay (ns):                  11.184
+  Slack (ns):                  -1.987
+  Arrival (ns):                17.219
+  Required (ns):               15.232
+
+Path 74
+  From:                        addresslatch/output[0]:CLK
+  To:                          ioBank63reader/parallelholdreg[2]:D
+  Delay (ns):                  11.169
+  Slack (ns):                  -1.972
+  Arrival (ns):                17.204
+  Required (ns):               15.232
+
+Path 75
+  From:                        addresslatch/output[7]:CLK
+  To:                          pwmdisable01latch/output[5]:D
+  Delay (ns):                  11.203
+  Slack (ns):                  -1.969
+  Arrival (ns):                17.209
+  Required (ns):               15.240
+
+Path 76
+  From:                        addresslatch/output[5]:CLK
+  To:                          ioBank60reader/parallelholdreg[2]:D
+  Delay (ns):                  11.144
+  Slack (ns):                  -1.954
+  Arrival (ns):                17.141
+  Required (ns):               15.187
+
+Path 77
+  From:                        addresslatch/output[0]:CLK
+  To:                          ioBank60reader/parallelholdreg[2]:D
+  Delay (ns):                  11.105
+  Slack (ns):                  -1.953
+  Arrival (ns):                17.140
+  Required (ns):               15.187
+
+Path 78
+  From:                        clock_master/counter[6]:CLK
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  6.474
+  Slack (ns):                  -1.951
+  Arrival (ns):                9.143
+  Required (ns):               7.192
+
+Path 79
+  From:                        clock_master/counter[1]:CLK
+  To:                          clock_master/counter[6]:D
+  Delay (ns):                  6.767
+  Slack (ns):                  -1.925
+  Arrival (ns):                8.810
+  Required (ns):               6.885
+
+Path 80
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[11]:D
+  Delay (ns):                  11.149
+  Slack (ns):                  -1.923
+  Arrival (ns):                17.155
+  Required (ns):               15.232
+
+Path 81
+  From:                        addresslatch/output[5]:CLK
+  To:                          externenablelatch/output[2]:D
+  Delay (ns):                  11.145
+  Slack (ns):                  -1.920
+  Arrival (ns):                17.142
+  Required (ns):               15.222
+
+Path 82
+  From:                        addresslatch/output[3]:CLK
+  To:                          pwmdisable01latch/output[7]:D
+  Delay (ns):                  11.117
+  Slack (ns):                  -1.912
+  Arrival (ns):                17.152
+  Required (ns):               15.240
+
+Path 83
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[2]:D
+  Delay (ns):                  11.107
+  Slack (ns):                  -1.900
+  Arrival (ns):                17.113
+  Required (ns):               15.213
+
+Path 84
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[9]:D
+  Delay (ns):                  11.107
+  Slack (ns):                  -1.900
+  Arrival (ns):                17.113
+  Required (ns):               15.213
+
+Path 85
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[3]:D
+  Delay (ns):                  11.107
+  Slack (ns):                  -1.900
+  Arrival (ns):                17.113
+  Required (ns):               15.213
+
+Path 86
+  From:                        addresslatch/output[1]:CLK
+  To:                          ioBank63reader/parallelholdreg[2]:D
+  Delay (ns):                  11.084
+  Slack (ns):                  -1.887
+  Arrival (ns):                17.119
+  Required (ns):               15.232
+
+Path 87
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[7]:D
+  Delay (ns):                  11.105
+  Slack (ns):                  -1.879
+  Arrival (ns):                17.111
+  Required (ns):               15.232
+
+Path 88
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[8]:D
+  Delay (ns):                  11.105
+  Slack (ns):                  -1.879
+  Arrival (ns):                17.111
+  Required (ns):               15.232
+
+Path 89
+  From:                        addresslatch/output[6]:CLK
+  To:                          externenablelatch/output[2]:D
+  Delay (ns):                  11.041
+  Slack (ns):                  -1.854
+  Arrival (ns):                17.076
+  Required (ns):               15.222
+
+Path 90
+  From:                        addresslatch/output[7]:CLK
+  To:                          ioBank69reader/parallelholdreg[0]:D
+  Delay (ns):                  11.083
+  Slack (ns):                  -1.840
+  Arrival (ns):                17.089
+  Required (ns):               15.249
+
+Path 91
+  From:                        addresslatch/output[6]:CLK
+  To:                          A2D01reader/parallelholdreg[10]:D
+  Delay (ns):                  11.018
+  Slack (ns):                  -1.804
+  Arrival (ns):                17.053
+  Required (ns):               15.249
+
+Path 92
+  From:                        addresslatch/output[5]:CLK
+  To:                          ioBank68reader/parallelholdreg[1]:D
+  Delay (ns):                  11.075
+  Slack (ns):                  -1.794
+  Arrival (ns):                17.072
+  Required (ns):               15.278
+
+Path 93
+  From:                        addresslatch/output[2]:CLK
+  To:                          ioBank60reader/parallelholdreg[2]:D
+  Delay (ns):                  10.932
+  Slack (ns):                  -1.780
+  Arrival (ns):                16.967
+  Required (ns):               15.187
+
+Path 94
+  From:                        addresslatch/output[1]:CLK
+  To:                          discretedutycycle01/output[5]:D
+  Delay (ns):                  10.957
+  Slack (ns):                  -1.779
+  Arrival (ns):                16.992
+  Required (ns):               15.213
+
+Path 95
+  From:                        addresslatch/output[7]:CLK
+  To:                          ioBank65reader/parallelholdreg[0]:D
+  Delay (ns):                  10.963
+  Slack (ns):                  -1.771
+  Arrival (ns):                16.969
+  Required (ns):               15.198
+
+Path 96
+  From:                        addresslatch/output[2]:CLK
+  To:                          discretedutycycle01/output[11]:D
+  Delay (ns):                  10.968
+  Slack (ns):                  -1.771
+  Arrival (ns):                17.003
+  Required (ns):               15.232
+
+Path 97
+  From:                        addresslatch/output[7]:CLK
+  To:                          pwmdisable01latch/output[7]:D
+  Delay (ns):                  11.003
+  Slack (ns):                  -1.769
+  Arrival (ns):                17.009
+  Required (ns):               15.240
+
+Path 98
+  From:                        addresslatch/output[0]:CLK
+  To:                          ioBank60reader/parallelholdreg[3]:D
+  Delay (ns):                  10.915
+  Slack (ns):                  -1.760
+  Arrival (ns):                16.950
+  Required (ns):               15.190
+
+Path 99
+  From:                        addresslatch/output[6]:CLK
+  To:                          ioBank6Areader/parallelholdreg[2]:D
+  Delay (ns):                  10.973
+  Slack (ns):                  -1.759
+  Arrival (ns):                17.008
+  Required (ns):               15.249
+
+Path 100
+  From:                        addresslatch/output[1]:CLK
+  To:                          discretedutycycle01/output[6]:D
+  Delay (ns):                  10.952
+  Slack (ns):                  -1.755
+  Arrival (ns):                16.987
+  Required (ns):               15.232
+

@@ -1,0 +1,27 @@
+Software Version: 11.9.2.1
+creating folder: C:\_SWork\LocalRepos\10-9399\sourceCode\FPGA\i762203\designer\impl1\i762203
+programmer 'S2001L81KX' : FlashPro5
+Created new project
+'C:\_SWork\LocalRepos\10-9399\sourceCode\FPGA\i762203\designer\impl1\i762203\i762203.pro'
+PDB file 'C:\_SWork\LocalRepos\10-9399\sourceCode\FPGA\i762203\designer\impl1\mainprogram.pdb'
+has been loaded successfully.
+DESIGN : mainprogram;  CHECKSUM : 141C;  PDB_VERSION : 1.9
+programmer 'S2001L81KX' : Scan Chain...
+programmer 'S2001L81KX' : Scan Chain PASSED.
+programmer 'S2001L81KX' : Executing action PROGRAM
+programmer 'S2001L81KX' : EXPORT FSN[48] = 01a65e182c45
+programmer 'S2001L81KX' : Erase ...
+programmer 'S2001L81KX' : Completed erase
+programmer 'S2001L81KX' : EXPORT CHECKSUM[16] = 141c
+programmer 'S2001L81KX' : Programming FPGA Array
+programmer 'S2001L81KX' : Verifying FPGA Array
+programmer 'S2001L81KX' :         Verifying FPGA Array -- pass
+programmer 'S2001L81KX' : Finished: Wed Jul 10 13:06:49 2024 (Elapsed time 00:00:25)
+programmer 'S2001L81KX' : Executing action PROGRAM PASSED.
+
+                        o - o - o - o - o - o
+
+creating folder:
+C:\_SWork\LocalRepos\10-9399\sourceCode\FPGA\i762203\designer\impl1\i762203\projectData
+Project saved.
+Project closed.

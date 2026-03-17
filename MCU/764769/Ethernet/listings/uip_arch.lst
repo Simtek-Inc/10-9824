@@ -1,0 +1,3795 @@
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 1   
+
+
+C51 COMPILER V8.06, COMPILATION OF MODULE UIP_ARCH
+OBJECT MODULE PLACED IN .\listings\uip_arch.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE src\tcpip\uip_arch.c LARGE OMF2 ROM(D16M) OPTIMIZE(0,SPEED) BROWSE INTVECTO
+                    -R(0X6020) INCDIR(.\src\cpu\;.\src\ethernet;.\src\swdma\;.\src\mstimer\;.\src\uart\;.\src\main\;.\src\tcpip\;.\src\hsur\;
+                    -.\src\gs2e\;.\src\debug\;.\src\dhcp;.\src\dns\;.\src\adapter\;.\src\pppoe\;.\src\console;.\src\telnet;.\src\smtp;.\src\h
+                    -ttp;.\src\web_page;.\src\si2c;.\src\eeprom;.\src\ping;.\src\fpga;.\src\menu;.\src\spi) DEFINE(RuntimeCodeAt24KH) VARBANK
+                    -ING DEBUG CODE LISTINCLUDE SYMBOLS PRINT(.\listings\uip_arch.lst) OBJECT(.\listings\uip_arch.obj)
+
+line level    source
+
+   1          /*
+   2           * Copyright (c) 2001, Adam Dunkels.
+   3           * All rights reserved. 
+   4           *
+   5           * Redistribution and use in source and binary forms, with or without 
+   6           * modification, are permitted provided that the following conditions 
+   7           * are met: 
+   8           * 1. Redistributions of source code must retain the above copyright 
+   9           *    notice, this list of conditions and the following disclaimer. 
+  10           * 2. Redistributions in binary form must reproduce the above copyright 
+  11           *    notice, this list of conditions and the following disclaimer in the 
+  12           *    documentation and/or other materials provided with the distribution. 
+  13           * 3. The name of the author may not be used to endorse or promote
+  14           *    products derived from this software without specific prior
+  15           *    written permission.  
+  16           *
+  17           * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+  18           * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  19           * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  20           * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+  21           * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  22           * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+  23           * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  24           * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  25           * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  26           * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  27           * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  28           *
+  29           * This file is part of the uIP TCP/IP stack.
+  30           *
+  31           * $Id: uip_arch.c,v$
+  32           *
+  33           */
+  34          
+  35          /*       ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+  36                   ?   TITLE:  Keil C51 v7.00 port of Adam Dunkels' uIP v0.9 
+  37                   ?REVISION:  VER 0.0                                       
+  38                   ?REV.DATE:  14-01-05                                      
+  39                   ? ARCHIVE:                                                
+  40                   ?  AUTHOR:  Murray R. Van Luyn, 2005.                     
+  41                   ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ        */
+  42          
+  43          #include "uip.h"
+   1      =1  //
+   2      =1  // \addtogroup uip
+   3      =1  // @{
+   4      =1  //
+   5      =1  
+   6      =1  //
+   7      =1  // \file
+   8      =1  // Header file for the uIP TCP/IP stack.
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 2   
+
+   9      =1  // \author Adam Dunkels <adam@dunkels.com>
+  10      =1  //
+  11      =1  // The uIP TCP/IP stack header file contains definitions for a number
+  12      =1  // of C macros that are used by uIP programs as well as internal uIP
+  13      =1  // structures, TCP/IP header structures and function declarations.
+  14      =1  //
+  15      =1  //
+  16      =1  // Copyright (c) 2001-2003, Adam Dunkels.
+  17      =1  // All rights reserved. 
+  18      =1  //
+  19      =1  // Redistribution and use in source and binary forms, with or without 
+  20      =1  // modification, are permitted provided that the following conditions 
+  21      =1  // are met: 
+  22      =1  // 1. Redistributions of source code must retain the above copyright 
+  23      =1  //    notice, this list of conditions and the following disclaimer. 
+  24      =1  // 2. Redistributions in binary form must reproduce the above copyright 
+  25      =1  //    notice, this list of conditions and the following disclaimer in the 
+  26      =1  //    documentation and/or other materials provided with the distribution. 
+  27      =1  // 3. The name of the author may not be used to endorse or promote
+  28      =1  //    products derived from this software without specific prior
+  29      =1  //    written permission.  
+  30      =1  //
+  31      =1  // THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+  32      =1  // OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  33      =1  // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  34      =1  // ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+  35      =1  // DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  36      =1  // DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+  37      =1  // GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  38      =1  // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  39      =1  // WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  40      =1  // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  41      =1  // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  42      =1  //
+  43      =1  // This file is part of the uIP TCP/IP stack.
+  44      =1  //
+  45      =1  // $Id: uip.h,v$
+  46      =1  //
+  47      =1  //       ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+  48      =1  //       ?   TITLE:  Keil C51 v7.00 port of Adam Dunkels' uIP v0.9 
+  49      =1  //       ?REVISION:  VER 0.0                                       
+  50      =1  //       ?REV.DATE:  14-01-05                                      
+  51      =1  //       ? ARCHIVE:                                                
+  52      =1  //       ?  AUTHOR:  Murray R. Van Luyn, 2005.                     
+  53      =1  //       ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+  54      =1  
+  55      =1  #ifndef __UIP_H__
+  56      =1  #define __UIP_H__
+  57      =1  
+  58      =1  #include "uipopt.h"
+   1      =2  /**
+   2      =2   * \defgroup uipopt Configuration options for uIP
+   3      =2   * @{
+   4      =2   *
+   5      =2   * uIP is configured using the per-project configuration file
+   6      =2   * "uipopt.h". This file contains all compile-time options for uIP and
+   7      =2   * should be tweaked to match each specific project. The uIP
+   8      =2   * distribution contains a documented example "uipopt.h" that can be
+   9      =2   * copied and modified for each project.
+  10      =2   */
+  11      =2  
+  12      =2  /**
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 3   
+
+  13      =2   * \file
+  14      =2   * Configuration options for uIP.
+  15      =2   * \author Adam Dunkels <adam@dunkels.com>
+  16      =2   *
+  17      =2   * This file is used for tweaking various configuration options for
+  18      =2   * uIP. You should make a copy of this file into one of your project's
+  19      =2   * directories instead of editing this example "uipopt.h" file that
+  20      =2   * comes with the uIP distribution.
+  21      =2   */
+  22      =2  
+  23      =2  /*
+  24      =2   * Copyright (c) 2001-2003, Adam Dunkels.
+  25      =2   * All rights reserved. 
+  26      =2   *
+  27      =2   * Redistribution and use in source and binary forms, with or without 
+  28      =2   * modification, are permitted provided that the following conditions 
+  29      =2   * are met: 
+  30      =2   * 1. Redistributions of source code must retain the above copyright 
+  31      =2   *    notice, this list of conditions and the following disclaimer. 
+  32      =2   * 2. Redistributions in binary form must reproduce the above copyright 
+  33      =2   *    notice, this list of conditions and the following disclaimer in the 
+  34      =2   *    documentation and/or other materials provided with the distribution. 
+  35      =2   * 3. The name of the author may not be used to endorse or promote
+  36      =2   *    products derived from this software without specific prior
+  37      =2   *    written permission.  
+  38      =2   *
+  39      =2   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+  40      =2   * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  41      =2   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  42      =2   * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+  43      =2   * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  44      =2   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+  45      =2   * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  46      =2   * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  47      =2   * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  48      =2   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  49      =2   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  50      =2   *
+  51      =2   * This file is part of the uIP TCP/IP stack.
+  52      =2   *
+  53      =2   * $Id: uipopt.h,v$
+  54      =2   *
+  55      =2   */
+  56      =2  
+  57      =2  /*       ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+  58      =2           ?   TITLE:  Keil C51 v7.00 port of Adam Dunkels' uIP v0.9 
+  59      =2           ?REVISION:  VER 0.0                                       
+  60      =2           ?REV.DATE:  14-01-05                                      
+  61      =2           ? ARCHIVE:                                                
+  62      =2           ?  AUTHOR:  Murray R. Van Luyn, 2005.                     
+  63      =2           ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ        */
+  64      =2  
+  65      =2  #ifndef __UIPOPT_H__
+  66      =2  #define __UIPOPT_H__
+  67      =2  
+  68      =2  #include "types.h"
+   1      =3  //----------------------------------------------------------------------------------------
+   2      =3  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =3  //
+   4      =3  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =3  //
+   6      =3  //     The copyright notice above does not evidence any actual or intended
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 4   
+
+   7      =3  //     publication of such source code.
+   8      =3  //----------------------------------------------------------------------------------------
+   9      =3  // Module Name : types.h
+  10      =3  // Purpose     : Definition of type.
+  11      =3  // Author      : Robin Lee
+  12      =3  // Date        : 2005-12-28
+  13      =3  // Notes       : None.
+  14      =3  // $Log: types.h,v $
+  15      =3  //----------------------------------------------------------------------------------------
+  16      =3  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =3  // no message
+  18      =3  //----------------------------------------------------------------------------------------
+  19      =3  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =3  // no message
+  21      =3  //----------------------------------------------------------------------------------------
+  22      =3  
+  23      =3  #ifndef TYPES_H
+  24      =3  #define TYPES_H
+  25      =3  
+  26      =3  typedef unsigned short int          bool;                                                 // boolean
+  27      =3  typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+  28      =3  typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+  29      =3  typedef short int                   sint;                                                 // 16-bit signed
+  30      =3  typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+  31      =3  
+  32      =3  #ifndef NULL
+  33      =3    #define NULL ((void *) 0L)
+  34      =3  #endif
+  35      =3  
+  36      =3  #define TRUE                  1
+  37      =3  #define FALSE                 0
+  38      =3  #define ON                    1
+  39      =3  #define OFF                   0
+  40      =3  #define Client                1
+  41      =3  #define Server                0
+  42      =3  
+  43      =3  // Bit Definitions for Bitwise Operation //
+  44      =3  #define BIT0            0x01
+  45      =3  #define BIT1            0x02
+  46      =3  #define BIT2            0x04
+  47      =3  #define BIT3            0x08
+  48      =3  #define BIT4            0x10
+  49      =3  #define BIT5            0x20
+  50      =3  #define BIT6            0x40
+  51      =3  #define BIT7            0x80
+  52      =3  #define BIT8            0x0100
+  53      =3  #define BIT9            0x0200
+  54      =3  #define BIT10           0x0400
+  55      =3  #define BIT11           0x0800
+  56      =3  #define BIT12           0x1000
+  57      =3  #define BIT13           0x2000
+  58      =3  #define BIT14           0x4000
+  59      =3  #define BIT15           0x8000
+  60      =3  #define BIT16           0x00010000
+  61      =3  #define BIT17           0x00020000
+  62      =3  #define BIT18           0x00040000
+  63      =3  #define BIT19           0x00080000
+  64      =3  #define BIT20           0x00100000
+  65      =3  #define BIT21           0x00200000
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 5   
+
+  66      =3  #define BIT22           0x00400000
+  67      =3  #define BIT23           0x00800000
+  68      =3  #define BIT24           0x01000000
+  69      =3  #define BIT25           0x02000000
+  70      =3  #define BIT26           0x04000000
+  71      =3  #define BIT27           0x08000000
+  72      =3  #define BIT28           0x10000000
+  73      =3  #define BIT29           0x20000000
+  74      =3  #define BIT30           0x40000000
+  75      =3  #define BIT31           0x80000000
+  76      =3  
+  77      =3  #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+  78      =3  #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+  79      =3  
+  80      =3  #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+  81      =3  #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+  82      =3  #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+  83      =3  #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+  84      =3   
+  85      =3  // Keil compiler user define //
+  86      =3  #define     KEIL_CPL
+  87      =3  
+  88      =3  #ifdef KEIL_CPL
+  89      =3   #define XDATA    xdata
+  90      =3   #define IDATA    idata
+  91      =3   #define BDATA    bdata
+  92      =3   #define CODE     code
+  93      =3   #define FAR      far
+  94      =3  #else
+           =3  #define XDATA
+           =3  #define IDATA
+           =3  #define BDATA
+           =3  #define CODE
+           =3  #define FAR
+           =3 #endif
+ 101      =3  
+ 102      =3  // Serial interface command direction //
+ 103      =3  #define     SI_WR                   BIT0
+ 104      =3  #define     SI_RD                   BIT1
+ 105      =3  
+ 106      =3  #define     FLASH_WR_ENB            (PCON |= PWE_)
+ 107      =3  #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+ 108      =3  
+ 109      =3  #endif  // end of TYPES_H //
+  69      =2  #include "tcpip.h"
+   1      =3  //=============================================================================
+   2      =3  //      Copyright (c) 2006      ASIX Electronic Corporation      All rights reserved.
+   3      =3  // 
+   4      =3  //      This is unpublished proprietary source code of ASIX Electronic Corporation
+   5      =3  // 
+   6      =3  //      The copyright notice above does not evidence any actual or intended
+   7      =3  //      publication of such source code.
+   8      =3  //=============================================================================
+   9      =3  //  Module Name:tcpip.h
+  10      =3  //  Purpose:
+  11      =3  //  Author:
+  12      =3  //  Date:
+  13      =3  //  Notes:
+  14      =3  //  $Log: tcpip.h,v $
+  15      =3  //=============================================================================
+  16      =3  
+  17      =3  #ifndef __TCPIP_H__
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 6   
+
+  18      =3  #define __TCPIP_H__
+  19      =3  
+  20      =3  // INCLUDE FILE DECLARATIONS //
+  21      =3  #include "types.h"
+   1      =4  //----------------------------------------------------------------------------------------
+   2      =4  //     Copyright (c) 2005       Simtek, Incorporated      All rights reserved.
+   3      =4  //
+   4      =4  //     This is unpublished proprietary source code of Simtek, Inc
+   5      =4  //
+   6      =4  //     The copyright notice above does not evidence any actual or intended
+   7      =4  //     publication of such source code.
+   8      =4  //----------------------------------------------------------------------------------------
+   9      =4  // Module Name : types.h
+  10      =4  // Purpose     : Definition of type.
+  11      =4  // Author      : Robin Lee
+  12      =4  // Date        : 2005-12-28
+  13      =4  // Notes       : None.
+  14      =4  // $Log: types.h,v $
+  15      =4  //----------------------------------------------------------------------------------------
+  16      =4  // Revision 1.2  2006/05/18 05:02:30  Louis
+  17      =4  // no message
+  18      =4  //----------------------------------------------------------------------------------------
+  19      =4  // Revision 1.1  2006/04/07 11:36:17  robin6633
+  20      =4  // no message
+  21      =4  //----------------------------------------------------------------------------------------
+  22      =4  
+  23      =4  #ifndef TYPES_H
+           =4 #define TYPES_H
+           =4 
+           =4 typedef unsigned short int          bool;                                                 // boolean
+           =4 typedef unsigned char               byte;                                                 //  8-bit unsign
+             -ed
+           =4 typedef unsigned short int          uint;                                                 // 16-bit unsign
+             -ed
+           =4 typedef short int                   sint;                                                 // 16-bit signed
+           =4 typedef unsigned long               ulong;                                                // 32-bit unsign
+             -ed
+           =4 
+           =4 #ifndef NULL
+           =4   #define NULL ((void *) 0L)
+           =4 #endif
+           =4 
+           =4 #define TRUE                  1
+           =4 #define FALSE                 0
+           =4 #define ON                    1
+           =4 #define OFF                   0
+           =4 #define Client                1
+           =4 #define Server                0
+           =4 
+           =4 // Bit Definitions for Bitwise Operation //
+           =4 #define BIT0            0x01
+           =4 #define BIT1            0x02
+           =4 #define BIT2            0x04
+           =4 #define BIT3            0x08
+           =4 #define BIT4            0x10
+           =4 #define BIT5            0x20
+           =4 #define BIT6            0x40
+           =4 #define BIT7            0x80
+           =4 #define BIT8            0x0100
+           =4 #define BIT9            0x0200
+           =4 #define BIT10           0x0400
+           =4 #define BIT11           0x0800
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 7   
+
+           =4 #define BIT12           0x1000
+           =4 #define BIT13           0x2000
+           =4 #define BIT14           0x4000
+           =4 #define BIT15           0x8000
+           =4 #define BIT16           0x00010000
+           =4 #define BIT17           0x00020000
+           =4 #define BIT18           0x00040000
+           =4 #define BIT19           0x00080000
+           =4 #define BIT20           0x00100000
+           =4 #define BIT21           0x00200000
+           =4 #define BIT22           0x00400000
+           =4 #define BIT23           0x00800000
+           =4 #define BIT24           0x01000000
+           =4 #define BIT25           0x02000000
+           =4 #define BIT26           0x04000000
+           =4 #define BIT27           0x08000000
+           =4 #define BIT28           0x10000000
+           =4 #define BIT29           0x20000000
+           =4 #define BIT30           0x40000000
+           =4 #define BIT31           0x80000000
+           =4 
+           =4 #define LOW_BYTE(dat)   (byte) (dat & 0x00FF)
+           =4 #define HIGH_BYTE(dat)  (byte)((dat & 0xFF00) >> 8)
+           =4 
+           =4 #define U32BYTE0(dat)   (byte) (dat  & 0x000000FF)
+           =4 #define U32BYTE1(dat)   (byte)((dat  & 0x0000FF00) >> 8)
+           =4 #define U32BYTE2(dat)   (byte)((dat  & 0x00FF0000) >> 16)
+           =4 #define U32BYTE3(dat)   (byte)((dat  & 0xFF000000) >> 24)
+           =4  
+           =4 // Keil compiler user define //
+           =4 #define     KEIL_CPL
+           =4 
+           =4 #ifdef KEIL_CPL
+           =4  #define XDATA    xdata
+           =4  #define IDATA    idata
+           =4  #define BDATA    bdata
+           =4  #define CODE     code
+           =4  #define FAR      far
+           =4 #else
+           =4  #define XDATA
+           =4  #define IDATA
+           =4  #define BDATA
+           =4  #define CODE
+           =4  #define FAR
+           =4 #endif
+           =4 
+           =4 // Serial interface command direction //
+           =4 #define     SI_WR                   BIT0
+           =4 #define     SI_RD                   BIT1
+           =4 
+           =4 #define     FLASH_WR_ENB            (PCON |= PWE_)
+           =4 #define     FLASH_WR_DISB           (PCON &= ~PWE_)
+           =4 
+           =4 #endif  // end of TYPES_H //
+  22      =3  
+  23      =3  // NAMING CONSTANT DECLARATIONS //
+  24      =3  #define TCPIP_MAX_APP_CONN                      16
+  25      =3  #define TCPIP_MAX_TCP_LISTEN            12
+  26      =3  #define TCPIP_MAX_UDP_LISTEN            12
+  27      =3  #define TCPIP_MAX_TCP_CONN                      16
+  28      =3  #define TCPIP_MAX_UDP_CONN                      16
+  29      =3  
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 8   
+
+  30      =3  #define TCPIP_NO_NEW_CONN                       0xff
+  31      =3  
+  32      =3  #define TCPIP_CONNECT_CANCEL            0
+  33      =3  #define TCPIP_CONNECT_WAIT                      1
+  34      =3  #define TCPIP_CONNECT_ACTIVE            2
+  35      =3  #define TCPIP_CONNECT_XMIT_COMPLETE     3
+  36      =3  #define TCPIP_CONNECT_BUSY                      0xf1
+  37      =3  
+  38      =3  #define TCPIP_SEND_NOT_FINAL            0
+  39      =3  #define TCPIP_SEND_FINAL                        1
+  40      =3  #define TCPIP_SEND_NOT_PUSH                     2
+  41      =3  
+  42      =3  #define TCPIP_KEEPALIVE_ON                      1
+  43      =3  #define TCPIP_KEEPALIVE_OFF                     0
+  44      =3  
+  45      =3  #define TCPIP_DONT_FRAGMENT                     1
+  46      =3  #define TCPIP_FRAGMENT                          0
+  47      =3  
+  48      =3  #define TCPIP_PROTOCOL_ICMP                     1
+  49      =3  #define TCPIP_PROTOCOL_TCP                      6
+  50      =3  #define TCPIP_PROTOCOL_UDP                      17
+  51      =3  
+  52      =3  #define TCPIP_NON_TRANSPARENT_MODE      0
+  53      =3  #define TCPIP_TRANSPARENT_MODE          1
+  54      =3  
+  55      =3  #define TCPIP_TIME_TO_LIVE                      255     // TTL item of ip layer //
+  56      =3  
+  57      =3  // GLOBAL VARIABLES //
+  58      =3  
+  59      =3  // for uip //
+  60      =3  extern byte xdata uip_buf[];
+  61      =3  extern volatile uint idata uip_len;
+  62      =3  extern volatile byte *uip_appdata;
+  63      =3  extern byte xdata uip_getgatewaymacaddrflag;
+  64      =3  
+  65      =3  #define TCPIP_GetRcvBuffer()            (uip_buf)
+  66      =3  #define TCPIP_GetXmitBuffer()           (uip_buf)
+  67      =3  #define TCPIP_SetRcvLength(len)         (uip_len = len)
+  68      =3  #define TCPIP_SetXmitLength(len)        (uip_len = len)
+  69      =3  #define TCPIP_GetXmitLength()           (uip_len)
+  70      =3  #define TCPIP_GetPayloadBuffer()        (uip_appdata)
+  71      =3  #define TCPIP_GetGwMacAddrFlag()        (uip_getgatewaymacaddrflag)
+  72      =3  #define TCPIP_SetGwMacAddrFlag(a)       (uip_getgatewaymacaddrflag = a)
+  73      =3  
+  74      =3  // EXPORTED SUBPROGRAM SPECIFICATIONS //
+  75      =3  void TCPIP_Init(byte);
+  76      =3  byte TCPIP_Bind(byte (* )(ulong XDATA*, uint, byte), void (* )(byte, byte), void (* )(byte XDATA*, uint, b
+             -yte));
+  77      =3  void TCPIP_Unbind(byte);
+  78      =3  
+  79      =3  // for tcp //
+  80      =3  byte TCPIP_TcpListen(uint, byte);
+  81      =3  void TCPIP_TcpUnlisten(uint);
+  82      =3  byte TCPIP_TcpNew(byte, byte, ulong, uint, uint);
+  83      =3  void TCPIP_TcpConnect(byte);
+  84      =3  void TCPIP_TcpKeepAlive(byte, byte);
+  85      =3  void TCPIP_TcpClose(byte);
+  86      =3  uint TCPIP_QueryTcpLocalPort(byte);
+  87      =3  void TCPIP_TcpSend(byte, byte*, uint, byte);
+  88      =3  
+  89      =3  // for udp //
+  90      =3  byte TCPIP_UdpListen(uint, byte);
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 9   
+
+  91      =3  void TCPIP_UdpUnlisten(uint);
+  92      =3  byte TCPIP_UdpNew(byte, byte, ulong, uint, uint);
+  93      =3  void TCPIP_UdpClose(byte);
+  94      =3  uint TCPIP_QueryUdpLocalPort(byte);
+  95      =3  void TCPIP_UdpSend(byte, byte*,byte, byte*, uint);
+  96      =3  
+  97      =3  // for other purpose //
+  98      =3  void TCPIP_AssignLowlayerXmitFunc(void (* )(uint));
+  99      =3  void TCPIP_AssignPingRespFunc(void (* )(void));
+ 100      =3  void TCPIP_PeriodicCheck(void);
+ 101      =3  void TCPIP_SetPppoeMode(byte);
+ 102      =3  ulong TCPIP_GetIPAddr(void);
+ 103      =3  ulong TCPIP_GetSubnetMask(void);
+ 104      =3  ulong TCPIP_GetGateway(void);
+ 105      =3  void TCPIP_SetIPAddr(ulong);
+ 106      =3  void TCPIP_SetSubnetMask(ulong);
+ 107      =3  void TCPIP_SetGateway(ulong);
+ 108      =3  void TCPIP_SetMacAddr(byte*);
+ 109      =3  void TCPIP_Receive(void);
+ 110      =3  void TCPIP_DontFragment(byte);
+ 111      =3  
+ 112      =3  // for uip //
+ 113      =3  uint htons(uint);
+ 114      =3  
+ 115      =3  // for uip_arp //
+ 116      =3  void uip_arp_ipin(void);
+ 117      =3  void uip_arp_arpin(void);
+ 118      =3  void uip_arp_out(void);
+ 119      =3  
+ 120      =3  // for debug //
+ 121      =3  //void TCPIP_Debug(void);
+ 122      =3  
+ 123      =3  #endif // End of __TCPIP_H__ //
+ 124      =3  
+ 125      =3  
+ 126      =3  // End of tcpip.h //
+  70      =2  
+  71      =2  /*------------------------------------------------------------------------------*/
+  72      =2  /**
+  73      =2   * \defgroup uipopttypedef uIP type definitions
+  74      =2   * @{
+  75      =2   */
+  76      =2  
+  77      =2  
+  78      =2  /**
+  79      =2   * The statistics data type.
+  80      =2   *
+  81      =2   * This datatype determines how high the statistics counters are able
+  82      =2   * to count.
+  83      =2   */
+  84      =2  typedef unsigned short uip_stats_t;
+  85      =2  
+  86      =2  /** @} */
+  87      =2  
+  88      =2  /*------------------------------------------------------------------------------*/
+  89      =2  
+  90      =2  /**
+  91      =2   * \defgroup uipoptstaticconf Static configuration options
+  92      =2   * @{
+  93      =2   *
+  94      =2   * These configuration options can be used for setting the IP address
+  95      =2   * settings statically, but only if UIP_FIXEDADDR is set to 1. The
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 10  
+
+  96      =2   * configuration options for a specific node includes IP address,
+  97      =2   * netmask and default router as well as the Ethernet address. The
+  98      =2   * netmask, default router and Ethernet address are appliciable only
+  99      =2   * if uIP should be run over Ethernet.
+ 100      =2   *
+ 101      =2   * All of these should be changed to suit your project.
+ 102      =2  */
+ 103      =2  
+ 104      =2  /**
+ 105      =2   * Determines if uIP should use a fixed IP address or not.
+ 106      =2   *
+ 107      =2   * If uIP should use a fixed IP address, the settings are set in the
+ 108      =2   * uipopt.h file. If not, the macros uip_sethostaddr(),
+ 109      =2   * uip_setdraddr() and uip_setnetmask() should be used instead.
+ 110      =2   *
+ 111      =2   * \hideinitializer
+ 112      =2   */
+ 113      =2  
+ 114      =2  #define UIP_FIXEDADDR    0
+ 115      =2  
+ 116      =2  /**
+ 117      =2   * Ping IP address asignment.
+ 118      =2   *
+ 119      =2   * uIP uses a "ping" packets for setting its own IP address if this
+ 120      =2   * option is set. If so, uIP will start with an empty IP address and
+ 121      =2   * the destination IP address of the first incoming "ping" (ICMP echo)
+ 122      =2   * packet will be used for setting the hosts IP address.
+ 123      =2   *
+ 124      =2   * \note This works only if UIP_FIXEDADDR is 0.
+ 125      =2   *
+ 126      =2   * \hideinitializer
+ 127      =2   */
+ 128      =2  #define UIP_PINGADDRCONF 0
+ 129      =2  
+ 130      =2  #define UIP_IPADDR0     192 /**< The first octet of the IP address of
+ 131      =2                                 this uIP node, if UIP_FIXEDADDR is
+ 132      =2                                 1. \hideinitializer */
+ 133      =2  #define UIP_IPADDR1     168 /**< The second octet of the IP address of
+ 134      =2                                 this uIP node, if UIP_FIXEDADDR is
+ 135      =2                                 1. \hideinitializer */
+ 136      =2  #define UIP_IPADDR2     0   /**< The third octet of the IP address of
+ 137      =2                                 this uIP node, if UIP_FIXEDADDR is
+ 138      =2                                 1. \hideinitializer */
+ 139      =2  #define UIP_IPADDR3     3   /**< The fourth octet of the IP address of
+ 140      =2                                 this uIP node, if UIP_FIXEDADDR is
+ 141      =2                                 1. \hideinitializer */
+ 142      =2  
+ 143      =2  #define UIP_NETMASK0    255 /**< The first octet of the netmask of
+ 144      =2                                 this uIP node, if UIP_FIXEDADDR is
+ 145      =2                                 1. \hideinitializer */
+ 146      =2  #define UIP_NETMASK1    255 /**< The second octet of the netmask of
+ 147      =2                                 this uIP node, if UIP_FIXEDADDR is
+ 148      =2                                 1. \hideinitializer */
+ 149      =2  #define UIP_NETMASK2    255 /**< The third octet of the netmask of
+ 150      =2                                 this uIP node, if UIP_FIXEDADDR is
+ 151      =2                                 1. \hideinitializer */
+ 152      =2  #define UIP_NETMASK3    0   /**< The fourth octet of the netmask of
+ 153      =2                                 this uIP node, if UIP_FIXEDADDR is
+ 154      =2                                 1. \hideinitializer */
+ 155      =2  
+ 156      =2  #define UIP_DRIPADDR0   192 /**< The first octet of the IP address of
+ 157      =2                                 the default router, if UIP_FIXEDADDR is
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 11  
+
+ 158      =2                                 1. \hideinitializer */
+ 159      =2  #define UIP_DRIPADDR1   168 /**< The second octet of the IP address of
+ 160      =2                                 the default router, if UIP_FIXEDADDR is
+ 161      =2                                 1. \hideinitializer */
+ 162      =2  #define UIP_DRIPADDR2   0   /**< The third octet of the IP address of
+ 163      =2                                 the default router, if UIP_FIXEDADDR is
+ 164      =2                                 1. \hideinitializer */
+ 165      =2  #define UIP_DRIPADDR3   1   /**< The fourth octet of the IP address of
+ 166      =2                                 the default router, if UIP_FIXEDADDR is
+ 167      =2                                 1. \hideinitializer */
+ 168      =2  
+ 169      =2  /**
+ 170      =2   * Specifies if the uIP ARP module should be compiled with a fixed
+ 171      =2   * Ethernet MAC address or not.
+ 172      =2   *
+ 173      =2   * If this configuration option is 0, the macro uip_setethaddr() can
+ 174      =2   * be used to specify the Ethernet address at run-time.
+ 175      =2   *
+ 176      =2   * \hideinitializer
+ 177      =2   */
+ 178      =2  #define UIP_FIXEDETHADDR 1
+ 179      =2  
+ 180      =2  #define UIP_ETHADDR0    0x00  /**< The first octet of the Ethernet
+ 181      =2                                   address if UIP_FIXEDETHADDR is
+ 182      =2                                   1. \hideinitializer */
+ 183      =2  #define UIP_ETHADDR1    0x12  /**< The second octet of the Ethernet
+ 184      =2                                   address if UIP_FIXEDETHADDR is
+ 185      =2                                   1. \hideinitializer */
+ 186      =2  #define UIP_ETHADDR2    0x34  /**< The third octet of the Ethernet
+ 187      =2                                   address if UIP_FIXEDETHADDR is
+ 188      =2                                   1. \hideinitializer */
+ 189      =2  #define UIP_ETHADDR3    0x56  /**< The fourth octet of the Ethernet
+ 190      =2                                   address if UIP_FIXEDETHADDR is
+ 191      =2                                   1. \hideinitializer */
+ 192      =2  #define UIP_ETHADDR4    0x78  /**< The fifth octet of the Ethernet
+ 193      =2                                   address if UIP_FIXEDETHADDR is
+ 194      =2                                   1. \hideinitializer */
+ 195      =2  #define UIP_ETHADDR5    0x9A  /**< The sixth octet of the Ethernet
+ 196      =2                                   address if UIP_FIXEDETHADDR is
+ 197      =2                                   1. \hideinitializer */
+ 198      =2  
+ 199      =2  /** @} */
+ 200      =2  /*------------------------------------------------------------------------------*/
+ 201      =2  /**
+ 202      =2   * \defgroup uipoptip IP configuration options
+ 203      =2   * @{
+ 204      =2   *
+ 205      =2   */
+ 206      =2  /**
+ 207      =2   * The IP TTL (time to live) of IP packets sent by uIP.
+ 208      =2   *
+ 209      =2   * This should normally not be changed.
+ 210      =2   */
+ 211      =2  #define UIP_TTL         (TCPIP_TIME_TO_LIVE)
+ 212      =2  
+ 213      =2  /**
+ 214      =2   * Turn on support for IP packet reassembly.
+ 215      =2   *
+ 216      =2   * uIP supports reassembly of fragmented IP packets. This features
+ 217      =2   * requires an additonal amount of RAM to hold the reassembly buffer
+ 218      =2   * and the reassembly code size is approximately 700 bytes.  The
+ 219      =2   * reassembly buffer is of the same size as the uip_buf buffer
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 12  
+
+ 220      =2   * (configured by UIP_BUFSIZE).
+ 221      =2   *
+ 222      =2   * \note IP packet reassembly is not heavily tested.
+ 223      =2   *
+ 224      =2   * \hideinitializer
+ 225      =2   */
+ 226      =2  #define UIP_REASSEMBLY 0
+ 227      =2  
+ 228      =2  /**
+ 229      =2   * The maximum time an IP fragment should wait in the reassembly
+ 230      =2   * buffer before it is dropped.
+ 231      =2   *
+ 232      =2   */
+ 233      =2  #define UIP_REASS_MAXAGE 40
+ 234      =2  
+ 235      =2  /** @} */
+ 236      =2  
+ 237      =2  #define CHECKSUM_OFFLOAD                1       /* hardware process all checksum calculate */
+ 238      =2  
+ 239      =2  /*------------------------------------------------------------------------------*/
+ 240      =2  /**
+ 241      =2   * \defgroup uipoptudp UDP configuration options
+ 242      =2   * @{
+ 243      =2   *
+ 244      =2   * \note The UDP support in uIP is still not entirely complete; there
+ 245      =2   * is no support for sending or receiving broadcast or multicast
+ 246      =2   * packets, but it works well enough to support a number of vital
+ 247      =2   * applications such as DNS queries, though
+ 248      =2   */
+ 249      =2  
+ 250      =2  /**
+ 251      =2   * Toggles wether UDP support should be compiled in or not.
+ 252      =2   *
+ 253      =2   * \hideinitializer
+ 254      =2   */
+ 255      =2  #define UIP_UDP           1
+ 256      =2  
+ 257      =2  /**
+ 258      =2   * Toggles if UDP checksums should be used or not.
+ 259      =2   *
+ 260      =2   * \note Support for UDP checksums is currently not included in uIP,
+ 261      =2   * so this option has no function.
+ 262      =2   *
+ 263      =2   * \hideinitializer
+ 264      =2   */
+ 265      =2  #define UIP_UDP_CHECKSUMS 0
+ 266      =2  
+ 267      =2  /**
+ 268      =2   * The maximum amount of concurrent UDP connections.
+ 269      =2   *
+ 270      =2   * \hideinitializer
+ 271      =2   */
+ 272      =2  #define UIP_UDP_CONNS           (TCPIP_MAX_UDP_CONN)
+ 273      =2  
+ 274      =2  /**
+ 275      =2   * The name of the function that should be called when UDP datagrams arrive.
+ 276      =2   *
+ 277      =2   * \hideinitializer
+ 278      =2   */
+ 279      =2  #define UIP_UDP_APPCALL()  TCPIP_CallUdpApp();
+ 280      =2  
+ 281      =2  /** @} */
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 13  
+
+ 282      =2  /*------------------------------------------------------------------------------*/
+ 283      =2  /**
+ 284      =2   * \defgroup uipopttcp TCP configuration options
+ 285      =2   * @{
+ 286      =2   */
+ 287      =2  
+ 288      =2  /**
+ 289      =2   * Determines if support for opening connections from uIP should be
+ 290      =2   * compiled in.
+ 291      =2   *
+ 292      =2   * If the applications that are running on top of uIP for this project
+ 293      =2   * do not need to open outgoing TCP connections, this configration
+ 294      =2   * option can be turned off to reduce the code size of uIP.
+ 295      =2   *
+ 296      =2   * \hideinitializer
+ 297      =2   */
+ 298      =2  #define UIP_ACTIVE_OPEN 1
+ 299      =2  
+ 300      =2  /**
+ 301      =2   * The maximum number of simultaneously open TCP connections.
+ 302      =2   *
+ 303      =2   * Since the TCP connections are statically allocated, turning this
+ 304      =2   * configuration knob down results in less RAM used. Each TCP
+ 305      =2   * connection requires approximatly 30 bytes of memory.
+ 306      =2   *
+ 307      =2   * \hideinitializer
+ 308      =2   */
+ 309      =2  #define UIP_CONNS                       (TCPIP_MAX_TCP_CONN)
+ 310      =2  
+ 311      =2  /**
+ 312      =2   * The maximum number of simultaneously listening TCP ports.
+ 313      =2   *
+ 314      =2   * Each listening TCP port requires 2 bytes of memory.
+ 315      =2   *
+ 316      =2   * \hideinitializer
+ 317      =2   */
+ 318      =2  #define UIP_LISTENPORTS         (TCPIP_MAX_TCP_LISTEN)
+ 319      =2  
+ 320      =2  #define UIP_UDP_LISTENPORTS     (TCPIP_MAX_UDP_LISTEN)
+ 321      =2  
+ 322      =2  /**
+ 323      =2   * The size of the advertised receiver's window.
+ 324      =2   *
+ 325      =2   * Should be set low (i.e., to the size of the uip_buf buffer) is the
+ 326      =2   * application is slow to process incoming data, or high (32768 bytes)
+ 327      =2   * if the application processes data quickly.
+ 328      =2   *
+ 329      =2   * \hideinitializer
+ 330      =2   */
+ 331      =2  #define UIP_RECEIVE_WINDOW   (1460 * 4)
+ 332      =2  
+ 333      =2  /**
+ 334      =2   * Determines if support for TCP urgent data notification should be
+ 335      =2   * compiled in.
+ 336      =2   *
+ 337      =2   * Urgent data (out-of-band data) is a rarely used TCP feature that
+ 338      =2   * very seldom would be required.
+ 339      =2   *
+ 340      =2   * \hideinitializer
+ 341      =2   */
+ 342      =2  #define UIP_URGDATA      1
+ 343      =2  
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 14  
+
+ 344      =2  /**
+ 345      =2   * The initial retransmission timeout counted in timer pulses.
+ 346      =2   *
+ 347      =2   * This should not be changed.
+ 348      =2   */
+ 349      =2  #define UIP_RTO         3
+ 350      =2  
+ 351      =2  /**
+ 352      =2   * The maximum number of times a segment should be retransmitted
+ 353      =2   * before the connection should be aborted.
+ 354      =2   *
+ 355      =2   * This should not be changed.
+ 356      =2   */
+ 357      =2  #define UIP_MAXRTX      8
+ 358      =2  
+ 359      =2  /**
+ 360      =2   * The maximum number of times a SYN segment should be retransmitted
+ 361      =2   * before a connection request should be deemed to have been
+ 362      =2   * unsuccessful.
+ 363      =2   *
+ 364      =2   * This should not need to be changed.
+ 365      =2   */
+ 366      =2  #define UIP_MAXSYNRTX      3
+ 367      =2  
+ 368      =2  /**
+ 369      =2   * The TCP maximum segment size.
+ 370      =2   *
+ 371      =2   * This is should not be to set to more than UIP_BUFSIZE - UIP_LLH_LEN - 40.
+ 372      =2   */
+ 373      =2  #define UIP_TCP_MSS     (UIP_BUFSIZE - 54)
+ 374      =2  
+ 375      =2  
+ 376      =2  /**
+ 377      =2   * How long a connection should stay in the TIME_WAIT state.
+ 378      =2   *
+ 379      =2   * This configiration option has no real implication, and it should be
+ 380      =2   * left untouched.
+ 381      =2   */ 
+ 382      =2  #define UIP_TIME_WAIT_TIMEOUT 120
+ 383      =2  
+ 384      =2  
+ 385      =2  /** @} */
+ 386      =2  /*------------------------------------------------------------------------------*/
+ 387      =2  /**
+ 388      =2   * \defgroup uipoptarp ARP configuration options
+ 389      =2   * @{
+ 390      =2   */
+ 391      =2  
+ 392      =2  /**
+ 393      =2   * The size of the ARP table.
+ 394      =2   *
+ 395      =2   * This option should be set to a larger value if this uIP node will
+ 396      =2   * have many connections from the local network.
+ 397      =2   *
+ 398      =2   * \hideinitializer
+ 399      =2   */
+ 400      =2  #define UIP_ARPTAB_SIZE 8
+ 401      =2  
+ 402      =2  /**
+ 403      =2   * The maxium age of ARP table entries measured in 10ths of seconds.
+ 404      =2   *
+ 405      =2   * An UIP_ARP_MAXAGE of 120 corresponds to 20 minutes (BSD
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 15  
+
+ 406      =2   * default).
+ 407      =2   */
+ 408      =2  #define UIP_ARP_MAXAGE 120
+ 409      =2  
+ 410      =2  /** @} */
+ 411      =2  
+ 412      =2  /*------------------------------------------------------------------------------*/
+ 413      =2  
+ 414      =2  /**
+ 415      =2   * \defgroup uipoptgeneral General configuration options
+ 416      =2   * @{
+ 417      =2   */
+ 418      =2  
+ 419      =2  /**
+ 420      =2   * The size of the uIP packet buffer.
+ 421      =2   *
+ 422      =2   * The uIP packet buffer should not be smaller than 60 bytes, and does
+ 423      =2   * not need to be larger than 1500 bytes. Lower size results in lower
+ 424      =2   * TCP throughput, larger size results in higher TCP throughput.
+ 425      =2   *
+ 426      =2   * \hideinitializer
+ 427      =2   */
+ 428      =2  #define UIP_BUFSIZE     1514
+ 429      =2  
+ 430      =2  
+ 431      =2  /**
+ 432      =2   * Determines if statistics support should be compiled in.
+ 433      =2   *
+ 434      =2   * The statistics is useful for debugging and to show the user.
+ 435      =2   *
+ 436      =2   * \hideinitializer
+ 437      =2   */
+ 438      =2  #define UIP_STATISTICS  0
+ 439      =2  
+ 440      =2  /**
+ 441      =2   * Determines if logging of certain events should be compiled in.
+ 442      =2   *
+ 443      =2   * This is useful mostly for debugging. The function uip_log()
+ 444      =2   * must be implemented to suit the architecture of the project, if
+ 445      =2   * logging is turned on.
+ 446      =2   *
+ 447      =2   * \hideinitializer
+ 448      =2   */
+ 449      =2  #define UIP_LOGGING     0
+ 450      =2  
+ 451      =2  /**
+ 452      =2   * Print out a uIP log message.
+ 453      =2   *
+ 454      =2   * This function must be implemented by the module that uses uIP, and
+ 455      =2   * is called by uIP whenever a log message is generated.
+ 456      =2   */
+ 457      =2  void uip_log(char *msg);
+ 458      =2  
+ 459      =2  /**
+ 460      =2   * The link level header length.
+ 461      =2   *
+ 462      =2   * This is the offset into the uip_buf where the IP header can be
+ 463      =2   * found. For Ethernet, this should be set to 14. For SLIP, this
+ 464      =2   * should be set to 0.
+ 465      =2   *
+ 466      =2   * \hideinitializer
+ 467      =2   */
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 16  
+
+ 468      =2  #define UIP_LLH_LEN     14
+ 469      =2  
+ 470      =2  /** @} */
+ 471      =2  /*------------------------------------------------------------------------------*/
+ 472      =2  /**
+ 473      =2   * \defgroup uipoptcpu CPU architecture configuration
+ 474      =2   * @{
+ 475      =2   *
+ 476      =2   * The CPU architecture configuration is where the endianess of the
+ 477      =2   * CPU on which uIP is to be run is specified. Most CPUs today are
+ 478      =2   * little endian, and the most notable exception are the Motorolas
+ 479      =2   * which are big endian. The BYTE_ORDER macro should be changed to
+ 480      =2   * reflect the CPU architecture on which uIP is to be run.
+ 481      =2   */
+ 482      =2  #ifndef LITTLE_ENDIAN
+ 483      =2  #define LITTLE_ENDIAN  3412
+ 484      =2  #endif /* LITTLE_ENDIAN */
+ 485      =2  #ifndef BIG_ENDIAN
+ 486      =2  #define BIG_ENDIAN     1234
+ 487      =2  #endif /* BIGE_ENDIAN */
+ 488      =2  
+ 489      =2  /**
+ 490      =2   * The byte order of the CPU architecture on which uIP is to be run.
+ 491      =2   *
+ 492      =2   * This option can be either BIG_ENDIAN (Motorola byte order) or
+ 493      =2   * LITTLE_ENDIAN (Intel byte order).
+ 494      =2   *
+ 495      =2   * \hideinitializer
+ 496      =2   */
+ 497      =2  #ifndef BYTE_ORDER
+ 498      =2  #define BYTE_ORDER     BIG_ENDIAN     // Keil C
+ 499      =2  #endif /* BYTE_ORDER */
+ 500      =2  
+ 501      =2  /** @} */
+ 502      =2  /*------------------------------------------------------------------------------*/
+ 503      =2  
+ 504      =2  /**
+ 505      =2   * \defgroup uipoptapp Appication specific configurations
+ 506      =2   * @{
+ 507      =2   *
+ 508      =2   * An uIP application is implemented using a single application
+ 509      =2   * function that is called by uIP whenever a TCP/IP event occurs. The
+ 510      =2   * name of this function must be registered with uIP at compile time
+ 511      =2   * using the UIP_APPCALL definition.
+ 512      =2   *
+ 513      =2   * uIP applications can store the application state within the
+ 514      =2   * uip_conn structure by specifying the size of the application
+ 515      =2   * structure with the UIP_APPSTATE_SIZE macro.
+ 516      =2   *
+ 517      =2   * The file containing the definitions must be included in the
+ 518      =2   * uipopt.h file.
+ 519      =2   *
+ 520      =2   * The following example illustrates how this can look.
+ 521      =2   \code
+ 522      =2  
+ 523      =2  void httpd_appcall(void);
+ 524      =2  #define UIP_APPCALL     httpd_appcall
+ 525      =2  
+ 526      =2  struct httpd_state {
+ 527      =2    uint state; 
+ 528      =2    uint count;
+ 529      =2    char *dataptr;
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 17  
+
+ 530      =2    char *script;
+ 531      =2  };
+ 532      =2  #define UIP_APPSTATE_SIZE (sizeof(struct httpd_state))
+ 533      =2   \endcode
+ 534      =2   */
+ 535      =2  
+ 536      =2  /**
+ 537      =2   * \var #define UIP_APPCALL
+ 538      =2   *
+ 539      =2   * The name of the application function that uIP should call in
+ 540      =2   * response to TCP/IP events.
+ 541      =2   *
+ 542      =2   */
+ 543      =2  
+ 544      =2  /**
+ 545      =2   * \var #define UIP_APPSTATE_SIZE
+ 546      =2   *
+ 547      =2   * The size of the application state that is to be stored in the
+ 548      =2   * uip_conn structure.
+ 549      =2   */
+ 550      =2  /** @} */
+ 551      =2  
+ 552      =2  /* Include the header file for the application program that should be
+ 553      =2     used. If you don't use the example web server, you should change
+ 554      =2     this. */
+ 555      =2  
+ 556      =2  
+ 557      =2  #endif /* __UIPOPT_H__ */
+  59      =1  
+  60      =1  //-----------------------------------------------------------------------------------//
+  61      =1  // First, the functions that should be called from the
+  62      =1  // system. Initialization, the periodic timer and incoming packets are
+  63      =1  // handled by the following three functions.
+  64      =1  //
+  65      =1  
+  66      =1  //
+  67      =1  // \defgroup uipconffunc uIP configuration functions
+  68      =1  // @{
+  69      =1  //
+  70      =1  // The uIP configuration functions are used for setting run-time
+  71      =1  // parameters in uIP such as IP addresses. 
+  72      =1  //
+  73      =1  
+  74      =1  //
+  75      =1  // Set the IP address of this host.
+  76      =1  //
+  77      =1  // The IP address is represented as a 4-byte array where the first
+  78      =1  // octet of the IP address is put in the first member of the 4-byte
+  79      =1  // array.
+  80      =1  //
+  81      =1  // \param addr A pointer to a 4-byte representation of the IP address.
+  82      =1  //
+  83      =1  // \hideinitializer
+  84      =1  //
+  85      =1  #define uip_sethostaddr(addr) do { uip_hostaddr[0] = addr[0]; \
+  86      =1                                uip_hostaddr[1] = addr[1]; } while(0)
+  87      =1  
+  88      =1  //
+  89      =1  // Get the IP address of this host.
+  90      =1  //
+  91      =1  // The IP address is represented as a 4-byte array where the first
+  92      =1  // octet of the IP address is put in the first member of the 4-byte
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 18  
+
+  93      =1  // array.
+  94      =1  //
+  95      =1  // \param addr A pointer to a 4-byte array that will be filled in with
+  96      =1  // the currently configured IP address.
+  97      =1  //
+  98      =1  // \hideinitializer
+  99      =1  //
+ 100      =1  #define uip_gethostaddr(addr) do { addr[0] = uip_hostaddr[0]; \
+ 101      =1                                addr[1] = uip_hostaddr[1]; } while(0)
+ 102      =1  
+ 103      =1  //
+ 104      =1  // \defgroup uipinit uIP initialization functions
+ 105      =1  // @{
+ 106      =1  //
+ 107      =1  // The uIP initialization functions are used for booting uIP.
+ 108      =1  //
+ 109      =1  
+ 110      =1  //
+ 111      =1  // uIP initialization function.
+ 112      =1  //
+ 113      =1  // This function should be called at boot up to initilize the uIP
+ 114      =1  // TCP/IP stack.
+ 115      =1  //
+ 116      =1  void uip_init(void);
+ 117      =1  
+ 118      =1  // @} //
+ 119      =1  
+ 120      =1  // \defgroup uipdevfunc uIP device driver functions
+ 121      =1  // @{
+ 122      =1  //
+ 123      =1  // These functions are used by a network device driver for interacting
+ 124      =1  // with uIP.
+ 125      =1  //
+ 126      =1  // Process an incoming packet.
+ 127      =1  //
+ 128      =1  // This function should be called when the device driver has received
+ 129      =1  // a packet from the network. The packet from the device driver must
+ 130      =1  // be present in the uip_buf buffer, and the length of the packet
+ 131      =1  // should be placed in the uip_len variable.
+ 132      =1  //
+ 133      =1  // When the function returns, there may be an outbound packet placed
+ 134      =1  // in the uip_buf packet buffer. If so, the uip_len variable is set to
+ 135      =1  // the length of the packet. If no packet is to be sent out, the
+ 136      =1  // uip_len variable is set to 0.
+ 137      =1  //
+ 138      =1  // The usual way of calling the function is presented by the source
+ 139      =1  // code below.
+ 140      =1  // \code
+ 141      =1  //  uip_len = devicedriver_poll();
+ 142      =1  //  if(uip_len > 0) {
+ 143      =1  //    uip_input();
+ 144      =1  //    if(uip_len > 0) {
+ 145      =1  //      devicedriver_send();
+ 146      =1  //    }
+ 147      =1  //  }
+ 148      =1  // \endcode
+ 149      =1  //
+ 150      =1  // \note If you are writing a uIP device driver that needs ARP
+ 151      =1  // (Address Resolution Protocol), e.g., when running uIP over
+ 152      =1  // Ethernet, you will need to call the uIP ARP code before calling
+ 153      =1  // this function:
+ 154      =1  // \code
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 19  
+
+ 155      =1  //  #define BUF ((struct uip_eth_hdr *)&uip_buf[0])
+ 156      =1  //  uip_len = ethernet_devicedrver_poll();
+ 157      =1  //  if(uip_len > 0) {
+ 158      =1  //    if(BUF->type == HTONS(UIP_ETHTYPE_IP)) {
+ 159      =1  //      uip_arp_ipin();
+ 160      =1  //      uip_input();
+ 161      =1  //      if(uip_len > 0) {
+ 162      =1  //        uip_arp_out();
+ 163      =1  //      ethernet_devicedriver_send();
+ 164      =1  //      }
+ 165      =1  //    } else if(BUF->type == HTONS(UIP_ETHTYPE_ARP)) {
+ 166      =1  //      uip_arp_arpin();
+ 167      =1  //      if(uip_len > 0) {
+ 168      =1  //      ethernet_devicedriver_send();
+ 169      =1  //      }
+ 170      =1  //    }
+ 171      =1  // \endcode
+ 172      =1  //
+ 173      =1  // \hideinitializer
+ 174      =1  //
+ 175      =1  //#define uip_input()        uip_process(UIP_DATA)
+ 176      =1  
+ 177      =1  //
+ 178      =1  // Periodic processing for a connection identified by its number.
+ 179      =1  // 
+ 180      =1  // This function does the necessary periodic processing (timers,
+ 181      =1  // polling) for a uIP TCP conneciton, and should be called when the
+ 182      =1  // periodic uIP timer goes off. It should be called for every
+ 183      =1  // connection, regardless of whether they are open of closed.
+ 184      =1  //
+ 185      =1  // When the function returns, it may have an outbound packet waiting
+ 186      =1  // for service in the uIP packet buffer, and if so the uip_len
+ 187      =1  // variable is set to a value larger than zero. The device driver
+ 188      =1  // should be called to send out the packet.
+ 189      =1  //
+ 190      =1  // The ususal way of calling the function is through a for() loop like
+ 191      =1  // this:
+ 192      =1  // \code
+ 193      =1  //  for(i = 0; i < UIP_CONNS; ++i) {
+ 194      =1  //    uip_periodic(i);
+ 195      =1  //    if(uip_len > 0) {
+ 196      =1  //      devicedriver_send();
+ 197      =1  //    }
+ 198      =1  //  }
+ 199      =1  // \endcode
+ 200      =1  //
+ 201      =1  // \note If you are writing a uIP device driver that needs ARP
+ 202      =1  // (Address Resolution Protocol), e.g., when running uIP over
+ 203      =1  // Ethernet, you will need to call the uip_arp_out() function before
+ 204      =1  // calling the device driver:
+ 205      =1  // \code
+ 206      =1  //  for(i = 0; i < UIP_CONNS; ++i) {
+ 207      =1  //    uip_periodic(i);
+ 208      =1  //    if(uip_len > 0) {
+ 209      =1  //      uip_arp_out();
+ 210      =1  //      ethernet_devicedriver_send();
+ 211      =1  //    }
+ 212      =1  //  }
+ 213      =1  // \endcode 
+ 214      =1  //
+ 215      =1  // \param conn The number of the connection which is to be periodically polled.
+ 216      =1  //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 20  
+
+ 217      =1  // \hideinitializer
+ 218      =1  //
+ 219      =1  #define uip_periodic(conn) do { uip_conn = &uip_conns[conn]; \
+ 220      =1                                  uip_process(UIP_TIMER); } while (0)
+ 221      =1  
+ 222      =1  //
+ 223      =1  // Periodic processing for a connection identified by a pointer to its structure.
+ 224      =1  //
+ 225      =1  // Same as uip_periodic() but takes a pointer to the actual uip_conn
+ 226      =1  // struct instead of an integer as its argument. This function can be
+ 227      =1  // used to force periodic processing of a specific connection.
+ 228      =1  //
+ 229      =1  // \param conn A pointer to the uip_conn struct for the connection to
+ 230      =1  // be processed.
+ 231      =1  //
+ 232      =1  // \hideinitializer
+ 233      =1  //
+ 234      =1  #define uip_periodic_conn(conn) do { uip_conn = conn; \
+ 235      =1                                       uip_process(UIP_TIMER); } while (0)
+ 236      =1  
+ 237      =1  #if UIP_UDP
+ 238      =1  //
+ 239      =1  // Periodic processing for a UDP connection identified by its number.
+ 240      =1  //
+ 241      =1  // This function is essentially the same as uip_prerioic(), but for
+ 242      =1  // UDP connections. It is called in a similar fashion as the
+ 243      =1  // uip_periodic() function:
+ 244      =1  // \code
+ 245      =1  //  for(i = 0; i < UIP_UDP_CONNS; i++) {
+ 246      =1  //    uip_udp_periodic(i);
+ 247      =1  //    if(uip_len > 0) {
+ 248      =1  //      devicedriver_send();
+ 249      =1  //    }
+ 250      =1  //  }   
+ 251      =1  // \endcode
+ 252      =1  //
+ 253      =1  // \note As for the uip_periodic() function, special care has to be
+ 254      =1  // taken when using uIP together with ARP and Ethernet:
+ 255      =1  // \code
+ 256      =1  //  for(i = 0; i < UIP_UDP_CONNS; i++) {
+ 257      =1  //    uip_udp_periodic(i);
+ 258      =1  //    if(uip_len > 0) {
+ 259      =1  //      uip_arp_out();
+ 260      =1  //      ethernet_devicedriver_send();
+ 261      =1  //    }
+ 262      =1  //  }   
+ 263      =1  // \endcode
+ 264      =1  //
+ 265      =1  // \param conn The number of the UDP connection to be processed.
+ 266      =1  //
+ 267      =1  // \hideinitializer
+ 268      =1  //
+ 269      =1  #define uip_udp_periodic(conn) do { uip_udp_conn = &uip_udp_conns[conn]; \
+ 270      =1                                  uip_process(UIP_UDP_TIMER); } while (0)
+ 271      =1  
+ 272      =1  //
+ 273      =1  // Periodic processing for a UDP connection identified by a pointer to
+ 274      =1  // its structure.
+ 275      =1  //
+ 276      =1  // Same as uip_udp_periodic() but takes a pointer to the actual
+ 277      =1  // uip_conn struct instead of an integer as its argument. This
+ 278      =1  // function can be used to force periodic processing of a specific
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 21  
+
+ 279      =1  // connection.
+ 280      =1  //
+ 281      =1  // \param conn A pointer to the uip_udp_conn struct for the connection
+ 282      =1  // to be processed.
+ 283      =1  //
+ 284      =1  // \hideinitializer
+ 285      =1  //
+ 286      =1  #define uip_udp_periodic_conn(conn) do { uip_udp_conn = conn; \
+ 287      =1                                           uip_process(UIP_UDP_TIMER); } while (0)
+ 288      =1  
+ 289      =1  void uip_udp_listen(uint port);
+ 290      =1  void uip_udp_unlisten(uint port);
+ 291      =1  
+ 292      =1  #endif // UIP_UDP //
+ 293      =1  
+ 294      =1  // The uIP packet buffer.
+ 295      =1  //
+ 296      =1  // The uip_buf array is used to hold incoming and outgoing
+ 297      =1  // packets. The device driver should place incoming data into this
+ 298      =1  // buffer. When sending data, the device driver should read the link
+ 299      =1  // level headers and the TCP/IP headers from this buffer. The size of
+ 300      =1  // the link level headers is configured by the UIP_LLH_LEN define.
+ 301      =1  //
+ 302      =1  // \note The application data need not be placed in this buffer, so
+ 303      =1  // the device driver must read it from the place pointed to by the
+ 304      =1  // uip_appdata pointer as illustrated by the following example:
+ 305      =1  // \code
+ 306      =1  // void
+ 307      =1  // devicedriver_send(void)
+ 308      =1  // {
+ 309      =1  //    hwsend(&uip_buf[0], UIP_LLH_LEN);
+ 310      =1  //    hwsend(&uip_buf[UIP_LLH_LEN], 40);
+ 311      =1  //    hwsend(uip_appdata, uip_len - 40 - UIP_LLH_LEN);
+ 312      =1  // }
+ 313      =1  // \endcode
+ 314      =1  //
+ 315      =1  //extern byte xdata uip_buf[UIP_BUFSIZE+2];
+ 316      =1  
+ 317      =1  // @} //
+ 318      =1  void uip_listen(uint port);
+ 319      =1  
+ 320      =1  //-----------------------------------------------------------------------------------//
+ 321      =1  // Functions that are used by the uIP application program. Opening and
+ 322      =1  // closing connections, sending and receiving data, etc. is all
+ 323      =1  // handled by the functions below.
+ 324      =1  //
+ 325      =1  //
+ 326      =1  // \defgroup uipappfunc uIP application functions
+ 327      =1  // @{
+ 328      =1  //
+ 329      =1  // Functions used by an application running of top of uIP.
+ 330      =1  //
+ 331      =1  
+ 332      =1  // Start listening to the specified port.
+ 333      =1  //
+ 334      =1  // \note Since this function expects the port number in network byte
+ 335      =1  // order, a conversion using HTONS() or htons() is necessary.
+ 336      =1  //
+ 337      =1  // \code
+ 338      =1  // uip_listen(HTONS(80)); 
+ 339      =1  // \endcode
+ 340      =1  //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 22  
+
+ 341      =1  // \param port A 16-bit port number in network byte order.
+ 342      =1  //
+ 343      =1  void uip_listen(uint port);
+ 344      =1  
+ 345      =1  // Stop listening to the specified port.
+ 346      =1  //
+ 347      =1  // \note Since this function expects the port number in network byte
+ 348      =1  // order, a conversion using HTONS() or htons() is necessary.
+ 349      =1  //
+ 350      =1  // \code
+ 351      =1  // uip_unlisten(HTONS(80)); 
+ 352      =1  // \endcode
+ 353      =1  //
+ 354      =1  // \param port A 16-bit port number in network byte order.
+ 355      =1  //
+ 356      =1  
+ 357      =1  struct uip_conn *uip_connect(uint *ripaddr, uint port);
+ 358      =1  
+ 359      =1  // Connect to a remote host using TCP.
+ 360      =1  //
+ 361      =1  // This function is used to start a new connection to the specified
+ 362      =1  // port on the specied host. It allocates a new connection identifier,
+ 363      =1  // sets the connection to the SYN_SENT state and sets the
+ 364      =1  // retransmission timer to 0. This will cause a TCP SYN segment to be
+ 365      =1  // sent out the next time this connection is periodically processed,
+ 366      =1  // which usually is done within 0.5 seconds after the call to
+ 367      =1  // uip_connect().
+ 368      =1  //
+ 369      =1  // \note This function is avaliable only if support for active open
+ 370      =1  // has been configured by defining UIP_ACTIVE_OPEN to 1 in uipopt.h.
+ 371      =1  //
+ 372      =1  // \note Since this function requires the port number to be in network
+ 373      =1  // byte order, a convertion using HTONS() or htons() is necessary.
+ 374      =1  //
+ 375      =1  // \code
+ 376      =1  // uint ipaddr[2];
+ 377      =1  
+ 378      =1  // uip_ipaddr(ipaddr, 192,168,1,2);
+ 379      =1  // uip_connect(ipaddr, HTONS(80)); 
+ 380      =1  // \endcode
+ 381      =1  // 
+ 382      =1  // \param ripaddr A pointer to a 4-byte array representing the IP
+ 383      =1  // address of the remote hot.
+ 384      =1  //
+ 385      =1  // \param port A 16-bit port number in network byte order.
+ 386      =1  //
+ 387      =1  // \return A pointer to the uIP connection identifier for the new connection,
+ 388      =1  // or NULL if no connection could be allocated.   
+ 389      =1  // 
+ 390      =1  //
+ 391      =1  struct uip_conn *uip_connect(uint *ripaddr, uint port);
+ 392      =1  
+ 393      =1  //
+ 394      =1  // \internal
+ 395      =1  //
+ 396      =1  // Check if a connection has outstanding (i.e., unacknowledged) data.
+ 397      =1  //
+ 398      =1  // \param conn A pointer to the uip_conn structure for the connection.
+ 399      =1  //
+ 400      =1  // \hideinitializer
+ 401      =1  //
+ 402      =1  #define uip_outstanding(conn) ((conn)->len)
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 23  
+
+ 403      =1  
+ 404      =1  //
+ 405      =1  // Send data on the current connection.
+ 406      =1  //
+ 407      =1  // This function is used to send out a single segment of TCP
+ 408      =1  // data. Only applications that have been invoked by uIP for event
+ 409      =1  // processing can send data. 
+ 410      =1  //
+ 411      =1  // The amount of data that actually is sent out after a call to this
+ 412      =1  // funcion is determined by the maximum amount of data TCP allows. uIP
+ 413      =1  // will automatically crop the data so that only the appropriate
+ 414      =1  // amount of data is sent. The function uip_mss() can be used to query
+ 415      =1  // uIP for the amount of data that actually will be sent.
+ 416      =1  // 
+ 417      =1  // \note This function does not guarantee that the sent data will
+ 418      =1  // arrive at the destination. If the data is lost in the network, the
+ 419      =1  // application will be invoked with the uip_rexmit() event being
+ 420      =1  // set. The application will then have to resend the data using this
+ 421      =1  // function.
+ 422      =1  // 
+ 423      =1  // \param data A pointer to the data which is to be sent.
+ 424      =1  //
+ 425      =1  // \param len The maximum amount of data bytes to be sent.
+ 426      =1  //
+ 427      =1  // \hideinitializer
+ 428      =1  //
+ 429      =1  #define uip_send(data, len) do { uip_sappdata = (data); uip_slen = (len);} while(0)   
+ 430      =1  
+ 431      =1  //
+ 432      =1  // The length of any incoming data that is currently avaliable (if avaliable)
+ 433      =1  // in the uip_appdata buffer.
+ 434      =1  //
+ 435      =1  // The test function uip_data() must first be used to check if there
+ 436      =1  // is any data available at all.
+ 437      =1  //
+ 438      =1  // \hideinitializer
+ 439      =1  //
+ 440      =1  #define uip_datalen()       uip_len
+ 441      =1  
+ 442      =1  //
+ 443      =1  // The length of any out-of-band data (urgent data) that has arrived
+ 444      =1  // on the connection.
+ 445      =1  //
+ 446      =1  // \note The configuration parameter UIP_URGDATA must be set for this
+ 447      =1  // function to be enabled.
+ 448      =1  //
+ 449      =1  // \hideinitializer
+ 450      =1  //
+ 451      =1  #define uip_urgdatalen()    uip_urglen
+ 452      =1  
+ 453      =1  //
+ 454      =1  // Close the current connection.
+ 455      =1  //
+ 456      =1  // This function will close the current connection in a nice way.
+ 457      =1  //
+ 458      =1  // \hideinitializer
+ 459      =1  //
+ 460      =1  #define uip_close()         (uip_flags = UIP_CLOSE)
+ 461      =1  
+ 462      =1  //
+ 463      =1  // Abort the current connection.
+ 464      =1  //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 24  
+
+ 465      =1  // This function will abort (reset) the current connection, and is
+ 466      =1  // usually used when an error has occured that prevents using the
+ 467      =1  // uip_close() function.
+ 468      =1  //
+ 469      =1  // \hideinitializer
+ 470      =1  //
+ 471      =1  #define uip_abort()         (uip_flags = UIP_ABORT)
+ 472      =1  
+ 473      =1  //
+ 474      =1  // Tell the sending host to stop sending data.
+ 475      =1  //
+ 476      =1  // This function will close our receiver's window so that we stop
+ 477      =1  // receiving data for the current connection.
+ 478      =1  //
+ 479      =1  // \hideinitializer
+ 480      =1  //
+ 481      =1  #define uip_stop()          (uip_conn->tcpstateflags |= UIP_STOPPED)
+ 482      =1  
+ 483      =1  //
+ 484      =1  // Find out if the current connection has been previously stopped with
+ 485      =1  // uip_stop().
+ 486      =1  //
+ 487      =1  // \hideinitializer
+ 488      =1  //
+ 489      =1  #define uip_stopped(conn)   ((conn)->tcpstateflags & UIP_STOPPED)
+ 490      =1  
+ 491      =1  /**
+ 492      =1   * Restart the current connection, if is has previously been stopped
+ 493      =1   * with uip_stop().
+ 494      =1   *
+ 495      =1   * This function will open the receiver's window again so that we
+ 496      =1   * start receiving data for the current connection.
+ 497      =1   *
+ 498      =1   * \hideinitializer
+ 499      =1   */
+ 500      =1  #define uip_restart()         do { uip_flags |= UIP_NEWDATA; \
+ 501      =1                                     uip_conn->tcpstateflags &= ~UIP_STOPPED; \
+ 502      =1                                } while(0)
+ 503      =1  
+ 504      =1  // uIP tests that can be made to determine in what state the current
+ 505      =1  // connection is, and what the application function should do.
+ 506      =1  
+ 507      =1  //
+ 508      =1  // Is new incoming data available?
+ 509      =1  //
+ 510      =1  // Will reduce to non-zero if there is new data for the application
+ 511      =1  // present at the uip_appdata pointer. The size of the data is
+ 512      =1  // avaliable through the uip_len variable.
+ 513      =1  //
+ 514      =1  // \hideinitializer
+ 515      =1  //
+ 516      =1  #define uip_newdata()   (uip_flags & UIP_NEWDATA)
+ 517      =1  
+ 518      =1  //
+ 519      =1  // Has previously sent data been acknowledged?
+ 520      =1  //
+ 521      =1  // Will reduce to non-zero if the previously sent data has been
+ 522      =1  // acknowledged by the remote host. This means that the application
+ 523      =1  // can send new data. 
+ 524      =1  //
+ 525      =1  // \hideinitializer
+ 526      =1  //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 25  
+
+ 527      =1  #define uip_acked()   (uip_flags & UIP_ACKDATA)
+ 528      =1  
+ 529      =1  //
+ 530      =1  // Has the connection just been connected?  
+ 531      =1  //
+ 532      =1  // Reduces to non-zero if the current connection has been connected to
+ 533      =1  // a remote host. This will happen both if the connection has been
+ 534      =1  // actively opened (with uip_connect()) or passively opened (with
+ 535      =1  // uip_listen()).
+ 536      =1  //
+ 537      =1  // \hideinitializer
+ 538      =1  //
+ 539      =1  #define uip_connected() (uip_flags & UIP_CONNECTED)
+ 540      =1  
+ 541      =1  //
+ 542      =1  // Has the connection been closed by the other end?
+ 543      =1  //
+ 544      =1  // Is non-zero if the connection has been closed by the remote
+ 545      =1  // host. The application may then do the necessary clean-ups.
+ 546      =1  //
+ 547      =1  // \hideinitializer
+ 548      =1  //
+ 549      =1  #define uip_closed()    (uip_flags & UIP_CLOSE)
+ 550      =1  
+ 551      =1  //
+ 552      =1  // Has the connection been aborted by the other end?
+ 553      =1  //
+ 554      =1  // Non-zero if the current connection has been aborted (reset) by the
+ 555      =1  // remote host.
+ 556      =1  //
+ 557      =1  // \hideinitializer
+ 558      =1  //
+ 559      =1  #define uip_aborted()    (uip_flags & UIP_ABORT)
+ 560      =1  
+ 561      =1  //
+ 562      =1  // Has the connection timed out?
+ 563      =1  //
+ 564      =1  // Non-zero if the current connection has been aborted due to too many
+ 565      =1  // retransmissions.
+ 566      =1  //
+ 567      =1  // \hideinitializer
+ 568      =1  //
+ 569      =1  #define uip_timedout()    (uip_flags & UIP_TIMEDOUT)
+ 570      =1  
+ 571      =1  //
+ 572      =1  // Do we need to retransmit previously data?
+ 573      =1  //
+ 574      =1  // Reduces to non-zero if the previously sent data has been lost in
+ 575      =1  // the network, and the application should retransmit it. The
+ 576      =1  // application should send the exact same data as it did the last
+ 577      =1  // time, using the uip_send() function.
+ 578      =1  //
+ 579      =1  // \hideinitializer
+ 580      =1  //
+ 581      =1  #define uip_rexmit()     (uip_flags & UIP_REXMIT)
+ 582      =1  
+ 583      =1  //
+ 584      =1  // Is the connection being polled by uIP?
+ 585      =1  //
+ 586      =1  // Is non-zero if the reason the application is invoked is that the
+ 587      =1  // current connection has been idle for a while and should be
+ 588      =1  // polled.
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 26  
+
+ 589      =1  //
+ 590      =1  // The polling event can be used for sending data without having to
+ 591      =1  // wait for the remote host to send data.
+ 592      =1  //
+ 593      =1  // \hideinitializer
+ 594      =1  // 
+ 595      =1  //#define uip_poll()       (uip_flags & UIP_POLL)
+ 596      =1  #define uip_conntimeout()       (uip_flags & UIP_CONN_TIMEDOUT)
+ 597      =1  
+ 598      =1  //
+ 599      =1  // Get the initial maxium segment size (MSS) of the current
+ 600      =1  // connection.
+ 601      =1  //
+ 602      =1  // \hideinitializer
+ 603      =1  //
+ 604      =1  #define uip_initialmss()             (uip_conn->initialmss)
+ 605      =1  
+ 606      =1  //
+ 607      =1  // Get the current maxium segment size that can be sent on the current
+ 608      =1  // connection.
+ 609      =1  //
+ 610      =1  // The current maxiumum segment size that can be sent on the
+ 611      =1  // connection is computed from the receiver's window and the MSS of
+ 612      =1  // the connection (which also is available by calling
+ 613      =1  // uip_initialmss()).
+ 614      =1  //
+ 615      =1  // \hideinitializer
+ 616      =1  //
+ 617      =1  #define uip_mss()             (uip_conn->mss)
+ 618      =1  
+ 619      =1  //
+ 620      =1  // Set up a new UDP connection.
+ 621      =1  //
+ 622      =1  // \param ripaddr A pointer to a 4-byte structure representing the IP
+ 623      =1  // address of the remote host.
+ 624      =1  //
+ 625      =1  // \param rport The remote port number in network byte order.
+ 626      =1  //
+ 627      =1  // \return The uip_udp_conn structure for the new connection or NULL
+ 628      =1  // if no connection could be allocated.
+ 629      =1  //
+ 630      =1  struct uip_udp_conn *uip_udp_new(uint *ripaddr, uint rport);
+ 631      =1  
+ 632      =1  //
+ 633      =1  // Removed a UDP connection.
+ 634      =1  //
+ 635      =1  // \param conn A pointer to the uip_udp_conn structure for the connection.
+ 636      =1  //
+ 637      =1  // \hideinitializer
+ 638      =1  //
+ 639      =1  #define uip_udp_remove(conn) (conn)->lport = 0
+ 640      =1  
+ 641      =1  //
+ 642      =1  // Send a UDP datagram of length len on the current connection.
+ 643      =1  //
+ 644      =1  // This function can only be called in response to a UDP event (poll
+ 645      =1  // or newdata). The data must be present in the uip_buf buffer, at the
+ 646      =1  // place pointed to by the uip_appdata pointer.
+ 647      =1  //
+ 648      =1  // \param len The length of the data in the uip_buf buffer.
+ 649      =1  //
+ 650      =1  // \hideinitializer
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 27  
+
+ 651      =1  //
+ 652      =1  #define uip_udp_send(len) uip_slen = (len)
+ 653      =1  
+ 654      =1  // @} //
+ 655      =1  
+ 656      =1  // uIP convenience and converting functions. //
+ 657      =1  
+ 658      =1  //
+ 659      =1  // \defgroup uipconvfunc uIP conversion functions
+ 660      =1  // @{
+ 661      =1  //
+ 662      =1  // These functions can be used for converting between different data
+ 663      =1  // formats used by uIP.
+ 664      =1  //
+ 665      =1  
+ 666      =1  //
+ 667      =1  // Pack an IP address into a 4-byte array which is used by uIP to
+ 668      =1  // represent IP addresses.
+ 669      =1  //
+ 670      =1  // Example:
+ 671      =1  // \code
+ 672      =1  // uint ipaddr[2];
+ 673      =1  //
+ 674      =1  // uip_ipaddr(&ipaddr, 192,168,1,2); 
+ 675      =1  // \endcode
+ 676      =1  //
+ 677      =1  // \param addr A pointer to a 4-byte array that will be filled in with
+ 678      =1  // the IP addres.
+ 679      =1  // \param addr0 The first octet of the IP address.
+ 680      =1  // \param addr1 The second octet of the IP address.
+ 681      =1  // \param addr2 The third octet of the IP address.
+ 682      =1  // \param addr3 The forth octet of the IP address. 
+ 683      =1  //
+ 684      =1  // \hideinitializer
+ 685      =1  //
+ 686      =1  #define uip_ipaddr(addr, addr0,addr1,addr2,addr3) do { \
+ 687      =1                       (addr)[0] = HTONS(((addr0) << 8) | (addr1)); \
+ 688      =1                       (addr)[1] = HTONS(((addr2) << 8) | (addr3)); \
+ 689      =1                    } while(0)
+ 690      =1  
+ 691      =1  //
+ 692      =1  // Convert 16-bit quantity from host byte order to network byte order.
+ 693      =1  //
+ 694      =1  // This macro is primarily used for converting constants from host
+ 695      =1  // byte order to network byte order. For converting variables to
+ 696      =1  // network byte order, use the htons() function instead.
+ 697      =1  //
+ 698      =1  // \hideinitializer
+ 699      =1  //
+ 700      =1  #ifndef HTONS
+ 701      =1  #if BYTE_ORDER == BIG_ENDIAN
+ 702      =1  #define HTONS(n) (n)
+ 703      =1  #else // BYTE_ORDER == BIG_ENDIAN //
+           =1 #define HTONS(n) ((((uint)((n) & 0xff)) << 8) | (((n) & 0xff00) >> 8))
+           =1 #endif // BYTE_ORDER == BIG_ENDIAN //
+ 706      =1  #endif // HTONS //
+ 707      =1  
+ 708      =1  //
+ 709      =1  // Convert 16-bit quantity from host byte order to network byte order.
+ 710      =1  //
+ 711      =1  // This function is primarily used for converting variables from host
+ 712      =1  // byte order to network byte order. For converting constants to
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 28  
+
+ 713      =1  // network byte order, use the HTONS() macro instead.
+ 714      =1  //
+ 715      =1  //#ifndef htons
+ 716      =1  //uint htons(uint val);
+ 717      =1  //#endif // htons //
+ 718      =1  
+ 719      =1  // @} //
+ 720      =1  
+ 721      =1  //
+ 722      =1  // Pointer to the application data in the packet buffer.
+ 723      =1  //
+ 724      =1  // This pointer points to the application data when the application is
+ 725      =1  // called. If the application wishes to send data, the application may
+ 726      =1  // use this space to write the data into before calling uip_send().
+ 727      =1  // /
+ 728      =1  //extern volatile byte *uip_appdata;
+ 729      =1  extern volatile byte *uip_sappdata; 
+ 730      =1  
+ 731      =1  #if UIP_URGDATA > 0 
+ 732      =1  // byte *uip_urgdata:
+ 733      =1  //
+ 734      =1  // This pointer points to any urgent data that has been received. Only
+ 735      =1  // present if compiled with support for urgent data (UIP_URGDATA).
+ 736      =1  //
+ 737      =1  extern volatile byte *uip_urgdata; 
+ 738      =1  #endif // UIP_URGDATA > 0 //
+ 739      =1  
+ 740      =1  // u[8|16]_t uip_len:
+ 741      =1  //
+ 742      =1  // When the application is called, uip_len contains the length of any
+ 743      =1  // new data that has been received from the remote host. The
+ 744      =1  // application should set this variable to the size of any data that
+ 745      =1  // the application wishes to send. When the network device driver
+ 746      =1  // output function is called, uip_len should contain the length of the
+ 747      =1  // outgoing packet.
+ 748      =1  //
+ 749      =1  //extern volatile uint idata uip_len, uip_slen;
+ 750      =1  extern volatile uint idata uip_slen;
+ 751      =1  
+ 752      =1  #if UIP_URGDATA > 0 
+ 753      =1  extern volatile byte idata uip_urglen, uip_surglen;
+ 754      =1  #endif // UIP_URGDATA > 0 //
+ 755      =1  
+ 756      =1  //
+ 757      =1  // Representation of a uIP TCP connection.
+ 758      =1  //
+ 759      =1  // The uip_conn structure is used for identifying a connection. All
+ 760      =1  // but one field in the structure are to be considered read-only by an
+ 761      =1  // application. The only exception is the appstate field whos purpose
+ 762      =1  // is to let the application store application-specific state (e.g.,
+ 763      =1  // file pointers) for the connection. The size of this field is
+ 764      =1  // configured in the "uipopt.h" header file.
+ 765      =1  //
+ 766      =1  struct uip_conn {
+ 767      =1          uint ripaddr[2];    //< The IP address of the remote host. //
+ 768      =1  
+ 769      =1          uint lport;         //< The local TCP port, in network byte order. //
+ 770      =1          uint rport;         //< The local remote TCP port, in network byte order. //  
+ 771      =1  
+ 772      =1          byte rcv_nxt[4];    //< The sequence number that we expect to receive next. //
+ 773      =1          byte snd_nxt[4];    //< The sequence number that was last sent by us. //
+ 774      =1          uint len;           //< Length of the data that was previously sent. //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 29  
+
+ 775      =1          uint mss;           //< Current maximum segment size for the connection. //
+ 776      =1          uint initialmss;    //< Initial maximum segment size for the connection. //  
+ 777      =1          byte sa;            //< Retransmission time-out calculation state variable. //
+ 778      =1          byte sv;            //< Retransmission time-out calculation state variable. //
+ 779      =1          byte rto;           //< Retransmission time-out. //
+ 780      =1          byte tcpstateflags; //< TCP state and flags. //
+ 781      =1          byte timer;         //< The retransmission timer. //
+ 782      =1          byte nrtx;          //< The number of retransmissions for the last segment sent. //
+ 783      =1  
+ 784      =1          byte window[2];
+ 785      =1          byte keepaliveflag;
+ 786      =1      byte sndkeepalive; // number of keepalive packet was sent //
+ 787      =1          uint keepalivetick;
+ 788      =1          byte tcpip_id;
+ 789      =1  
+ 790      =1          // The application state. //
+ 791      =1  //      byte appstate[UIP_APPSTATE_SIZE];  
+ 792      =1  };
+ 793      =1  
+ 794      =1  // Pointer to the current connection. //
+ 795      =1  extern struct uip_conn xdata *uip_conn;
+ 796      =1  // The array containing all uIP connections. //
+ 797      =1  extern struct uip_conn xdata uip_conns[UIP_CONNS];
+ 798      =1  //
+ 799      =1  // \addtogroup uiparch
+ 800      =1  // @{
+ 801      =1  //
+ 802      =1  
+ 803      =1  //
+ 804      =1  // 4-byte array used for the 32-bit sequence number calculations.
+ 805      =1  //
+ 806      =1  extern volatile byte uip_acc32[4];
+ 807      =1  
+ 808      =1  // @} //
+ 809      =1  
+ 810      =1  #if UIP_UDP
+ 811      =1  //
+ 812      =1  // Representation of a uIP UDP connection.
+ 813      =1  //
+ 814      =1  struct uip_udp_conn {
+ 815      =1    uint ripaddr[2];   //< The IP address of the remote peer. //
+ 816      =1    uint lport;        //< The local port number in network byte order. //
+ 817      =1    uint rport;        //< The remote port number in network byte order. //
+ 818      =1  
+ 819      =1    byte tcpip_id;
+ 820      =1  };
+ 821      =1  
+ 822      =1  extern struct uip_udp_conn xdata *uip_udp_conn;
+ 823      =1  extern struct uip_udp_conn xdata uip_udp_conns[UIP_UDP_CONNS];
+ 824      =1  #endif // UIP_UDP //
+ 825      =1  
+ 826      =1  //
+ 827      =1  // The structure holding the TCP/IP statistics that are gathered if
+ 828      =1  // UIP_STATISTICS is set to 1.
+ 829      =1  //
+ 830      =1  //
+ 831      =1  struct uip_stats {
+ 832      =1    struct {
+ 833      =1      uip_stats_t drop;     //< Number of dropped packets at the IP layer. //
+ 834      =1      uip_stats_t recv;     //< Number of received packets at the IP layer. //
+ 835      =1      uip_stats_t sent;     //< Number of sent packets at the IP layer. //
+ 836      =1      uip_stats_t vhlerr;   //< Number of packets dropped due to wrong IP version or header length. //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 30  
+
+ 837      =1      uip_stats_t hblenerr; //< Number of packets dropped due to wrong IP length, high byte. //
+ 838      =1      uip_stats_t lblenerr; //< Number of packets dropped due to wrong IP length, low byte. //
+ 839      =1      uip_stats_t fragerr;  //< Number of packets dropped since they were IP fragments. //
+ 840      =1      uip_stats_t chkerr;   //< Number of packets dropped due to IP checksum errors. //
+ 841      =1      uip_stats_t protoerr; //< Number of packets dropped since they were neither ICMP, UDP nor TCP. //
+ 842      =1    } ip;                   //< IP statistics. //
+ 843      =1    struct {
+ 844      =1      uip_stats_t drop;     //< Number of dropped ICMP packets. //
+ 845      =1      uip_stats_t recv;     //< Number of received ICMP packets. //
+ 846      =1      uip_stats_t sent;     //< Number of sent ICMP packets. //
+ 847      =1      uip_stats_t typeerr;  //< Number of ICMP packets with a wrong type. //
+ 848      =1    } icmp;                 //< ICMP statistics. //
+ 849      =1    struct {
+ 850      =1      uip_stats_t drop;     //< Number of dropped TCP segments. //
+ 851      =1      uip_stats_t recv;     //< Number of recived TCP segments. //
+ 852      =1      uip_stats_t sent;     //< Number of sent TCP segments. //
+ 853      =1      uip_stats_t chkerr;   //< Number of TCP segments with a bad checksum. //
+ 854      =1      uip_stats_t ackerr;   //< Number of TCP segments with a bad ACK number. //
+ 855      =1      uip_stats_t rst;      //< Number of recevied TCP RST (reset) segments. //
+ 856      =1      uip_stats_t rexmit;   //< Number of retransmitted TCP segments. //
+ 857      =1      uip_stats_t syndrop;  //< Number of dropped SYNs due to too few connections was avaliable. //
+ 858      =1      uip_stats_t synrst;   //< Number of SYNs for closed ports, triggering a RST. //
+ 859      =1    } tcp;                  //< TCP statistics. //
+ 860      =1  };
+ 861      =1  
+ 862      =1  //
+ 863      =1  // The uIP TCP/IP statistics.
+ 864      =1  //
+ 865      =1  // This is the variable in which the uIP TCP/IP statistics are gathered.
+ 866      =1  //
+ 867      =1  extern struct uip_stats uip_stat;
+ 868      =1  
+ 869      =1  //-----------------------------------------------------------------------------------//
+ 870      =1  // All the stuff below this point is internal to uIP and should not be
+ 871      =1  // used directly by an application or by a device driver.
+ 872      =1  //
+ 873      =1  //-----------------------------------------------------------------------------------//
+ 874      =1  // byte uip_flags:
+ 875      =1  //
+ 876      =1  // When the application is called, uip_flags will contain the flags
+ 877      =1  // that are defined in this file. Please read below for more
+ 878      =1  // infomation.
+ 879      =1  //
+ 880      =1  extern volatile byte idata uip_flags;
+ 881      =1  
+ 882      =1  // The following flags may be set in the global variable uip_flags
+ 883      =1  // before calling the application callback. The UIP_ACKDATA and
+ 884      =1  // UIP_NEWDATA flags may both be set at the same time, whereas the
+ 885      =1  // others are mutualy exclusive. Note that these flags should *NOT* be
+ 886      =1  // accessed directly, but through the uIP functions/macros.
+ 887      =1  
+ 888      =1  #define UIP_ACKDATA   1     // Signifies that the outstanding data was
+ 889      =1  //                             acked and the application should send
+ 890      =1  //                             out new data instead of retransmitting
+ 891      =1  //                             the last data.
+ 892      =1  #define UIP_NEWDATA   2     // Flags the fact that the peer has sent us new data. //
+ 893      =1  #define UIP_REXMIT    4     // Tells the application to retransmit the data that was last sent. //
+ 894      =1  #define UIP_CONN_TIMEDOUT       8
+ 895      =1  //#define UIP_POLL      8     // Used for polling the application, to
+ 896      =1  //                             check if the application has data that
+ 897      =1  //                               it wants to send.
+ 898      =1  #define UIP_CLOSE     16    // The remote host has closed the
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 31  
+
+ 899      =1  //                             connection, thus the connection has
+ 900      =1  //                             gone away. Or the application signals
+ 901      =1  //                             that it wants to close the
+ 902      =1  //                             connection.
+ 903      =1  #define UIP_ABORT     32    // The remote host has aborted the
+ 904      =1  //                             connection, thus the connection has
+ 905      =1  //                             gone away. Or the application signals
+ 906      =1  //                             that it wants to abort the
+ 907      =1  //                             connection.
+ 908      =1  #define UIP_CONNECTED 64    // We have got a connection from a remote
+ 909      =1  //                             host and have set up a new connection
+ 910      =1  //                             for it, or an active connection has
+ 911      =1  //                             been successfully established.
+ 912      =1  
+ 913      =1  #define UIP_TIMEDOUT  128   // The connection has been aborted due to too many retransmissions. //
+ 914      =1  
+ 915      =1  extern byte xdata uip_extraflag;
+ 916      =1  
+ 917      =1  #define UIP_SEND_PUSH   1
+ 918      =1  #define UIP_SEND_NONE   2
+ 919      =1  #define UIP_SEND_REXMIT 4
+ 920      =1  #define UIP_RCV_WINDOW  64
+ 921      =1  #define UIP_RCV_PRE_ACK 128
+ 922      =1  
+ 923      =1  // uip_process(flag):
+ 924      =1  //
+ 925      =1  // The actual uIP function which does all the work.
+ 926      =1  //
+ 927      =1  void uip_process(byte flag);
+ 928      =1  
+ 929      =1  // The following flags are passed as an argument to the uip_process()
+ 930      =1  // function. They are used to distinguish between the two cases where
+ 931      =1  // uip_process() is called. It can be called either because we have
+ 932      =1  // incoming data that should be processed, or because the periodic
+ 933      =1  // timer has fired.
+ 934      =1  
+ 935      =1  #define UIP_DATA    1     // Tells uIP that there is incoming data in
+ 936      =1                            // the uip_buf buffer. The length of the
+ 937      =1                            // data is stored in the global variable
+ 938      =1                            // uip_len.
+ 939      =1  #define UIP_TIMER   2     // Tells uIP that the periodic timer has
+ 940      =1                            // fired.
+ 941      =1  #if UIP_UDP
+ 942      =1  #define UIP_UDP_TIMER 3
+ 943      =1  #endif // UIP_UDP //
+ 944      =1  
+ 945      =1  #if UIP_ACTIVE_OPEN
+ 946      =1  #define UIP_ACTIVE_SEND 4
+ 947      =1  #endif // UIP_ACTIVE_OPEN //
+ 948      =1  
+ 949      =1  // The TCP states used in the uip_conn->tcpstateflags. //
+ 950      =1  #define CLOSED      0
+ 951      =1  #define SYN_RCVD    1
+ 952      =1  #define SYN_SENT    2
+ 953      =1  #define ESTABLISHED 3
+ 954      =1  #define FIN_WAIT_1  4
+ 955      =1  #define FIN_WAIT_2  5
+ 956      =1  #define CLOSING     6
+ 957      =1  #define TIME_WAIT   7
+ 958      =1  #define LAST_ACK    8
+ 959      =1  #define TS_MASK     15
+ 960      =1    
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 32  
+
+ 961      =1  #define UIP_STOPPED      16
+ 962      =1  
+ 963      =1  #define UIP_TCPIP_HLEN 40
+ 964      =1  
+ 965      =1  // The TCP and IP headers. //
+ 966      =1  typedef struct {
+ 967      =1    // IP header. //
+ 968      =1    byte vhl,
+ 969      =1      tos,          
+ 970      =1      len[2],       
+ 971      =1      ipid[2],        
+ 972      =1      ipoffset[2],  
+ 973      =1      ttl,          
+ 974      =1      proto;     
+ 975      =1    uint ipchksum;
+ 976      =1    uint srcipaddr[2], 
+ 977      =1      destipaddr[2];
+ 978      =1    
+ 979      =1    // TCP header. //
+ 980      =1    uint srcport,
+ 981      =1      destport;
+ 982      =1    byte seqno[4],  
+ 983      =1      ackno[4],
+ 984      =1      tcpoffset,
+ 985      =1      flags,
+ 986      =1      wnd[2];     
+ 987      =1    uint tcpchksum;
+ 988      =1    byte urgp[2];
+ 989      =1    byte optdata[4];
+ 990      =1  } uip_tcpip_hdr;
+ 991      =1  
+ 992      =1  // The ICMP and IP headers. //
+ 993      =1  typedef struct {
+ 994      =1    // IP header. //
+ 995      =1    byte vhl,
+ 996      =1      tos,          
+ 997      =1      len[2],       
+ 998      =1      ipid[2],        
+ 999      =1      ipoffset[2],  
+1000      =1      ttl,          
+1001      =1      proto;     
+1002      =1    uint ipchksum;
+1003      =1    uint srcipaddr[2], 
+1004      =1      destipaddr[2];
+1005      =1    // ICMP (echo) header. //
+1006      =1    byte type, icode;
+1007      =1    uint icmpchksum;
+1008      =1    uint id, seqno;  
+1009      =1  } uip_icmpip_hdr;
+1010      =1  
+1011      =1  // The UDP and IP headers. //
+1012      =1  typedef struct {
+1013      =1    // IP header. //
+1014      =1    byte vhl,
+1015      =1      tos,          
+1016      =1      len[2],       
+1017      =1      ipid[2],        
+1018      =1      ipoffset[2],  
+1019      =1      ttl,          
+1020      =1      proto;     
+1021      =1    uint ipchksum;
+1022      =1    uint srcipaddr[2], 
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 33  
+
+1023      =1      destipaddr[2];
+1024      =1    
+1025      =1    // UDP header. //
+1026      =1    uint srcport,
+1027      =1      destport;
+1028      =1    uint udplen;
+1029      =1    uint udpchksum;
+1030      =1  } uip_udpip_hdr;
+1031      =1  
+1032      =1  #define UIP_PROTO_ICMP  1
+1033      =1  #define UIP_PROTO_TCP   6
+1034      =1  #define UIP_PROTO_UDP   17
+1035      =1  
+1036      =1  #if UIP_FIXEDADDR
+           =1 extern const uint code uip_hostaddr[2];
+           =1 #else // UIP_FIXEDADDR //
+1039      =1  extern uint idata uip_hostaddr[2];
+1040      =1  #endif // UIP_FIXEDADDR //
+1041      =1  
+1042      =1  #endif // __UIP_H__ //
+1043      =1  
+1044      =1  // @} //
+1045      =1  
+  44          #include "uip_arch.h"
+   1      =1  //
+   2      =1  // \defgroup uiparch Architecture specific uIP functions
+   3      =1  // @{
+   4      =1  //
+   5      =1  // The functions in the architecture specific module implement the IP
+   6      =1  // check sum and 32-bit additions.
+   7      =1  //
+   8      =1  // The IP checksum calculation is the most computationally expensive
+   9      =1  // operation in the TCP/IP stack and it therefore pays off to
+  10      =1  // implement this in efficient assembler. The purpose of the uip-arch
+  11      =1  // module is to let the checksum functions to be implemented in
+  12      =1  // architecture specific assembler.
+  13      =1  //
+  14      =1  //
+  15      =1  
+  16      =1  //
+  17      =1  // \file
+  18      =1  // Declarations of architecture specific functions.
+  19      =1  // \author Adam Dunkels <adam@dunkels.com>
+  20      =1  //
+  21      =1  
+  22      =1  //
+  23      =1  // Copyright (c) 2001, Adam Dunkels.
+  24      =1  // All rights reserved. 
+  25      =1  //
+  26      =1  // Redistribution and use in source and binary forms, with or without 
+  27      =1  // modification, are permitted provided that the following conditions 
+  28      =1  // are met: 
+  29      =1  // 1. Redistributions of source code must retain the above copyright 
+  30      =1  //    notice, this list of conditions and the following disclaimer. 
+  31      =1  // 2. Redistributions in binary form must reproduce the above copyright 
+  32      =1  //    notice, this list of conditions and the following disclaimer in the 
+  33      =1  //    documentation and/or other materials provided with the distribution. 
+  34      =1  // 3. The name of the author may not be used to endorse or promote
+  35      =1  //    products derived from this software without specific prior
+  36      =1  //    written permission.  
+  37      =1  //
+  38      =1  // THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 34  
+
+  39      =1  // OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  40      =1  // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  41      =1  // ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+  42      =1  // DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  43      =1  // DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+  44      =1  // GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  45      =1  // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  46      =1  // WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  47      =1  // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  48      =1  // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  49      =1  //
+  50      =1  // This file is part of the uIP TCP/IP stack.
+  51      =1  //
+  52      =1  // $Id: uip_arch.h,v$
+  53      =1  //
+  54      =1  //
+  55      =1  
+  56      =1  //       ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+  57      =1  //       บ    TITLE:  Keil C51 v7.00 port of Adam Dunkels' uIP v0.9 บ
+  58      =1  //       บ REVISION:  VER 0.0                                       บ
+  59      =1  //       บ REV.DATE:  14-01-05                                      บ
+  60      =1  //       บ  ARCHIVE:                                                บ
+  61      =1  //       บ   AUTHOR:  Murray R. Van Luyn, 2005.                     บ
+  62      =1  //       ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ        //
+  63      =1  
+  64      =1  #ifndef __UIP_ARCH_H__
+  65      =1  #define __UIP_ARCH_H__
+  66      =1  
+  67      =1  #include "uip.h"
+   1      =2  //
+   2      =2  // \addtogroup uip
+   3      =2  // @{
+   4      =2  //
+   5      =2  
+   6      =2  //
+   7      =2  // \file
+   8      =2  // Header file for the uIP TCP/IP stack.
+   9      =2  // \author Adam Dunkels <adam@dunkels.com>
+  10      =2  //
+  11      =2  // The uIP TCP/IP stack header file contains definitions for a number
+  12      =2  // of C macros that are used by uIP programs as well as internal uIP
+  13      =2  // structures, TCP/IP header structures and function declarations.
+  14      =2  //
+  15      =2  //
+  16      =2  // Copyright (c) 2001-2003, Adam Dunkels.
+  17      =2  // All rights reserved. 
+  18      =2  //
+  19      =2  // Redistribution and use in source and binary forms, with or without 
+  20      =2  // modification, are permitted provided that the following conditions 
+  21      =2  // are met: 
+  22      =2  // 1. Redistributions of source code must retain the above copyright 
+  23      =2  //    notice, this list of conditions and the following disclaimer. 
+  24      =2  // 2. Redistributions in binary form must reproduce the above copyright 
+  25      =2  //    notice, this list of conditions and the following disclaimer in the 
+  26      =2  //    documentation and/or other materials provided with the distribution. 
+  27      =2  // 3. The name of the author may not be used to endorse or promote
+  28      =2  //    products derived from this software without specific prior
+  29      =2  //    written permission.  
+  30      =2  //
+  31      =2  // THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+  32      =2  // OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  33      =2  // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 35  
+
+  34      =2  // ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+  35      =2  // DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  36      =2  // DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+  37      =2  // GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  38      =2  // INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  39      =2  // WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  40      =2  // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  41      =2  // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  42      =2  //
+  43      =2  // This file is part of the uIP TCP/IP stack.
+  44      =2  //
+  45      =2  // $Id: uip.h,v$
+  46      =2  //
+  47      =2  //       ษออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป
+  48      =2  //       ?   TITLE:  Keil C51 v7.00 port of Adam Dunkels' uIP v0.9 
+  49      =2  //       ?REVISION:  VER 0.0                                       
+  50      =2  //       ?REV.DATE:  14-01-05                                      
+  51      =2  //       ? ARCHIVE:                                                
+  52      =2  //       ?  AUTHOR:  Murray R. Van Luyn, 2005.                     
+  53      =2  //       ศออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ
+  54      =2  
+  55      =2  #ifndef __UIP_H__
+           =2 #define __UIP_H__
+           =2 
+           =2 #include "uipopt.h"
+           =2 
+           =2 //-----------------------------------------------------------------------------------//
+           =2 // First, the functions that should be called from the
+           =2 // system. Initialization, the periodic timer and incoming packets are
+           =2 // handled by the following three functions.
+           =2 //
+           =2 
+           =2 //
+           =2 // \defgroup uipconffunc uIP configuration functions
+           =2 // @{
+           =2 //
+           =2 // The uIP configuration functions are used for setting run-time
+           =2 // parameters in uIP such as IP addresses. 
+           =2 //
+           =2 
+           =2 //
+           =2 // Set the IP address of this host.
+           =2 //
+           =2 // The IP address is represented as a 4-byte array where the first
+           =2 // octet of the IP address is put in the first member of the 4-byte
+           =2 // array.
+           =2 //
+           =2 // \param addr A pointer to a 4-byte representation of the IP address.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_sethostaddr(addr) do { uip_hostaddr[0] = addr[0]; \
+           =2                               uip_hostaddr[1] = addr[1]; } while(0)
+           =2 
+           =2 //
+           =2 // Get the IP address of this host.
+           =2 //
+           =2 // The IP address is represented as a 4-byte array where the first
+           =2 // octet of the IP address is put in the first member of the 4-byte
+           =2 // array.
+           =2 //
+           =2 // \param addr A pointer to a 4-byte array that will be filled in with
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 36  
+
+           =2 // the currently configured IP address.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_gethostaddr(addr) do { addr[0] = uip_hostaddr[0]; \
+           =2                               addr[1] = uip_hostaddr[1]; } while(0)
+           =2 
+           =2 //
+           =2 // \defgroup uipinit uIP initialization functions
+           =2 // @{
+           =2 //
+           =2 // The uIP initialization functions are used for booting uIP.
+           =2 //
+           =2 
+           =2 //
+           =2 // uIP initialization function.
+           =2 //
+           =2 // This function should be called at boot up to initilize the uIP
+           =2 // TCP/IP stack.
+           =2 //
+           =2 void uip_init(void);
+           =2 
+           =2 // @} //
+           =2 
+           =2 // \defgroup uipdevfunc uIP device driver functions
+           =2 // @{
+           =2 //
+           =2 // These functions are used by a network device driver for interacting
+           =2 // with uIP.
+           =2 //
+           =2 // Process an incoming packet.
+           =2 //
+           =2 // This function should be called when the device driver has received
+           =2 // a packet from the network. The packet from the device driver must
+           =2 // be present in the uip_buf buffer, and the length of the packet
+           =2 // should be placed in the uip_len variable.
+           =2 //
+           =2 // When the function returns, there may be an outbound packet placed
+           =2 // in the uip_buf packet buffer. If so, the uip_len variable is set to
+           =2 // the length of the packet. If no packet is to be sent out, the
+           =2 // uip_len variable is set to 0.
+           =2 //
+           =2 // The usual way of calling the function is presented by the source
+           =2 // code below.
+           =2 // \code
+           =2 //  uip_len = devicedriver_poll();
+           =2 //  if(uip_len > 0) {
+           =2 //    uip_input();
+           =2 //    if(uip_len > 0) {
+           =2 //      devicedriver_send();
+           =2 //    }
+           =2 //  }
+           =2 // \endcode
+           =2 //
+           =2 // \note If you are writing a uIP device driver that needs ARP
+           =2 // (Address Resolution Protocol), e.g., when running uIP over
+           =2 // Ethernet, you will need to call the uIP ARP code before calling
+           =2 // this function:
+           =2 // \code
+           =2 //  #define BUF ((struct uip_eth_hdr *)&uip_buf[0])
+           =2 //  uip_len = ethernet_devicedrver_poll();
+           =2 //  if(uip_len > 0) {
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 37  
+
+           =2 //    if(BUF->type == HTONS(UIP_ETHTYPE_IP)) {
+           =2 //      uip_arp_ipin();
+           =2 //      uip_input();
+           =2 //      if(uip_len > 0) {
+           =2 //        uip_arp_out();
+           =2 //      ethernet_devicedriver_send();
+           =2 //      }
+           =2 //    } else if(BUF->type == HTONS(UIP_ETHTYPE_ARP)) {
+           =2 //      uip_arp_arpin();
+           =2 //      if(uip_len > 0) {
+           =2 //      ethernet_devicedriver_send();
+           =2 //      }
+           =2 //    }
+           =2 // \endcode
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 //#define uip_input()        uip_process(UIP_DATA)
+           =2 
+           =2 //
+           =2 // Periodic processing for a connection identified by its number.
+           =2 // 
+           =2 // This function does the necessary periodic processing (timers,
+           =2 // polling) for a uIP TCP conneciton, and should be called when the
+           =2 // periodic uIP timer goes off. It should be called for every
+           =2 // connection, regardless of whether they are open of closed.
+           =2 //
+           =2 // When the function returns, it may have an outbound packet waiting
+           =2 // for service in the uIP packet buffer, and if so the uip_len
+           =2 // variable is set to a value larger than zero. The device driver
+           =2 // should be called to send out the packet.
+           =2 //
+           =2 // The ususal way of calling the function is through a for() loop like
+           =2 // this:
+           =2 // \code
+           =2 //  for(i = 0; i < UIP_CONNS; ++i) {
+           =2 //    uip_periodic(i);
+           =2 //    if(uip_len > 0) {
+           =2 //      devicedriver_send();
+           =2 //    }
+           =2 //  }
+           =2 // \endcode
+           =2 //
+           =2 // \note If you are writing a uIP device driver that needs ARP
+           =2 // (Address Resolution Protocol), e.g., when running uIP over
+           =2 // Ethernet, you will need to call the uip_arp_out() function before
+           =2 // calling the device driver:
+           =2 // \code
+           =2 //  for(i = 0; i < UIP_CONNS; ++i) {
+           =2 //    uip_periodic(i);
+           =2 //    if(uip_len > 0) {
+           =2 //      uip_arp_out();
+           =2 //      ethernet_devicedriver_send();
+           =2 //    }
+           =2 //  }
+           =2 // \endcode 
+           =2 //
+           =2 // \param conn The number of the connection which is to be periodically polled.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_periodic(conn) do { uip_conn = &uip_conns[conn]; \
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 38  
+
+           =2                                 uip_process(UIP_TIMER); } while (0)
+           =2 
+           =2 //
+           =2 // Periodic processing for a connection identified by a pointer to its structure.
+           =2 //
+           =2 // Same as uip_periodic() but takes a pointer to the actual uip_conn
+           =2 // struct instead of an integer as its argument. This function can be
+           =2 // used to force periodic processing of a specific connection.
+           =2 //
+           =2 // \param conn A pointer to the uip_conn struct for the connection to
+           =2 // be processed.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_periodic_conn(conn) do { uip_conn = conn; \
+           =2                                      uip_process(UIP_TIMER); } while (0)
+           =2 
+           =2 #if UIP_UDP
+           =2 //
+           =2 // Periodic processing for a UDP connection identified by its number.
+           =2 //
+           =2 // This function is essentially the same as uip_prerioic(), but for
+           =2 // UDP connections. It is called in a similar fashion as the
+           =2 // uip_periodic() function:
+           =2 // \code
+           =2 //  for(i = 0; i < UIP_UDP_CONNS; i++) {
+           =2 //    uip_udp_periodic(i);
+           =2 //    if(uip_len > 0) {
+           =2 //      devicedriver_send();
+           =2 //    }
+           =2 //  }   
+           =2 // \endcode
+           =2 //
+           =2 // \note As for the uip_periodic() function, special care has to be
+           =2 // taken when using uIP together with ARP and Ethernet:
+           =2 // \code
+           =2 //  for(i = 0; i < UIP_UDP_CONNS; i++) {
+           =2 //    uip_udp_periodic(i);
+           =2 //    if(uip_len > 0) {
+           =2 //      uip_arp_out();
+           =2 //      ethernet_devicedriver_send();
+           =2 //    }
+           =2 //  }   
+           =2 // \endcode
+           =2 //
+           =2 // \param conn The number of the UDP connection to be processed.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_udp_periodic(conn) do { uip_udp_conn = &uip_udp_conns[conn]; \
+           =2                                 uip_process(UIP_UDP_TIMER); } while (0)
+           =2 
+           =2 //
+           =2 // Periodic processing for a UDP connection identified by a pointer to
+           =2 // its structure.
+           =2 //
+           =2 // Same as uip_udp_periodic() but takes a pointer to the actual
+           =2 // uip_conn struct instead of an integer as its argument. This
+           =2 // function can be used to force periodic processing of a specific
+           =2 // connection.
+           =2 //
+           =2 // \param conn A pointer to the uip_udp_conn struct for the connection
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 39  
+
+           =2 // to be processed.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_udp_periodic_conn(conn) do { uip_udp_conn = conn; \
+           =2                                          uip_process(UIP_UDP_TIMER); } while (0)
+           =2 
+           =2 void uip_udp_listen(uint port);
+           =2 void uip_udp_unlisten(uint port);
+           =2 
+           =2 #endif // UIP_UDP //
+           =2 
+           =2 // The uIP packet buffer.
+           =2 //
+           =2 // The uip_buf array is used to hold incoming and outgoing
+           =2 // packets. The device driver should place incoming data into this
+           =2 // buffer. When sending data, the device driver should read the link
+           =2 // level headers and the TCP/IP headers from this buffer. The size of
+           =2 // the link level headers is configured by the UIP_LLH_LEN define.
+           =2 //
+           =2 // \note The application data need not be placed in this buffer, so
+           =2 // the device driver must read it from the place pointed to by the
+           =2 // uip_appdata pointer as illustrated by the following example:
+           =2 // \code
+           =2 // void
+           =2 // devicedriver_send(void)
+           =2 // {
+           =2 //    hwsend(&uip_buf[0], UIP_LLH_LEN);
+           =2 //    hwsend(&uip_buf[UIP_LLH_LEN], 40);
+           =2 //    hwsend(uip_appdata, uip_len - 40 - UIP_LLH_LEN);
+           =2 // }
+           =2 // \endcode
+           =2 //
+           =2 //extern byte xdata uip_buf[UIP_BUFSIZE+2];
+           =2 
+           =2 // @} //
+           =2 void uip_listen(uint port);
+           =2 
+           =2 //-----------------------------------------------------------------------------------//
+           =2 // Functions that are used by the uIP application program. Opening and
+           =2 // closing connections, sending and receiving data, etc. is all
+           =2 // handled by the functions below.
+           =2 //
+           =2 //
+           =2 // \defgroup uipappfunc uIP application functions
+           =2 // @{
+           =2 //
+           =2 // Functions used by an application running of top of uIP.
+           =2 //
+           =2 
+           =2 // Start listening to the specified port.
+           =2 //
+           =2 // \note Since this function expects the port number in network byte
+           =2 // order, a conversion using HTONS() or htons() is necessary.
+           =2 //
+           =2 // \code
+           =2 // uip_listen(HTONS(80)); 
+           =2 // \endcode
+           =2 //
+           =2 // \param port A 16-bit port number in network byte order.
+           =2 //
+           =2 void uip_listen(uint port);
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 40  
+
+           =2 
+           =2 // Stop listening to the specified port.
+           =2 //
+           =2 // \note Since this function expects the port number in network byte
+           =2 // order, a conversion using HTONS() or htons() is necessary.
+           =2 //
+           =2 // \code
+           =2 // uip_unlisten(HTONS(80)); 
+           =2 // \endcode
+           =2 //
+           =2 // \param port A 16-bit port number in network byte order.
+           =2 //
+           =2 
+           =2 struct uip_conn *uip_connect(uint *ripaddr, uint port);
+           =2 
+           =2 // Connect to a remote host using TCP.
+           =2 //
+           =2 // This function is used to start a new connection to the specified
+           =2 // port on the specied host. It allocates a new connection identifier,
+           =2 // sets the connection to the SYN_SENT state and sets the
+           =2 // retransmission timer to 0. This will cause a TCP SYN segment to be
+           =2 // sent out the next time this connection is periodically processed,
+           =2 // which usually is done within 0.5 seconds after the call to
+           =2 // uip_connect().
+           =2 //
+           =2 // \note This function is avaliable only if support for active open
+           =2 // has been configured by defining UIP_ACTIVE_OPEN to 1 in uipopt.h.
+           =2 //
+           =2 // \note Since this function requires the port number to be in network
+           =2 // byte order, a convertion using HTONS() or htons() is necessary.
+           =2 //
+           =2 // \code
+           =2 // uint ipaddr[2];
+           =2 
+           =2 // uip_ipaddr(ipaddr, 192,168,1,2);
+           =2 // uip_connect(ipaddr, HTONS(80)); 
+           =2 // \endcode
+           =2 // 
+           =2 // \param ripaddr A pointer to a 4-byte array representing the IP
+           =2 // address of the remote hot.
+           =2 //
+           =2 // \param port A 16-bit port number in network byte order.
+           =2 //
+           =2 // \return A pointer to the uIP connection identifier for the new connection,
+           =2 // or NULL if no connection could be allocated.   
+           =2 // 
+           =2 //
+           =2 struct uip_conn *uip_connect(uint *ripaddr, uint port);
+           =2 
+           =2 //
+           =2 // \internal
+           =2 //
+           =2 // Check if a connection has outstanding (i.e., unacknowledged) data.
+           =2 //
+           =2 // \param conn A pointer to the uip_conn structure for the connection.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_outstanding(conn) ((conn)->len)
+           =2 
+           =2 //
+           =2 // Send data on the current connection.
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 41  
+
+           =2 //
+           =2 // This function is used to send out a single segment of TCP
+           =2 // data. Only applications that have been invoked by uIP for event
+           =2 // processing can send data. 
+           =2 //
+           =2 // The amount of data that actually is sent out after a call to this
+           =2 // funcion is determined by the maximum amount of data TCP allows. uIP
+           =2 // will automatically crop the data so that only the appropriate
+           =2 // amount of data is sent. The function uip_mss() can be used to query
+           =2 // uIP for the amount of data that actually will be sent.
+           =2 // 
+           =2 // \note This function does not guarantee that the sent data will
+           =2 // arrive at the destination. If the data is lost in the network, the
+           =2 // application will be invoked with the uip_rexmit() event being
+           =2 // set. The application will then have to resend the data using this
+           =2 // function.
+           =2 // 
+           =2 // \param data A pointer to the data which is to be sent.
+           =2 //
+           =2 // \param len The maximum amount of data bytes to be sent.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_send(data, len) do { uip_sappdata = (data); uip_slen = (len);} while(0)   
+           =2 
+           =2 //
+           =2 // The length of any incoming data that is currently avaliable (if avaliable)
+           =2 // in the uip_appdata buffer.
+           =2 //
+           =2 // The test function uip_data() must first be used to check if there
+           =2 // is any data available at all.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_datalen()       uip_len
+           =2 
+           =2 //
+           =2 // The length of any out-of-band data (urgent data) that has arrived
+           =2 // on the connection.
+           =2 //
+           =2 // \note The configuration parameter UIP_URGDATA must be set for this
+           =2 // function to be enabled.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_urgdatalen()    uip_urglen
+           =2 
+           =2 //
+           =2 // Close the current connection.
+           =2 //
+           =2 // This function will close the current connection in a nice way.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_close()         (uip_flags = UIP_CLOSE)
+           =2 
+           =2 //
+           =2 // Abort the current connection.
+           =2 //
+           =2 // This function will abort (reset) the current connection, and is
+           =2 // usually used when an error has occured that prevents using the
+           =2 // uip_close() function.
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 42  
+
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_abort()         (uip_flags = UIP_ABORT)
+           =2 
+           =2 //
+           =2 // Tell the sending host to stop sending data.
+           =2 //
+           =2 // This function will close our receiver's window so that we stop
+           =2 // receiving data for the current connection.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_stop()          (uip_conn->tcpstateflags |= UIP_STOPPED)
+           =2 
+           =2 //
+           =2 // Find out if the current connection has been previously stopped with
+           =2 // uip_stop().
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_stopped(conn)   ((conn)->tcpstateflags & UIP_STOPPED)
+           =2 
+           =2 /**
+           =2  * Restart the current connection, if is has previously been stopped
+           =2  * with uip_stop().
+           =2  *
+           =2  * This function will open the receiver's window again so that we
+           =2  * start receiving data for the current connection.
+           =2  *
+           =2  * \hideinitializer
+           =2  */
+           =2 #define uip_restart()         do { uip_flags |= UIP_NEWDATA; \
+           =2                                    uip_conn->tcpstateflags &= ~UIP_STOPPED; \
+           =2                               } while(0)
+           =2 
+           =2 // uIP tests that can be made to determine in what state the current
+           =2 // connection is, and what the application function should do.
+           =2 
+           =2 //
+           =2 // Is new incoming data available?
+           =2 //
+           =2 // Will reduce to non-zero if there is new data for the application
+           =2 // present at the uip_appdata pointer. The size of the data is
+           =2 // avaliable through the uip_len variable.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_newdata()   (uip_flags & UIP_NEWDATA)
+           =2 
+           =2 //
+           =2 // Has previously sent data been acknowledged?
+           =2 //
+           =2 // Will reduce to non-zero if the previously sent data has been
+           =2 // acknowledged by the remote host. This means that the application
+           =2 // can send new data. 
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_acked()   (uip_flags & UIP_ACKDATA)
+           =2 
+           =2 //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 43  
+
+           =2 // Has the connection just been connected?  
+           =2 //
+           =2 // Reduces to non-zero if the current connection has been connected to
+           =2 // a remote host. This will happen both if the connection has been
+           =2 // actively opened (with uip_connect()) or passively opened (with
+           =2 // uip_listen()).
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_connected() (uip_flags & UIP_CONNECTED)
+           =2 
+           =2 //
+           =2 // Has the connection been closed by the other end?
+           =2 //
+           =2 // Is non-zero if the connection has been closed by the remote
+           =2 // host. The application may then do the necessary clean-ups.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_closed()    (uip_flags & UIP_CLOSE)
+           =2 
+           =2 //
+           =2 // Has the connection been aborted by the other end?
+           =2 //
+           =2 // Non-zero if the current connection has been aborted (reset) by the
+           =2 // remote host.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_aborted()    (uip_flags & UIP_ABORT)
+           =2 
+           =2 //
+           =2 // Has the connection timed out?
+           =2 //
+           =2 // Non-zero if the current connection has been aborted due to too many
+           =2 // retransmissions.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_timedout()    (uip_flags & UIP_TIMEDOUT)
+           =2 
+           =2 //
+           =2 // Do we need to retransmit previously data?
+           =2 //
+           =2 // Reduces to non-zero if the previously sent data has been lost in
+           =2 // the network, and the application should retransmit it. The
+           =2 // application should send the exact same data as it did the last
+           =2 // time, using the uip_send() function.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_rexmit()     (uip_flags & UIP_REXMIT)
+           =2 
+           =2 //
+           =2 // Is the connection being polled by uIP?
+           =2 //
+           =2 // Is non-zero if the reason the application is invoked is that the
+           =2 // current connection has been idle for a while and should be
+           =2 // polled.
+           =2 //
+           =2 // The polling event can be used for sending data without having to
+           =2 // wait for the remote host to send data.
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 44  
+
+           =2 //
+           =2 // \hideinitializer
+           =2 // 
+           =2 //#define uip_poll()       (uip_flags & UIP_POLL)
+           =2 #define uip_conntimeout()       (uip_flags & UIP_CONN_TIMEDOUT)
+           =2 
+           =2 //
+           =2 // Get the initial maxium segment size (MSS) of the current
+           =2 // connection.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_initialmss()             (uip_conn->initialmss)
+           =2 
+           =2 //
+           =2 // Get the current maxium segment size that can be sent on the current
+           =2 // connection.
+           =2 //
+           =2 // The current maxiumum segment size that can be sent on the
+           =2 // connection is computed from the receiver's window and the MSS of
+           =2 // the connection (which also is available by calling
+           =2 // uip_initialmss()).
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_mss()             (uip_conn->mss)
+           =2 
+           =2 //
+           =2 // Set up a new UDP connection.
+           =2 //
+           =2 // \param ripaddr A pointer to a 4-byte structure representing the IP
+           =2 // address of the remote host.
+           =2 //
+           =2 // \param rport The remote port number in network byte order.
+           =2 //
+           =2 // \return The uip_udp_conn structure for the new connection or NULL
+           =2 // if no connection could be allocated.
+           =2 //
+           =2 struct uip_udp_conn *uip_udp_new(uint *ripaddr, uint rport);
+           =2 
+           =2 //
+           =2 // Removed a UDP connection.
+           =2 //
+           =2 // \param conn A pointer to the uip_udp_conn structure for the connection.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_udp_remove(conn) (conn)->lport = 0
+           =2 
+           =2 //
+           =2 // Send a UDP datagram of length len on the current connection.
+           =2 //
+           =2 // This function can only be called in response to a UDP event (poll
+           =2 // or newdata). The data must be present in the uip_buf buffer, at the
+           =2 // place pointed to by the uip_appdata pointer.
+           =2 //
+           =2 // \param len The length of the data in the uip_buf buffer.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_udp_send(len) uip_slen = (len)
+           =2 
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 45  
+
+           =2 // @} //
+           =2 
+           =2 // uIP convenience and converting functions. //
+           =2 
+           =2 //
+           =2 // \defgroup uipconvfunc uIP conversion functions
+           =2 // @{
+           =2 //
+           =2 // These functions can be used for converting between different data
+           =2 // formats used by uIP.
+           =2 //
+           =2 
+           =2 //
+           =2 // Pack an IP address into a 4-byte array which is used by uIP to
+           =2 // represent IP addresses.
+           =2 //
+           =2 // Example:
+           =2 // \code
+           =2 // uint ipaddr[2];
+           =2 //
+           =2 // uip_ipaddr(&ipaddr, 192,168,1,2); 
+           =2 // \endcode
+           =2 //
+           =2 // \param addr A pointer to a 4-byte array that will be filled in with
+           =2 // the IP addres.
+           =2 // \param addr0 The first octet of the IP address.
+           =2 // \param addr1 The second octet of the IP address.
+           =2 // \param addr2 The third octet of the IP address.
+           =2 // \param addr3 The forth octet of the IP address. 
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #define uip_ipaddr(addr, addr0,addr1,addr2,addr3) do { \
+           =2                      (addr)[0] = HTONS(((addr0) << 8) | (addr1)); \
+           =2                      (addr)[1] = HTONS(((addr2) << 8) | (addr3)); \
+           =2                   } while(0)
+           =2 
+           =2 //
+           =2 // Convert 16-bit quantity from host byte order to network byte order.
+           =2 //
+           =2 // This macro is primarily used for converting constants from host
+           =2 // byte order to network byte order. For converting variables to
+           =2 // network byte order, use the htons() function instead.
+           =2 //
+           =2 // \hideinitializer
+           =2 //
+           =2 #ifndef HTONS
+           =2 #if BYTE_ORDER == BIG_ENDIAN
+           =2 #define HTONS(n) (n)
+           =2 #else // BYTE_ORDER == BIG_ENDIAN //
+           =2 #define HTONS(n) ((((uint)((n) & 0xff)) << 8) | (((n) & 0xff00) >> 8))
+           =2 #endif // BYTE_ORDER == BIG_ENDIAN //
+           =2 #endif // HTONS //
+           =2 
+           =2 //
+           =2 // Convert 16-bit quantity from host byte order to network byte order.
+           =2 //
+           =2 // This function is primarily used for converting variables from host
+           =2 // byte order to network byte order. For converting constants to
+           =2 // network byte order, use the HTONS() macro instead.
+           =2 //
+           =2 //#ifndef htons
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 46  
+
+           =2 //uint htons(uint val);
+           =2 //#endif // htons //
+           =2 
+           =2 // @} //
+           =2 
+           =2 //
+           =2 // Pointer to the application data in the packet buffer.
+           =2 //
+           =2 // This pointer points to the application data when the application is
+           =2 // called. If the application wishes to send data, the application may
+           =2 // use this space to write the data into before calling uip_send().
+           =2 // /
+           =2 //extern volatile byte *uip_appdata;
+           =2 extern volatile byte *uip_sappdata; 
+           =2 
+           =2 #if UIP_URGDATA > 0 
+           =2 // byte *uip_urgdata:
+           =2 //
+           =2 // This pointer points to any urgent data that has been received. Only
+           =2 // present if compiled with support for urgent data (UIP_URGDATA).
+           =2 //
+           =2 extern volatile byte *uip_urgdata; 
+           =2 #endif // UIP_URGDATA > 0 //
+           =2 
+           =2 // u[8|16]_t uip_len:
+           =2 //
+           =2 // When the application is called, uip_len contains the length of any
+           =2 // new data that has been received from the remote host. The
+           =2 // application should set this variable to the size of any data that
+           =2 // the application wishes to send. When the network device driver
+           =2 // output function is called, uip_len should contain the length of the
+           =2 // outgoing packet.
+           =2 //
+           =2 //extern volatile uint idata uip_len, uip_slen;
+           =2 extern volatile uint idata uip_slen;
+           =2 
+           =2 #if UIP_URGDATA > 0 
+           =2 extern volatile byte idata uip_urglen, uip_surglen;
+           =2 #endif // UIP_URGDATA > 0 //
+           =2 
+           =2 //
+           =2 // Representation of a uIP TCP connection.
+           =2 //
+           =2 // The uip_conn structure is used for identifying a connection. All
+           =2 // but one field in the structure are to be considered read-only by an
+           =2 // application. The only exception is the appstate field whos purpose
+           =2 // is to let the application store application-specific state (e.g.,
+           =2 // file pointers) for the connection. The size of this field is
+           =2 // configured in the "uipopt.h" header file.
+           =2 //
+           =2 struct uip_conn {
+           =2         uint ripaddr[2];    //< The IP address of the remote host. //
+           =2 
+           =2         uint lport;         //< The local TCP port, in network byte order. //
+           =2         uint rport;         //< The local remote TCP port, in network byte order. //  
+           =2 
+           =2         byte rcv_nxt[4];    //< The sequence number that we expect to receive next. //
+           =2         byte snd_nxt[4];    //< The sequence number that was last sent by us. //
+           =2         uint len;           //< Length of the data that was previously sent. //
+           =2         uint mss;           //< Current maximum segment size for the connection. //
+           =2         uint initialmss;    //< Initial maximum segment size for the connection. //  
+           =2         byte sa;            //< Retransmission time-out calculation state variable. //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 47  
+
+           =2         byte sv;            //< Retransmission time-out calculation state variable. //
+           =2         byte rto;           //< Retransmission time-out. //
+           =2         byte tcpstateflags; //< TCP state and flags. //
+           =2         byte timer;         //< The retransmission timer. //
+           =2         byte nrtx;          //< The number of retransmissions for the last segment sent. //
+           =2 
+           =2         byte window[2];
+           =2         byte keepaliveflag;
+           =2     byte sndkeepalive; // number of keepalive packet was sent //
+           =2         uint keepalivetick;
+           =2         byte tcpip_id;
+           =2 
+           =2         // The application state. //
+           =2 //      byte appstate[UIP_APPSTATE_SIZE];  
+           =2 };
+           =2 
+           =2 // Pointer to the current connection. //
+           =2 extern struct uip_conn xdata *uip_conn;
+           =2 // The array containing all uIP connections. //
+           =2 extern struct uip_conn xdata uip_conns[UIP_CONNS];
+           =2 //
+           =2 // \addtogroup uiparch
+           =2 // @{
+           =2 //
+           =2 
+           =2 //
+           =2 // 4-byte array used for the 32-bit sequence number calculations.
+           =2 //
+           =2 extern volatile byte uip_acc32[4];
+           =2 
+           =2 // @} //
+           =2 
+           =2 #if UIP_UDP
+           =2 //
+           =2 // Representation of a uIP UDP connection.
+           =2 //
+           =2 struct uip_udp_conn {
+           =2   uint ripaddr[2];   //< The IP address of the remote peer. //
+           =2   uint lport;        //< The local port number in network byte order. //
+           =2   uint rport;        //< The remote port number in network byte order. //
+           =2 
+           =2   byte tcpip_id;
+           =2 };
+           =2 
+           =2 extern struct uip_udp_conn xdata *uip_udp_conn;
+           =2 extern struct uip_udp_conn xdata uip_udp_conns[UIP_UDP_CONNS];
+           =2 #endif // UIP_UDP //
+           =2 
+           =2 //
+           =2 // The structure holding the TCP/IP statistics that are gathered if
+           =2 // UIP_STATISTICS is set to 1.
+           =2 //
+           =2 //
+           =2 struct uip_stats {
+           =2   struct {
+           =2     uip_stats_t drop;     //< Number of dropped packets at the IP layer. //
+           =2     uip_stats_t recv;     //< Number of received packets at the IP layer. //
+           =2     uip_stats_t sent;     //< Number of sent packets at the IP layer. //
+           =2     uip_stats_t vhlerr;   //< Number of packets dropped due to wrong IP version or header length. //
+           =2     uip_stats_t hblenerr; //< Number of packets dropped due to wrong IP length, high byte. //
+           =2     uip_stats_t lblenerr; //< Number of packets dropped due to wrong IP length, low byte. //
+           =2     uip_stats_t fragerr;  //< Number of packets dropped since they were IP fragments. //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 48  
+
+           =2     uip_stats_t chkerr;   //< Number of packets dropped due to IP checksum errors. //
+           =2     uip_stats_t protoerr; //< Number of packets dropped since they were neither ICMP, UDP nor TCP. //
+           =2   } ip;                   //< IP statistics. //
+           =2   struct {
+           =2     uip_stats_t drop;     //< Number of dropped ICMP packets. //
+           =2     uip_stats_t recv;     //< Number of received ICMP packets. //
+           =2     uip_stats_t sent;     //< Number of sent ICMP packets. //
+           =2     uip_stats_t typeerr;  //< Number of ICMP packets with a wrong type. //
+           =2   } icmp;                 //< ICMP statistics. //
+           =2   struct {
+           =2     uip_stats_t drop;     //< Number of dropped TCP segments. //
+           =2     uip_stats_t recv;     //< Number of recived TCP segments. //
+           =2     uip_stats_t sent;     //< Number of sent TCP segments. //
+           =2     uip_stats_t chkerr;   //< Number of TCP segments with a bad checksum. //
+           =2     uip_stats_t ackerr;   //< Number of TCP segments with a bad ACK number. //
+           =2     uip_stats_t rst;      //< Number of recevied TCP RST (reset) segments. //
+           =2     uip_stats_t rexmit;   //< Number of retransmitted TCP segments. //
+           =2     uip_stats_t syndrop;  //< Number of dropped SYNs due to too few connections was avaliable. //
+           =2     uip_stats_t synrst;   //< Number of SYNs for closed ports, triggering a RST. //
+           =2   } tcp;                  //< TCP statistics. //
+           =2 };
+           =2 
+           =2 //
+           =2 // The uIP TCP/IP statistics.
+           =2 //
+           =2 // This is the variable in which the uIP TCP/IP statistics are gathered.
+           =2 //
+           =2 extern struct uip_stats uip_stat;
+           =2 
+           =2 //-----------------------------------------------------------------------------------//
+           =2 // All the stuff below this point is internal to uIP and should not be
+           =2 // used directly by an application or by a device driver.
+           =2 //
+           =2 //-----------------------------------------------------------------------------------//
+           =2 // byte uip_flags:
+           =2 //
+           =2 // When the application is called, uip_flags will contain the flags
+           =2 // that are defined in this file. Please read below for more
+           =2 // infomation.
+           =2 //
+           =2 extern volatile byte idata uip_flags;
+           =2 
+           =2 // The following flags may be set in the global variable uip_flags
+           =2 // before calling the application callback. The UIP_ACKDATA and
+           =2 // UIP_NEWDATA flags may both be set at the same time, whereas the
+           =2 // others are mutualy exclusive. Note that these flags should *NOT* be
+           =2 // accessed directly, but through the uIP functions/macros.
+           =2 
+           =2 #define UIP_ACKDATA   1     // Signifies that the outstanding data was
+           =2 //                             acked and the application should send
+           =2 //                             out new data instead of retransmitting
+           =2 //                             the last data.
+           =2 #define UIP_NEWDATA   2     // Flags the fact that the peer has sent us new data. //
+           =2 #define UIP_REXMIT    4     // Tells the application to retransmit the data that was last sent. //
+           =2 #define UIP_CONN_TIMEDOUT       8
+           =2 //#define UIP_POLL      8     // Used for polling the application, to
+           =2 //                             check if the application has data that
+           =2 //                               it wants to send.
+           =2 #define UIP_CLOSE     16    // The remote host has closed the
+           =2 //                             connection, thus the connection has
+           =2 //                             gone away. Or the application signals
+           =2 //                             that it wants to close the
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 49  
+
+           =2 //                             connection.
+           =2 #define UIP_ABORT     32    // The remote host has aborted the
+           =2 //                             connection, thus the connection has
+           =2 //                             gone away. Or the application signals
+           =2 //                             that it wants to abort the
+           =2 //                             connection.
+           =2 #define UIP_CONNECTED 64    // We have got a connection from a remote
+           =2 //                             host and have set up a new connection
+           =2 //                             for it, or an active connection has
+           =2 //                             been successfully established.
+           =2 
+           =2 #define UIP_TIMEDOUT  128   // The connection has been aborted due to too many retransmissions. //
+           =2 
+           =2 extern byte xdata uip_extraflag;
+           =2 
+           =2 #define UIP_SEND_PUSH   1
+           =2 #define UIP_SEND_NONE   2
+           =2 #define UIP_SEND_REXMIT 4
+           =2 #define UIP_RCV_WINDOW  64
+           =2 #define UIP_RCV_PRE_ACK 128
+           =2 
+           =2 // uip_process(flag):
+           =2 //
+           =2 // The actual uIP function which does all the work.
+           =2 //
+           =2 void uip_process(byte flag);
+           =2 
+           =2 // The following flags are passed as an argument to the uip_process()
+           =2 // function. They are used to distinguish between the two cases where
+           =2 // uip_process() is called. It can be called either because we have
+           =2 // incoming data that should be processed, or because the periodic
+           =2 // timer has fired.
+           =2 
+           =2 #define UIP_DATA    1     // Tells uIP that there is incoming data in
+           =2                           // the uip_buf buffer. The length of the
+           =2                           // data is stored in the global variable
+           =2                           // uip_len.
+           =2 #define UIP_TIMER   2     // Tells uIP that the periodic timer has
+           =2                           // fired.
+           =2 #if UIP_UDP
+           =2 #define UIP_UDP_TIMER 3
+           =2 #endif // UIP_UDP //
+           =2 
+           =2 #if UIP_ACTIVE_OPEN
+           =2 #define UIP_ACTIVE_SEND 4
+           =2 #endif // UIP_ACTIVE_OPEN //
+           =2 
+           =2 // The TCP states used in the uip_conn->tcpstateflags. //
+           =2 #define CLOSED      0
+           =2 #define SYN_RCVD    1
+           =2 #define SYN_SENT    2
+           =2 #define ESTABLISHED 3
+           =2 #define FIN_WAIT_1  4
+           =2 #define FIN_WAIT_2  5
+           =2 #define CLOSING     6
+           =2 #define TIME_WAIT   7
+           =2 #define LAST_ACK    8
+           =2 #define TS_MASK     15
+           =2   
+           =2 #define UIP_STOPPED      16
+           =2 
+           =2 #define UIP_TCPIP_HLEN 40
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 50  
+
+           =2 
+           =2 // The TCP and IP headers. //
+           =2 typedef struct {
+           =2   // IP header. //
+           =2   byte vhl,
+           =2     tos,          
+           =2     len[2],       
+           =2     ipid[2],        
+           =2     ipoffset[2],  
+           =2     ttl,          
+           =2     proto;     
+           =2   uint ipchksum;
+           =2   uint srcipaddr[2], 
+           =2     destipaddr[2];
+           =2   
+           =2   // TCP header. //
+           =2   uint srcport,
+           =2     destport;
+           =2   byte seqno[4],  
+           =2     ackno[4],
+           =2     tcpoffset,
+           =2     flags,
+           =2     wnd[2];     
+           =2   uint tcpchksum;
+           =2   byte urgp[2];
+           =2   byte optdata[4];
+           =2 } uip_tcpip_hdr;
+           =2 
+           =2 // The ICMP and IP headers. //
+           =2 typedef struct {
+           =2   // IP header. //
+           =2   byte vhl,
+           =2     tos,          
+           =2     len[2],       
+           =2     ipid[2],        
+           =2     ipoffset[2],  
+           =2     ttl,          
+           =2     proto;     
+           =2   uint ipchksum;
+           =2   uint srcipaddr[2], 
+           =2     destipaddr[2];
+           =2   // ICMP (echo) header. //
+           =2   byte type, icode;
+           =2   uint icmpchksum;
+           =2   uint id, seqno;  
+           =2 } uip_icmpip_hdr;
+           =2 
+           =2 // The UDP and IP headers. //
+           =2 typedef struct {
+           =2   // IP header. //
+           =2   byte vhl,
+           =2     tos,          
+           =2     len[2],       
+           =2     ipid[2],        
+           =2     ipoffset[2],  
+           =2     ttl,          
+           =2     proto;     
+           =2   uint ipchksum;
+           =2   uint srcipaddr[2], 
+           =2     destipaddr[2];
+           =2   
+           =2   // UDP header. //
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 51  
+
+           =2   uint srcport,
+           =2     destport;
+           =2   uint udplen;
+           =2   uint udpchksum;
+           =2 } uip_udpip_hdr;
+           =2 
+           =2 #define UIP_PROTO_ICMP  1
+           =2 #define UIP_PROTO_TCP   6
+           =2 #define UIP_PROTO_UDP   17
+           =2 
+           =2 #if UIP_FIXEDADDR
+           =2 extern const uint code uip_hostaddr[2];
+           =2 #else // UIP_FIXEDADDR //
+           =2 extern uint idata uip_hostaddr[2];
+           =2 #endif // UIP_FIXEDADDR //
+           =2 
+           =2 #endif // __UIP_H__ //
+1043      =2  
+1044      =2  // @} //
+1045      =2  
+  68      =1  
+  69      =1  //
+  70      =1  // Carry out a 32-bit addition.
+  71      =1  //
+  72      =1  // Because not all architectures for which uIP is intended has native
+  73      =1  // 32-bit arithmetic, uIP uses an external C function for doing the
+  74      =1  // required 32-bit additions in the TCP protocol processing. This
+  75      =1  // function should add the two arguments and place the result in the
+  76      =1  // global variable uip_acc32.
+  77      =1  //
+  78      =1  // \note The 32-bit integer pointed to by the op32 parameter and the
+  79      =1  // result in the uip_acc32 variable are in network byte order (big
+  80      =1  // endian).
+  81      =1  //
+  82      =1  // \param op32 A pointer to a 4-byte array representing a 32-bit
+  83      =1  // integer in network byte order (big endian).
+  84      =1  //
+  85      =1  // \param op16 A 16-bit integer in host byte order.
+  86      =1  //
+  87      =1  void uip_add32(byte *op32, uint op16);
+  88      =1  
+  89      =1  //
+  90      =1  // Calculate the Internet checksum over a buffer.
+  91      =1  //
+  92      =1  // The Internet checksum is the one's complement of the one's
+  93      =1  // complement sum of all 16-bit words in the buffer.
+  94      =1  //
+  95      =1  // See RFC1071.
+  96      =1  //
+  97      =1  // \note This function is not called in the current version of uIP,
+  98      =1  // but future versions might make use of it.
+  99      =1  //
+ 100      =1  // \param buf A pointer to the buffer over which the checksum is to be
+ 101      =1  // computed.
+ 102      =1  //
+ 103      =1  // \param len The length of the buffer over which the checksum is to
+ 104      =1  // be computed.
+ 105      =1  //
+ 106      =1  // \return The Internet checksum of the buffer.
+ 107      =1  //
+ 108      =1  uint uip_chksum(uint *buf, uint len);
+ 109      =1  
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 52  
+
+ 110      =1  //
+ 111      =1  // Calculate the IP header checksum of the packet header in uip_buf.
+ 112      =1  //
+ 113      =1  // The IP header checksum is the Internet checksum of the 20 bytes of
+ 114      =1  // the IP header.
+ 115      =1  //
+ 116      =1  // \return The IP header checksum of the IP header in the uip_buf
+ 117      =1  // buffer.
+ 118      =1  //
+ 119      =1  uint uip_ipchksum(void);
+ 120      =1  
+ 121      =1  //
+ 122      =1  // Calculate the TCP checksum of the packet in uip_buf and uip_appdata.
+ 123      =1  //
+ 124      =1  // The TCP checksum is the Internet checksum of data contents of the
+ 125      =1  // TCP segment, and a pseudo-header as defined in RFC793.
+ 126      =1  //
+ 127      =1  // \note The uip_appdata pointer that points to the packet data may
+ 128      =1  // point anywhere in memory, so it is not possible to simply calculate
+ 129      =1  // the Internet checksum of the contents of the uip_buf buffer.
+ 130      =1  //
+ 131      =1  // \return The TCP checksum of the TCP segment in uip_buf and pointed
+ 132      =1  // to by uip_appdata.
+ 133      =1  //
+ 134      =1  uint uip_tcpchksum(void);
+ 135      =1  
+ 136      =1  // @} //
+ 137      =1  
+ 138      =1  #endif // __UIP_ARCH_H__ //
+  45          
+  46          #define BUF_TRANSP ((uip_tcpip_hdr *)&uip_buf[UIP_LLH_LEN])
+  47          #define BUF ((uip_tcpip_hdr *)&uip_buf[0])
+  48          #define IP_PROTO_TCP    6
+  49          
+  50          /*-----------------------------------------------------------------------------------*/
+  51          void
+  52          uip_add32(byte *op32, uint op16)
+  53          {
+  54   1        
+  55   1        uip_acc32[3] = op32[3] + (op16 & 0xff);
+  56   1        uip_acc32[2] = op32[2] + (op16 >> 8);
+  57   1        uip_acc32[1] = op32[1];
+  58   1        uip_acc32[0] = op32[0];
+  59   1        
+  60   1        if(uip_acc32[2] < (op16 >> 8)) {
+  61   2          ++uip_acc32[1];    
+  62   2          if(uip_acc32[1] == 0) {
+  63   3            ++uip_acc32[0];
+  64   3          }
+  65   2        }
+  66   1        
+  67   1        
+  68   1        if(uip_acc32[3] < (op16 & 0xff)) {
+  69   2          ++uip_acc32[2];  
+  70   2          if(uip_acc32[2] == 0) {
+  71   3            ++uip_acc32[1];    
+  72   3            if(uip_acc32[1] == 0) {
+  73   4              ++uip_acc32[0];
+  74   4            }
+  75   3          }
+  76   2        }
+  77   1      }
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 53  
+
+  78          /*-----------------------------------------------------------------------------------*/
+  79          #if (!CHECKSUM_OFFLOAD)
+              uint
+              uip_chksum(uint *sdata, uint len)
+              {
+                uint acc;
+                
+                for(acc = 0; len > 1; len -= 2) {
+                  acc += *sdata;
+                  if(acc < *sdata) {
+                    /* Overflow, so we add the carry to acc (i.e., increase by
+                       one). */
+                    ++acc;
+                  }
+                  ++sdata;
+                }
+              
+                /* add up any odd byte */
+                if(len == 1) {
+                  acc += htons(((uint)(*(byte *)sdata)) << 8);
+                  if(acc < htons(((uint)(*(byte *)sdata)) << 8)) {
+                    ++acc;
+                  }
+                }
+              
+                return acc;
+              }
+              #endif
+ 106          /*-----------------------------------------------------------------------------------*/
+ 107          #if (!CHECKSUM_OFFLOAD)
+              uint
+              uip_ipchksum(void)
+              {
+                return uip_chksum((uint *)&uip_buf[TCPIP_EthHeadLen], 20);
+              }
+              #endif
+ 114          /*-----------------------------------------------------------------------------------*/
+ 115          #if (!CHECKSUM_OFFLOAD)
+              uint
+              uip_tcpchksum(void)
+              {
+                uint hsum, sum;
+              
+                
+                /* Compute the checksum of the TCP header. */
+                hsum = uip_chksum((uint *)&uip_buf[20 + TCPIP_EthHeadLen], 20);
+              
+                /* Compute the checksum of the data in the TCP packet and add it to
+                   the TCP header checksum. */
+                if (TCPIP_EthHeadLen)
+                {
+                      sum = uip_chksum((uint *)uip_appdata,
+                        (uint)(((((uint)(BUF_TRANSP->len[0]) << 8) + BUF_TRANSP->len[1]) - 40)));
+                }
+                else
+                {
+                      sum = uip_chksum((uint *)uip_appdata,
+                        (uint)(((((uint)(BUF->len[0]) << 8) + BUF->len[1]) - 40)));
+                }
+              
+                if((sum += hsum) < hsum) {
+                  ++sum;
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 54  
+
+                }
+              
+                if (TCPIP_EthHeadLen)
+                {
+                      if((sum += BUF_TRANSP->srcipaddr[0]) < BUF_TRANSP->srcipaddr[0]) {
+                              ++sum;
+                      }
+                      if((sum += BUF_TRANSP->srcipaddr[1]) < BUF_TRANSP->srcipaddr[1]) {
+                      ++sum;
+                      }
+                      if((sum += BUF_TRANSP->destipaddr[0]) < BUF_TRANSP->destipaddr[0]) {
+                      ++sum;
+                      }
+                      if((sum += BUF_TRANSP->destipaddr[1]) < BUF_TRANSP->destipaddr[1]) {
+                      ++sum;
+                      }
+                }
+                else
+                {  
+                      if((sum += BUF->srcipaddr[0]) < BUF->srcipaddr[0]) {
+                              ++sum;
+                      }
+                      if((sum += BUF->srcipaddr[1]) < BUF->srcipaddr[1]) {
+                      ++sum;
+                      }
+                      if((sum += BUF->destipaddr[0]) < BUF->destipaddr[0]) {
+                      ++sum;
+                      }
+                      if((sum += BUF->destipaddr[1]) < BUF->destipaddr[1]) {
+                      ++sum;
+                      }
+                }
+                if((sum += (uint)htons((uint)IP_PROTO_TCP)) < (uint)htons((uint)IP_PROTO_TCP)) {
+                  ++sum;
+                }
+              
+                if (TCPIP_EthHeadLen)
+                {
+                      hsum = (uint)htons((((uint)(BUF_TRANSP->len[0]) << 8) + BUF_TRANSP->len[1]) - 20);
+                }
+                else
+                {
+                      hsum = (uint)htons((((uint)(BUF->len[0]) << 8) + BUF->len[1]) - 20);
+                }
+                
+                if((sum += hsum) < hsum) {
+                  ++sum;
+                }
+                
+                return sum;
+              }
+              #endif
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 55  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _uip_add32 (BEGIN)
+                                           ; SOURCE LINE # 52
+0000 90000000    R     MOV     DPTR,#op32
+0004 EB                MOV     A,R3
+0005 F0                MOVX    @DPTR,A
+0006 A3                INC     DPTR
+0007 EA                MOV     A,R2
+0008 F0                MOVX    @DPTR,A
+0009 A3                INC     DPTR
+000A E9                MOV     A,R1
+000B F0                MOVX    @DPTR,A
+000C 90000000    R     MOV     DPTR,#op16
+0010 EC                MOV     A,R4
+0011 F0                MOVX    @DPTR,A
+0012 A3                INC     DPTR
+0013 ED                MOV     A,R5
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 53
+                                           ; SOURCE LINE # 55
+0015 90000000    R     MOV     DPTR,#op32
+0019 E0                MOVX    A,@DPTR
+001A FB                MOV     R3,A
+001B A3                INC     DPTR
+001C E0                MOVX    A,@DPTR
+001D FA                MOV     R2,A
+001E A3                INC     DPTR
+001F E0                MOVX    A,@DPTR
+0020 F9                MOV     R1,A
+0021 E9                MOV     A,R1
+0022 2403              ADD     A,#03H
+0024 F9                MOV     R1,A
+0025 EA                MOV     A,R2
+0026 3400              ADDC    A,#00H
+0028 FA                MOV     R2,A
+0029 12000000    E     LCALL   ?C?CLDPTR
+002D FF                MOV     R7,A
+002E 90000000    R     MOV     DPTR,#op16
+0032 E0                MOVX    A,@DPTR
+0033 FC                MOV     R4,A
+0034 A3                INC     DPTR
+0035 E0                MOVX    A,@DPTR
+0036 FD                MOV     R5,A
+0037 AE05              MOV     R6,AR5
+0039 EE                MOV     A,R6
+003A 54FF              ANL     A,#0FFH
+003C FE                MOV     R6,A
+003D EE                MOV     A,R6
+003E 2F                ADD     A,R7
+003F FF                MOV     R7,A
+0040 90000000    E     MOV     DPTR,#uip_acc32+03H
+0044 EF                MOV     A,R7
+0045 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 56
+0046 90000000    R     MOV     DPTR,#op32
+004A E0                MOVX    A,@DPTR
+004B FB                MOV     R3,A
+004C A3                INC     DPTR
+004D E0                MOVX    A,@DPTR
+004E FA                MOV     R2,A
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 56  
+
+004F A3                INC     DPTR
+0050 E0                MOVX    A,@DPTR
+0051 F9                MOV     R1,A
+0052 E9                MOV     A,R1
+0053 2402              ADD     A,#02H
+0055 F9                MOV     R1,A
+0056 EA                MOV     A,R2
+0057 3400              ADDC    A,#00H
+0059 FA                MOV     R2,A
+005A 12000000    E     LCALL   ?C?CLDPTR
+005E FD                MOV     R5,A
+005F 90000000    R     MOV     DPTR,#op16
+0063 E0                MOVX    A,@DPTR
+0064 FE                MOV     R6,A
+0065 A3                INC     DPTR
+0066 E0                MOVX    A,@DPTR
+0067 FF                MOV     R7,A
+0068 EE                MOV     A,R6
+0069 FF                MOV     R7,A
+006A 7E00              MOV     R6,#00H
+006C EF                MOV     A,R7
+006D 2D                ADD     A,R5
+006E FF                MOV     R7,A
+006F 90000000    E     MOV     DPTR,#uip_acc32+02H
+0073 EF                MOV     A,R7
+0074 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 57
+0075 90000000    R     MOV     DPTR,#op32
+0079 E0                MOVX    A,@DPTR
+007A FB                MOV     R3,A
+007B A3                INC     DPTR
+007C E0                MOVX    A,@DPTR
+007D FA                MOV     R2,A
+007E A3                INC     DPTR
+007F E0                MOVX    A,@DPTR
+0080 F9                MOV     R1,A
+0081 E9                MOV     A,R1
+0082 2401              ADD     A,#01H
+0084 F9                MOV     R1,A
+0085 EA                MOV     A,R2
+0086 3400              ADDC    A,#00H
+0088 FA                MOV     R2,A
+0089 12000000    E     LCALL   ?C?CLDPTR
+008D FF                MOV     R7,A
+008E 90000000    E     MOV     DPTR,#uip_acc32+01H
+0092 EF                MOV     A,R7
+0093 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 58
+0094 90000000    R     MOV     DPTR,#op32
+0098 E0                MOVX    A,@DPTR
+0099 FB                MOV     R3,A
+009A A3                INC     DPTR
+009B E0                MOVX    A,@DPTR
+009C FA                MOV     R2,A
+009D A3                INC     DPTR
+009E E0                MOVX    A,@DPTR
+009F F9                MOV     R1,A
+00A0 12000000    E     LCALL   ?C?CLDPTR
+00A4 FF                MOV     R7,A
+00A5 90000000    E     MOV     DPTR,#uip_acc32
+00A9 EF                MOV     A,R7
+00AA F0                MOVX    @DPTR,A
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 57  
+
+                                           ; SOURCE LINE # 60
+00AB 90000000    R     MOV     DPTR,#op16
+00AF E0                MOVX    A,@DPTR
+00B0 FE                MOV     R6,A
+00B1 A3                INC     DPTR
+00B2 E0                MOVX    A,@DPTR
+00B3 FF                MOV     R7,A
+00B4 EE                MOV     A,R6
+00B5 FF                MOV     R7,A
+00B6 7E00              MOV     R6,#00H
+00B8 90000000    E     MOV     DPTR,#uip_acc32+02H
+00BC E0                MOVX    A,@DPTR
+00BD FD                MOV     R5,A
+00BE 7C00              MOV     R4,#00H
+00C0 C3                CLR     C
+00C1 ED                MOV     A,R5
+00C2 9F                SUBB    A,R7
+00C3 EC                MOV     A,R4
+00C4 9E                SUBB    A,R6
+00C5 5017              JNC     ?C0001
+                                           ; SOURCE LINE # 61
+00C7 90000000    E     MOV     DPTR,#uip_acc32+01H
+00CB E0                MOVX    A,@DPTR
+00CC 04                INC     A
+00CD F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 62
+00CE 90000000    E     MOV     DPTR,#uip_acc32+01H
+00D2 E0                MOVX    A,@DPTR
+00D3 FF                MOV     R7,A
+00D4 EF                MOV     A,R7
+00D5 7007              JNZ     ?C0001
+                                           ; SOURCE LINE # 63
+00D7 90000000    E     MOV     DPTR,#uip_acc32
+00DB E0                MOVX    A,@DPTR
+00DC 04                INC     A
+00DD F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 64
+00DE         ?C0002:
+                                           ; SOURCE LINE # 65
+00DE         ?C0001:
+                                           ; SOURCE LINE # 68
+00DE 90000000    R     MOV     DPTR,#op16
+00E2 E0                MOVX    A,@DPTR
+00E3 FE                MOV     R6,A
+00E4 A3                INC     DPTR
+00E5 E0                MOVX    A,@DPTR
+00E6 FF                MOV     R7,A
+00E7 7E00              MOV     R6,#00H
+00E9 90000000    E     MOV     DPTR,#uip_acc32+03H
+00ED E0                MOVX    A,@DPTR
+00EE FD                MOV     R5,A
+00EF 7C00              MOV     R4,#00H
+00F1 C3                CLR     C
+00F2 ED                MOV     A,R5
+00F3 9F                SUBB    A,R7
+00F4 EC                MOV     A,R4
+00F5 9E                SUBB    A,R6
+00F6 5027              JNC     ?C0006
+                                           ; SOURCE LINE # 69
+00F8 90000000    E     MOV     DPTR,#uip_acc32+02H
+00FC E0                MOVX    A,@DPTR
+00FD 04                INC     A
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 58  
+
+00FE F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 70
+00FF 90000000    E     MOV     DPTR,#uip_acc32+02H
+0103 E0                MOVX    A,@DPTR
+0104 FF                MOV     R7,A
+0105 EF                MOV     A,R7
+0106 7017              JNZ     ?C0006
+                                           ; SOURCE LINE # 71
+0108 90000000    E     MOV     DPTR,#uip_acc32+01H
+010C E0                MOVX    A,@DPTR
+010D 04                INC     A
+010E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 72
+010F 90000000    E     MOV     DPTR,#uip_acc32+01H
+0113 E0                MOVX    A,@DPTR
+0114 FF                MOV     R7,A
+0115 EF                MOV     A,R7
+0116 7007              JNZ     ?C0006
+                                           ; SOURCE LINE # 73
+0118 90000000    E     MOV     DPTR,#uip_acc32
+011C E0                MOVX    A,@DPTR
+011D 04                INC     A
+011E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 74
+011F         ?C0005:
+                                           ; SOURCE LINE # 75
+011F         ?C0004:
+                                           ; SOURCE LINE # 76
+011F         ?C0003:
+                                           ; SOURCE LINE # 77
+011F         ?C0006:
+011F 22                RET     
+             ; FUNCTION _uip_add32 (END)
+
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 59  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+uip_udp_conn . . . . . . . . . . . . .  * TAG *  -----  STRUCT   -----  9
+  ripaddr. . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0000H  4
+  lport. . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0004H  2
+  rport. . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0006H  2
+  tcpip_id . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0008H  1
+ulong. . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+bool . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+byte . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+uip_stats_t. . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+uip_acc32. . . . . . . . . . . . . . .  EXTERN   XDATA  ARRAY    -----  4
+_uip_add32 . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  op32 . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  op16 . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0003H  2
+sint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+uint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+uip_icmpip_hdr . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  28
+  vhl. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  tos. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  len. . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0002H  2
+  ipid . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0004H  2
+  ipoffset . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0006H  2
+  ttl. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0008H  1
+  proto. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0009H  1
+  ipchksum . . . . . . . . . . . . . .  MEMBER   -----  U_INT    000AH  2
+  srcipaddr. . . . . . . . . . . . . .  MEMBER   -----  ARRAY    000CH  4
+  destipaddr . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0010H  4
+  type . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0014H  1
+  icode. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0015H  1
+  icmpchksum . . . . . . . . . . . . .  MEMBER   -----  U_INT    0016H  2
+  id . . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0018H  2
+  seqno. . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    001AH  2
+uip_conn . . . . . . . . . . . . . . .  * TAG *  -----  STRUCT   -----  35
+  ripaddr. . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0000H  4
+  lport. . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0004H  2
+  rport. . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0006H  2
+  rcv_nxt. . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0008H  4
+  snd_nxt. . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    000CH  4
+  len. . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0010H  2
+  mss. . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0012H  2
+  initialmss . . . . . . . . . . . . .  MEMBER   -----  U_INT    0014H  2
+  sa . . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0016H  1
+  sv . . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0017H  1
+  rto. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0018H  1
+  tcpstateflags. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0019H  1
+  timer. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   001AH  1
+  nrtx . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   001BH  1
+  window . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    001CH  2
+  keepaliveflag. . . . . . . . . . . .  MEMBER   -----  U_CHAR   001EH  1
+  sndkeepalive . . . . . . . . . . . .  MEMBER   -----  U_CHAR   001FH  1
+  keepalivetick. . . . . . . . . . . .  MEMBER   -----  U_INT    0020H  2
+  tcpip_id . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0022H  1
+uip_stats. . . . . . . . . . . . . . .  * TAG *  -----  STRUCT   -----  44
+  ip . . . . . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0000H  18
+  icmp . . . . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0012H  8
+  tcp. . . . . . . . . . . . . . . . .  MEMBER   -----  STRUCT   001AH  18
+uip_tcpip_hdr. . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  44
+  vhl. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+C51 COMPILER V8.06   UIP_ARCH                                                              07/01/2021 16:27:15 PAGE 60  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  tos. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  len. . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0002H  2
+  ipid . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0004H  2
+  ipoffset . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0006H  2
+  ttl. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0008H  1
+  proto. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0009H  1
+  ipchksum . . . . . . . . . . . . . .  MEMBER   -----  U_INT    000AH  2
+  srcipaddr. . . . . . . . . . . . . .  MEMBER   -----  ARRAY    000CH  4
+  destipaddr . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0010H  4
+  srcport. . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0014H  2
+  destport . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0016H  2
+  seqno. . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0018H  4
+  ackno. . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    001CH  4
+  tcpoffset. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0020H  1
+  flags. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0021H  1
+  wnd. . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0022H  2
+  tcpchksum. . . . . . . . . . . . . .  MEMBER   -----  U_INT    0024H  2
+  urgp . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0026H  2
+  optdata. . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0028H  4
+uip_udpip_hdr. . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  28
+  vhl. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  tos. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  len. . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0002H  2
+  ipid . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0004H  2
+  ipoffset . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0006H  2
+  ttl. . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0008H  1
+  proto. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0009H  1
+  ipchksum . . . . . . . . . . . . . .  MEMBER   -----  U_INT    000AH  2
+  srcipaddr. . . . . . . . . . . . . .  MEMBER   -----  ARRAY    000CH  4
+  destipaddr . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0010H  4
+  srcport. . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0014H  2
+  destport . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0016H  2
+  udplen . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0018H  2
+  udpchksum. . . . . . . . . . . . . .  MEMBER   -----  U_INT    001AH  2
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    288    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      5    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
