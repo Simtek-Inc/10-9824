@@ -1,0 +1,28 @@
+#------------------------------------------------------------------------------------------------------------------------------------------
+# RUN NUMBER: 1   DATE: 09:13:40 27-Jul-2017
+# INVOKED AS:  extended_run_gui.tcl -n 5 -starting_seed_index 1 -timing_driven -place_incremental on -compare_criteria frequency
+#------------------------------------------------------------------------------------------------------------------------------------------
+# Seed Index  Seed      Slowest Clock          Frequency  Report Analyzed                                Saved Design
+# ==========  ========  ===============  ===============  =============================================  ===================================
+           1         0  clock_master/counter[7]:Q           33.110  mainprogram_timing_r1_s1.rpt                 
+           2  86662958  clock_master/counter[7]:Q           30.235  mainprogram_timing_r1_s2.rpt                 
+           3   8988747  clock_master/counter[7]:Q           33.096  mainprogram_timing_r1_s3.rpt                 
+           4  51071856  clock_master/counter[7]:Q           30.920  mainprogram_timing_r1_s4.rpt                 
+           5  78381505  clock_master/counter[7]:Q           32.165  mainprogram_timing_r1_s5.rpt                 
+#------------------------------------------------------------------------------------------------------------------------------------------
+# RUN NUMBER: 2   DATE: 09:50:46 27-Jul-2017
+# INVOKED AS:  extended_run_gui.tcl -n 10 -starting_seed_index 6 -timing_driven -compare_criteria frequency -c XCLK -save_all
+#------------------------------------------------------------------------------------------------------------------------------------------
+# Seed Index  Seed      Specific Clock         Frequency  Report Analyzed                                Saved Design
+# ==========  ========  ===============  ===============  =============================================  ===================================
+         N/A         0  XCLK                      90.383  mainprogram_timing_r2_initial.rpt              C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_initial.adb
+           6  82287664  XCLK                      88.449  mainprogram_timing_r2_s6.rpt                   C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s6.adb
+           7  23702026  XCLK                      88.692  mainprogram_timing_r2_s7.rpt                   C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s7.adb
+           8  51370950  XCLK                      88.519  mainprogram_timing_r2_s8.rpt                   C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s8.adb
+           9  93189207  XCLK                      88.519  mainprogram_timing_r2_s9.rpt                   C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s9.adb
+          10  17538078  XCLK                      90.457  mainprogram_timing_r2_s10.rpt                  C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s10.adb
+          11  77122585  XCLK                      88.456  mainprogram_timing_r2_s11.rpt                  C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s11.adb
+          12  27521058  XCLK                      87.329  mainprogram_timing_r2_s12.rpt                  C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s12.adb
+          13  77808595  XCLK                      87.374  mainprogram_timing_r2_s13.rpt                  C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s13.adb
+          14  85318856  XCLK                      88.511  mainprogram_timing_r2_s14.rpt                  C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s14.adb
+          15  74257101  XCLK                      88.456  mainprogram_timing_r2_s15.rpt                  C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/designer/impl1/mainprogram_r2_s15.adb

@@ -1,0 +1,777 @@
+----------------------------------------------------------------------
+Report for cell mainprogram.behavioral
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND3         2       1.0        2.0
+                                AO1         8       1.0        8.0
+                               AO13        28       1.0       28.0
+                               AO18         7       1.0        7.0
+                               AO1D         9       1.0        9.0
+                               AOI1        10       1.0       10.0
+                              AOI1B         1       1.0        1.0
+                               AX1B         5       1.0        5.0
+                               AX1D        23       1.0       23.0
+                               BUFF         2       1.0        2.0
+                             CLKBUF         1       0.0        0.0
+                             CLKINT         1       0.0        0.0
+                        ClockMaster         1      19.0       19.0
+                                GND         1       0.0        0.0
+                              INBUF        16       0.0        0.0
+                       IODebounceZ0         1      60.0       60.0
+                       IODebounce_8         1      53.0       53.0
+                               MAJ3        43       1.0       43.0
+                               MIN3         6       1.0        6.0
+                               MX2C         2       1.0        2.0
+                             Max144         1    1688.0     1688.0
+                               NOR2        13       1.0       13.0
+                              NOR2A       180       1.0      180.0
+                              NOR2B        12       1.0       12.0
+                               NOR3         3       1.0        3.0
+                              NOR3A         7       1.0        7.0
+                              NOR3B         2       1.0        2.0
+                              NOR3C         2       1.0        2.0
+                                OA1        16       1.0       16.0
+                               OA1A        13       1.0       13.0
+                                OR2        24       1.0       24.0
+                               OR2A        29       1.0       29.0
+                               OR2B         4       1.0        4.0
+                                OR3         3       1.0        3.0
+                               OR3A         2       1.0        2.0
+                               OR3C         1       1.0        1.0
+                             OUTBUF        21       0.0        0.0
+                           PWMS1_10         1     128.0      128.0
+                         PWMS1_10_0         1     133.0      133.0
+                         PWMS1_10_1         1     132.0      132.0
+                         PWMS1_10_2         1     131.0      131.0
+                         PWMS1_10_3         1     131.0      131.0
+                         PWMS1_10_4         1     137.0      137.0
+                         PWMS1_10_5         1     132.0      132.0
+                         PWMS1_10_6         1     132.0      132.0
+                         PWMS1_10_7         1     132.0      132.0
+                         PWMS1_10_8         1     132.0      132.0
+                         PWMS1_10_9         1     133.0      133.0
+                                VCC         1       0.0        0.0
+                           WatchDog         1      49.0       49.0
+                                XA1         1       1.0        1.0
+                               XA1A        13       1.0       13.0
+                              XNOR2        34       1.0       34.0
+                              XNOR3        37       1.0       37.0
+                                XO1         1       1.0        1.0
+                               XO1A         1       1.0        1.0
+                               XOR2        85       1.0       85.0
+                               XOR3        70       1.0       70.0
+                               ZOR3         6       1.0        6.0
+                            divider         1       2.0        2.0
+                             pisoZ0         1      29.0       29.0
+                             pisoZ1         1      43.0       43.0
+                             pisoZ2         1      79.0       79.0
+                             pisoZ3         1      82.0       82.0
+                           revision         1      34.0       34.0
+                             sipoZ0         1      52.0       52.0
+                             sipoZ1         1      60.0       60.0
+                             sipoZ2         1      71.0       71.0
+                             sipoZ3         1      58.0       58.0
+                             sipoZ4         1      69.0       69.0
+                            
+                         TOTAL            773               4606.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_9.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.6.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         8       1.0        8.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               NOR2         4       1.0        4.0
+                              NOR2A        13       1.0       13.0
+                              NOR2B        11       1.0       11.0
+                               NOR3         2       1.0        2.0
+                              NOR3A        11       1.0       11.0
+                              NOR3B         2       1.0        2.0
+                              NOR3C        17       1.0       17.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1         1       1.0        1.0
+                              XNOR2        11       1.0       11.0
+                               XOR2         4       1.0        4.0
+                            
+                         TOTAL            135                133.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_8.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.5.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         5       1.0        5.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               NOR2         5       1.0        5.0
+                              NOR2A        12       1.0       12.0
+                              NOR2B        15       1.0       15.0
+                               NOR3         2       1.0        2.0
+                              NOR3A        11       1.0       11.0
+                              NOR3B         3       1.0        3.0
+                              NOR3C        11       1.0       11.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1         2       1.0        2.0
+                              XNOR2        11       1.0       11.0
+                               XOR2         6       1.0        6.0
+                            
+                         TOTAL            134                132.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_7.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.4.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         8       1.0        8.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               NOR2         5       1.0        5.0
+                              NOR2A        12       1.0       12.0
+                              NOR2B        12       1.0       12.0
+                               NOR3         2       1.0        2.0
+                              NOR3A        13       1.0       13.0
+                              NOR3B         3       1.0        3.0
+                              NOR3C        12       1.0       12.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1         1       1.0        1.0
+                              XNOR2        11       1.0       11.0
+                               XOR2         4       1.0        4.0
+                            
+                         TOTAL            134                132.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_6.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.10.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         7       1.0        7.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               NOR2         5       1.0        5.0
+                              NOR2A        12       1.0       12.0
+                              NOR2B        14       1.0       14.0
+                               NOR3         2       1.0        2.0
+                              NOR3A        11       1.0       11.0
+                              NOR3B         3       1.0        3.0
+                              NOR3C        12       1.0       12.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1         1       1.0        1.0
+                              XNOR2        11       1.0       11.0
+                               XOR2         5       1.0        5.0
+                            
+                         TOTAL            134                132.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_5.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.3.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         5       1.0        5.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               NOR2         5       1.0        5.0
+                              NOR2A        12       1.0       12.0
+                              NOR2B        15       1.0       15.0
+                               NOR3         2       1.0        2.0
+                              NOR3A        11       1.0       11.0
+                              NOR3B         3       1.0        3.0
+                              NOR3C        11       1.0       11.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1         2       1.0        2.0
+                              XNOR2        11       1.0       11.0
+                               XOR2         6       1.0        6.0
+                            
+                         TOTAL            134                132.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_4.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.9.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         3       1.0        3.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               NOR2         7       1.0        7.0
+                              NOR2A        22       1.0       22.0
+                              NOR2B        13       1.0       13.0
+                              NOR3A         5       1.0        5.0
+                              NOR3B         2       1.0        2.0
+                              NOR3C        15       1.0       15.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1         3       1.0        3.0
+                               XA1B         7       1.0        7.0
+                              XNOR2        10       1.0       10.0
+                               XOR2         1       1.0        1.0
+                            
+                         TOTAL            139                137.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_3.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.2.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         3       1.0        3.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               MX2C         1       1.0        1.0
+                               NOR2         6       1.0        6.0
+                              NOR2A        13       1.0       13.0
+                              NOR2B        16       1.0       16.0
+                               NOR3         2       1.0        2.0
+                              NOR3A         2       1.0        2.0
+                              NOR3B         4       1.0        4.0
+                              NOR3C        14       1.0       14.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1        10       1.0       10.0
+                              XNOR2        11       1.0       11.0
+                            
+                         TOTAL            133                131.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_2.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.8.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         2       1.0        2.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               MX2C         1       1.0        1.0
+                               NOR2         6       1.0        6.0
+                              NOR2A        13       1.0       13.0
+                              NOR2B        15       1.0       15.0
+                               NOR3         2       1.0        2.0
+                              NOR3A         2       1.0        2.0
+                              NOR3B         4       1.0        4.0
+                              NOR3C        15       1.0       15.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1        10       1.0       10.0
+                              XNOR2        11       1.0       11.0
+                               XOR2         1       1.0        1.0
+                            
+                         TOTAL            133                131.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_1.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.1.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         6       1.0        6.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               NOR2         5       1.0        5.0
+                              NOR2A        12       1.0       12.0
+                              NOR2B        14       1.0       14.0
+                               NOR3         2       1.0        2.0
+                              NOR3A        11       1.0       11.0
+                              NOR3B         3       1.0        3.0
+                              NOR3C        12       1.0       12.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1         1       1.0        1.0
+                              XNOR2        11       1.0       11.0
+                               XOR2         6       1.0        6.0
+                            
+                         TOTAL            134                132.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10_0.netlist
+  Original Cell name PWMS1_10
+     Instance path:  gen_pwm_control.7.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                              AOI1B         1       1.0        1.0
+                               AX1C         6       1.0        6.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               NOR2         4       1.0        4.0
+                              NOR2A        14       1.0       14.0
+                              NOR2B        14       1.0       14.0
+                               NOR3         1       1.0        1.0
+                              NOR3A        14       1.0       14.0
+                              NOR3B         1       1.0        1.0
+                              NOR3C        11       1.0       11.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1         1       1.0        1.0
+                               XA1B         1       1.0        1.0
+                              XNOR2        10       1.0       10.0
+                               XOR2         6       1.0        6.0
+                            
+                         TOTAL            135                133.0
+----------------------------------------------------------------------
+Report for cell PWMS1_10.netlist
+  Original Cell name PWMS1
+     Instance path:  gen_pwm_control.0.snkpout_inst
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         2       1.0        2.0
+                              AND2A         2       1.0        2.0
+                               AND3         2       1.0        2.0
+                              AND3A         1       1.0        1.0
+                                AO1         3       1.0        3.0
+                               AO1C         4       1.0        4.0
+                              AOI1A         6       1.0        6.0
+                               AX1C         4       1.0        4.0
+                               DFN1        16       1.0       16.0
+                                GND         1       0.0        0.0
+                               NOR2         4       1.0        4.0
+                              NOR2A        14       1.0       14.0
+                              NOR2B        21       1.0       21.0
+                               NOR3         2       1.0        2.0
+                              NOR3A         3       1.0        3.0
+                              NOR3B         1       1.0        1.0
+                              NOR3C        10       1.0       10.0
+                                OA1         1       1.0        1.0
+                               OA1A         2       1.0        2.0
+                               OR2A        10       1.0       10.0
+                                VCC         1       0.0        0.0
+                                XA1         5       1.0        5.0
+                              XNOR2        11       1.0       11.0
+                               XOR2         4       1.0        4.0
+                            
+                         TOTAL            130                128.0
+----------------------------------------------------------------------
+Report for cell pisoZ0.netlist
+     Instance path:  ioBank61reader
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AOI1         1       1.0        1.0
+                               DFN1         7       1.0        7.0
+                                GND         1       0.0        0.0
+                                MX2         7       1.0        7.0
+                              NOR2A         1       1.0        1.0
+                              NOR3A         2       1.0        2.0
+                              NOR3C         1       1.0        1.0
+                                OR2         9       1.0        9.0
+                                VCC         1       0.0        0.0
+                                XA1         1       1.0        1.0
+                            
+                         TOTAL             31                 29.0
+----------------------------------------------------------------------
+Report for cell pisoZ1.netlist
+     Instance path:  ioBank60reader
+                                          Cell usage:
+                               cell       count     area    count*area
+                                AO1         2       1.0        2.0
+                               AX1E         1       1.0        1.0
+                               DFN1         9       1.0        9.0
+                                GND         1       0.0        0.0
+                                MX2         7       1.0        7.0
+                               NOR2         3       1.0        3.0
+                              NOR2A         1       1.0        1.0
+                              NOR2B         1       1.0        1.0
+                               NOR3         2       1.0        2.0
+                              NOR3A         2       1.0        2.0
+                              NOR3B         2       1.0        2.0
+                              NOR3C         1       1.0        1.0
+                                OR2        10       1.0       10.0
+                                OR3         1       1.0        1.0
+                                VCC         1       0.0        0.0
+                               XA1B         1       1.0        1.0
+                            
+                         TOTAL             45                 43.0
+----------------------------------------------------------------------
+Report for cell pisoZ2.netlist
+     Instance path:  A2D01reader
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AOI1         1       1.0        1.0
+                              AOI1B         1       1.0        1.0
+                               DFN1        17       1.0       17.0
+                                GND         1       0.0        0.0
+                                MX2        23       1.0       23.0
+                               NOR2         2       1.0        2.0
+                              NOR2A         3       1.0        3.0
+                              NOR2B         2       1.0        2.0
+                              NOR3C         2       1.0        2.0
+                                OR2        25       1.0       25.0
+                                VCC         1       0.0        0.0
+                                XA1         3       1.0        3.0
+                            
+                         TOTAL             81                 79.0
+----------------------------------------------------------------------
+Report for cell pisoZ3.netlist
+     Instance path:  A2D00reader
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AOI1         2       1.0        2.0
+                               DFN1        17       1.0       17.0
+                                GND         1       0.0        0.0
+                                MX2        23       1.0       23.0
+                               NOR2         4       1.0        4.0
+                              NOR2A         2       1.0        2.0
+                              NOR2B         2       1.0        2.0
+                              NOR3A         1       1.0        1.0
+                              NOR3C         2       1.0        2.0
+                                OR2        26       1.0       26.0
+                                VCC         1       0.0        0.0
+                                XA1         3       1.0        3.0
+                            
+                         TOTAL             84                 82.0
+----------------------------------------------------------------------
+Report for cell revision.netlist
+     Instance path:  firmware
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AO1D         1       1.0        1.0
+                              AOI1B         1       1.0        1.0
+                               DFN1         4       1.0        4.0
+                             DFN1E0         6       1.0        6.0
+                                GND         1       0.0        0.0
+                                MX2         4       1.0        4.0
+                               MX2C         4       1.0        4.0
+                               NOR2         1       1.0        1.0
+                              NOR2A         2       1.0        2.0
+                               NOR3         1       1.0        1.0
+                              NOR3A         2       1.0        2.0
+                              NOR3C         1       1.0        1.0
+                                OR2         2       1.0        2.0
+                               OR2B         2       1.0        2.0
+                               OR3B         1       1.0        1.0
+                                VCC         1       0.0        0.0
+                                XA1         1       1.0        1.0
+                               XO1A         1       1.0        1.0
+                            
+                         TOTAL             36                 34.0
+----------------------------------------------------------------------
+Report for cell sipoZ0.netlist
+     Instance path:  Indicator2
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AOI1         1       1.0        1.0
+                               DFN1        10       1.0       10.0
+                             DFN1E0         3       1.0        3.0
+                                GND         1       0.0        0.0
+                                MX2        10       1.0       10.0
+                              NOR2A        15       1.0       15.0
+                              NOR2B         7       1.0        7.0
+                              NOR3A         3       1.0        3.0
+                              NOR3B         1       1.0        1.0
+                                VCC         1       0.0        0.0
+                                XA1         2       1.0        2.0
+                            
+                         TOTAL             54                 52.0
+----------------------------------------------------------------------
+Report for cell sipoZ1.netlist
+     Instance path:  Indicator1
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         3       1.0        3.0
+                               AOI1         1       1.0        1.0
+                               DFN1        12       1.0       12.0
+                             DFN1E0         3       1.0        3.0
+                                GND         1       0.0        0.0
+                                MX2        12       1.0       12.0
+                               NOR2         2       1.0        2.0
+                              NOR2A        16       1.0       16.0
+                              NOR2B         2       1.0        2.0
+                              NOR3A         2       1.0        2.0
+                              NOR3B         3       1.0        3.0
+                              NOR3C         2       1.0        2.0
+                                VCC         1       0.0        0.0
+                                XA1         2       1.0        2.0
+                            
+                         TOTAL             62                 60.0
+----------------------------------------------------------------------
+Report for cell sipoZ2.netlist
+     Instance path:  dutycyclelatch01
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         3       1.0        3.0
+                               AOI1         1       1.0        1.0
+                               DFN1        16       1.0       16.0
+                             DFN1E0         3       1.0        3.0
+                                GND         1       0.0        0.0
+                                MX2        16       1.0       16.0
+                               NOR2         1       1.0        1.0
+                              NOR2A        20       1.0       20.0
+                              NOR2B         1       1.0        1.0
+                              NOR3B         4       1.0        4.0
+                              NOR3C         4       1.0        4.0
+                                VCC         1       0.0        0.0
+                                XA1         2       1.0        2.0
+                            
+                         TOTAL             73                 71.0
+----------------------------------------------------------------------
+Report for cell sipoZ3.netlist
+     Instance path:  externenablelatch01
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AOI1         1       1.0        1.0
+                               AX1B         1       1.0        1.0
+                               DFN1        12       1.0       12.0
+                             DFN1E0         3       1.0        3.0
+                                GND         1       0.0        0.0
+                                INV         2       1.0        2.0
+                                MX2        12       1.0       12.0
+                               NOR2         2       1.0        2.0
+                              NOR2A        11       1.0       11.0
+                              NOR2B         2       1.0        2.0
+                              NOR3A         1       1.0        1.0
+                              NOR3B         4       1.0        4.0
+                              NOR3C         3       1.0        3.0
+                                OR2         2       1.0        2.0
+                               OR2A         1       1.0        1.0
+                                VCC         1       0.0        0.0
+                                XO1         1       1.0        1.0
+                            
+                         TOTAL             60                 58.0
+----------------------------------------------------------------------
+Report for cell sipoZ4.netlist
+     Instance path:  addresslatch
+                                          Cell usage:
+                               cell       count     area    count*area
+                               DFN1        19       1.0       19.0
+                                GND         1       0.0        0.0
+                                MX2        16       1.0       16.0
+                               NOR2         2       1.0        2.0
+                              NOR2A        21       1.0       21.0
+                              NOR2B         3       1.0        3.0
+                              NOR3A         2       1.0        2.0
+                              NOR3B         4       1.0        4.0
+                                VCC         1       0.0        0.0
+                                XA1         2       1.0        2.0
+                            
+                         TOTAL             71                 69.0
+----------------------------------------------------------------------
+Report for cell IODebounce_8.netlist
+     Instance path:  iobank61debounce
+                                          Cell usage:
+                               cell       count     area    count*area
+                               DFN1         8       1.0        8.0
+                             DFN1E0         5       1.0        5.0
+                             DFN1E1         9       1.0        9.0
+                                GND         1       0.0        0.0
+                                INV         4       1.0        4.0
+                               MX2B         8       1.0        8.0
+                               NOR2         1       1.0        1.0
+                              NOR2A         1       1.0        1.0
+                              NOR2B         6       1.0        6.0
+                              NOR3C         1       1.0        1.0
+                               OA1C         1       1.0        1.0
+                               OR2B         1       1.0        1.0
+                                VCC         1       0.0        0.0
+                                XA1         7       1.0        7.0
+                               XOR2         1       1.0        1.0
+                            
+                         TOTAL             55                 53.0
+----------------------------------------------------------------------
+Report for cell IODebounceZ0.netlist
+     Instance path:  iobank60debounce
+                                          Cell usage:
+                               cell       count     area    count*area
+                               DFN1        11       1.0       11.0
+                             DFN1E0         6       1.0        6.0
+                             DFN1E1         8       1.0        8.0
+                                GND         1       0.0        0.0
+                                INV         5       1.0        5.0
+                               MX2A         1       1.0        1.0
+                               MX2B        10       1.0       10.0
+                               NOR2         1       1.0        1.0
+                              NOR2A         1       1.0        1.0
+                              NOR2B         6       1.0        6.0
+                              NOR3C         1       1.0        1.0
+                               OA1C         1       1.0        1.0
+                               OR2B         1       1.0        1.0
+                                VCC         1       0.0        0.0
+                                XA1         7       1.0        7.0
+                               XOR2         1       1.0        1.0
+                            
+                         TOTAL             62                 60.0
+----------------------------------------------------------------------
+Report for cell Max144.netlist
+     Instance path:  A2DRead
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         9       1.0        9.0
+                                AO1        68       1.0       68.0
+                               AO13        11       1.0       11.0
+                               AO18        16       1.0       16.0
+                               AO1A        10       1.0       10.0
+                               AO1D         3       1.0        3.0
+                              AOI1B         3       1.0        3.0
+                                AX1         3       1.0        3.0
+                               AX1B         1       1.0        1.0
+                               AX1D        15       1.0       15.0
+                               DFN1         1       1.0        1.0
+                             DFN1E0        22       1.0       22.0
+                             DFN1E1       432       1.0      432.0
+                                GND         1       0.0        0.0
+                               MAJ3       260       1.0      260.0
+                               MIN3        16       1.0       16.0
+                                MX2         2       1.0        2.0
+                               NOR2        17       1.0       17.0
+                              NOR2A        15       1.0       15.0
+                              NOR2B       118       1.0      118.0
+                               NOR3         2       1.0        2.0
+                              NOR3A        16       1.0       16.0
+                              NOR3B        20       1.0       20.0
+                              NOR3C        22       1.0       22.0
+                                OA1        48       1.0       48.0
+                               OA1A         5       1.0        5.0
+                               OA1B         1       1.0        1.0
+                               OAI1         1       1.0        1.0
+                                OR2        67       1.0       67.0
+                               OR2A         7       1.0        7.0
+                               OR2B         4       1.0        4.0
+                                OR3        31       1.0       31.0
+                               OR3A         3       1.0        3.0
+                               OR3B         4       1.0        4.0
+                               OR3C         1       1.0        1.0
+                                VCC         1       0.0        0.0
+                                XA1        11       1.0       11.0
+                               XA1B         1       1.0        1.0
+                               XA1C         2       1.0        2.0
+                               XAI1         1       1.0        1.0
+                              XAI1A         1       1.0        1.0
+                              XNOR2         6       1.0        6.0
+                              XNOR3        10       1.0       10.0
+                                XO1         6       1.0        6.0
+                               XO1A         1       1.0        1.0
+                               XOR2        85       1.0       85.0
+                               XOR3       310       1.0      310.0
+                            
+                         TOTAL           1690               1688.0
+----------------------------------------------------------------------
+Report for cell WatchDog.netlist
+     Instance path:  Watch_Dog_Reset
+                                          Cell usage:
+                               cell       count     area    count*area
+                               DFN1         1       1.0        1.0
+                             DFN1E0        11       1.0       11.0
+                                GND         1       0.0        0.0
+                               MX2C         1       1.0        1.0
+                               NOR2         5       1.0        5.0
+                              NOR2B        12       1.0       12.0
+                              NOR3A         1       1.0        1.0
+                              NOR3B         1       1.0        1.0
+                              NOR3C         7       1.0        7.0
+                                VCC         1       0.0        0.0
+                               XA1B        10       1.0       10.0
+                            
+                         TOTAL             51                 49.0
+----------------------------------------------------------------------
+Report for cell ClockMaster.netlist
+     Instance path:  clock_master
+                                          Cell usage:
+                               cell       count     area    count*area
+                               AND2         3       1.0        3.0
+                                AO1         3       1.0        3.0
+                             CLKINT         4       0.0        0.0
+                               DFN1         4       1.0        4.0
+                                GND         1       0.0        0.0
+                                INV         1       1.0        1.0
+                                VCC         1       0.0        0.0
+                               XOR2         8       1.0        8.0
+                            
+                         TOTAL             25                 19.0
+----------------------------------------------------------------------
+Report for cell divider.netlist
+     Instance path:  clockdivider
+                                          Cell usage:
+                               cell       count     area    count*area
+                               DFN1         1       1.0        1.0
+                                GND         1       0.0        0.0
+                                INV         1       1.0        1.0
+                                VCC         1       0.0        0.0
+                            
+                         TOTAL              4                  2.0

@@ -1,0 +1,1746 @@
+//========================================================================================//
+//     Copyright (c) 2021     Simtek, Incorporated      All rights reserved.              //
+//                                                                                        //
+//     This is unpublished proprietary source code of Simtek, Inc                         //
+//                                                                                        //
+//     The copyright notice above does not evidence any actual or intended                //
+//     publication of such source code.                                                   //
+//========================================================================================//
+// 75-8217  for 10-9012-01                                                                //
+// Circuit boards used : 51-5330-01                                                       //
+// Used the programs from C. Mason 10-8149 to start with                                  //
+//                                                                                        //
+//========================================================================================//
+// Module Name : Main.c                                                                   //
+// Purpose     : Main loop                                                                //
+//========================================================================================//
+// Author      : C. Mason                                                                 //
+// Date        : March 20, 2021                                                           //
+// Revision    : -                                                                        //
+// Notes       : Shipped with instrument.                                                 //
+//========================================================================================//
+
+//========================================================================================//
+//          include file declarations                                                     //
+//========================================================================================//
+#include "reg80390.h"                                                                     //
+#include "main.h"                                                                         //
+#include "fpga.h"                                                                         //
+#include "adapter.h"                                                                      //
+#include "mstimer.h"                                                                      //
+#include "ax11000.h"                                                                      //
+#include "interrupt.h"                                                                    //
+#include "stoe.h"                                                                         //
+#include "dma.h"                                                                          //
+#include "tcpip.h"                                                                        //
+#include "printd.h"                                                                       //
+#include "delay.h"                                                                        //
+#include "intrins.h"                                                                      //
+#include "Hardware.h"                                                                     //
+#include "uart.h"                                                                         //
+#include "gconfig.h"                                                                      //
+#include "phy.h"                                                                          //
+#include "mac.h"                                                                          //
+#include "gudpdat.h"                                                                      //
+#include "uart.h"                                                                         //
+#include "gs2e.h"                                                                         //
+#include <string.h>                                                                       //
+#include <stdio.h>                                                                        //
+#include "CIRCUIT.H"                                                                      //
+#include "instrument.h"                                                                   //
+#include "hardware.h"                                                                     //
+#include <math.h>                                                                         //
+#include "dhcpc.h"                                                                        //
+#include <stdlib.h>                                                                       //
+#include "util_menus.h"                                                                   //
+//========================================================================================//
+//                naming #define declarations                                            //
+//========================================================================================//
+#define  RS422                            0                                               //
+#define  RS232                            1                                               //
+#define  DEDisable                        0                                               //
+#define  DEEnable                         1                                               //
+
+#ifdef DEBUG                                                                              //
+#define DBGMSG(A) {A}                                                                     //
+#else                                                                                     //
+#define DBGMSG(A) {}                                                                      //
+#endif                                                                                    //
+#define  TIME_OUT_COUNTER                 (20/SWTIMER_INTERVAL)                           // 20/swtimer_intervale = x ms
+#define  SW_TIME_OUT_COUNTER              3000 // 3000 = 30 seconds                       // 30 seconds
+#define  DBG_TIME_OUT_COUNTER             100 // 100  =  1 seconds                        // 30 seconds
+
+#define Serial                            0
+#define Ethernet                          1
+#define Host_Port                       (Ethernet)
+
+// MACRO DECLARATIONS //
+#if   ( Host_Port == Serial )
+#define     wrHost(p,c)    UART0_PutStr(p,c)
+#else
+#define     wrHost(p,c)    wrStrEthTxBuffer(p,c)
+#endif
+
+       uint                   EthTxBufTail;
+//========================================================================================//
+//          switch action codes                                                           //
+//========================================================================================//
+#define acodeSS_NullPosition              0x00                                            //
+#define acodeS1_Position1                 0x01                                            //
+#define acodeS1_Position2                 0x02                                            //
+#define acodeS2_Position1                 0x03                                            //
+#define acodeS2_Position2                 0x04                                            //
+#define acodeS3_Position1                 0x05                                            //
+#define acodeS3_Position2                 0x06                                            //
+#define acodeS4_Position1                 0x07                                            //
+#define acodeS4_Position2                 0x08                                            //
+#define acodeS5_Position1                 0x09                                            //
+#define acodeS5_Position2                 0x0A                                            //
+#define acodeS6_Position1                 0x0B                                            //
+#define acodeS6_Position2                 0x0C                                            //
+#define acodeS7_Position1                 0x0D                                            //
+#define acodeS7_Position2                 0x0E                                            //
+#define acodeS8_Position1                 0x0F                                            //
+#define acodeS8_Position2                 0x10                                            //
+#define acodeS9_Position1                 0x11                                            //
+#define acodeS9_Position2                 0x12                                            //
+#define acodeS10_Position1                0x13                                            //
+#define acodeS10_Position2                0x14                                            //
+#define acodeS11_Position1                0x15                                            //
+#define acodeS11_Position2                0x16                                            //
+#define acodeS12_Position1                0x17                                            //
+#define acodeS12_Position2                0x18                                            //
+#define acodeS13_Position1                0x19                                            //
+#define acodeS13_Position2                0x1A                                            //
+#define acodeS14_Position1                0x1B                                            //
+#define acodeS14_Position2                0x1C                                            //
+#define acodeS15_Position1                0x1D                                            //
+#define acodeS15_Position2                0x1E                                            //
+#define acodeS16_Position1                0x1F                                            //
+#define acodeS16_Position2                0x20                                            //
+#define acodeS17_Position1                0x21                                            //
+#define acodeS17_Position2                0x22                                            //
+#define acodeR1                           0x01                                            //
+#define acodeR2                           0x02                                            //
+
+#define acodeDD_NullPosition              0x00                                            //
+#define acodeD0_Open                      0x10                                            //
+#define acodeD0_Ground                    0x11                                            //
+#define acodeD1_Open                      0x12                                            //
+#define acodeD1_Ground                    0x13                                            //
+#define acodeD2_Open                      0x14                                            //
+#define acodeD2_Ground                    0x15                                            //
+#define acodeD3_Open                      0x16                                            //
+#define acodeD3_Ground                    0x17                                            //
+#define acodeD4_Open                      0x18                                            //
+#define acodeD4_Ground                    0x19                                            //
+#define acodeD5_Open                      0x1A                                            //
+#define acodeD5_Ground                    0x1B                                            //
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          fpga #define declarations/data array structure                               //
+//========================================================================================//
+//========================================================================================//
+//      fpga register addresses                                                           //
+//========================================================================================//
+#define defaultaddress        0x00                                                        // default address to use after reset
+
+#define adrsfirmware1         0x20                                                        // firmware number and revision data
+#define adrsfirmware2         0x21                                                        // firmware number and revision data
+#define adrsfirmware3         0x22                                                        // firmware number and revision data
+#define adrsfirmware4         0x23                                                        // firmware number and revision data
+
+#define adrsA2DChannel0       0x50                                                        // address of a2d channel 0 reader
+#define adrsA2DChannel1       0x51                                                        // address of a2d channel 1 reader
+
+#define adrsswitchbank1       0x60                                                        // address of switch bank 1 reader
+#define adrsswitchbank2       0x61                                                        // address of switch bank 2 reader
+#define adrsswitchbank3       0x62                                                        // address of switch bank 3 reader
+#define adrsswitchbank4       0x63                                                        // address of switch bank 4 reader
+
+#define adrsexternalenables   0x80                                                        // address of control register for external hardware enable/disable
+
+#define closeCOMports         0x63
+#define A2DEngineEnable       0x01  // turn the a2d sample in engine on
+#define onSwCmnLo             0x02
+#define onSwCmnHi             0x04
+#define onRs422port           0x18
+#define onRs422portRe         0x10
+#define onRs233port           0x20
+#define onHeartBeat           0x40  // turn the heartbeat on
+#define onHeartBeatPWM        0x80  // turn the heart beat dimming with pwm on
+//#define closeCOMports         0x00
+#define defaultexternal       onRs233port | onSwCmnLo | offHeartBeat | A2DEngineEnable | onRs422port
+#define adrsbitcontrol1       0x90                                                        // address of discrete bit control bank 1
+#define defaultpwmctrl01      0x00                                                        // default off state of device enable bank = 0xFF
+#define adrsbitcontrol2       0x91                                                        // address of discrete bit control bank 2
+#define adrsbitcontrol3       0x92                                                        // address of discrete bit control bank 3
+#define adrspwmon01           0xA0                                                        // address of the device enable latch bank 1
+#define adrspwmon02           0xA1                                                        // address of the device enable latch bank 2
+#define adrspwmon03           0xA2                                                        // address of the device enable latch bank 3
+#define adrspwmon02           0xA1                                                        // address of the device enable latch bank 2
+#define defaultpwmctrl02      0x00                                                        // default off state of device enable bank = 0x3F
+#define adrsbitcontrol3       0x92                                                        // address of discrete bit control bank 3
+#define defaultbitonbit3      0x3F        // 1 = ON                                       // define the default state
+#define adrspwmon03           0xA2                                                        // address of the device enable latch bank 3
+#define defaultpwmctrl03      0x3F                                                        // default off state of device enable bank = 0x3F
+
+#define defaultdutycycle      0x0C00                                                      // default PWM duty cycle
+#define adrsDutyCycle01       0xC0                                                        // address_xC0 address of pwm duty cycle control register for discrete 1
+#define adrsDutyCycle02       0xC1                                                        // address_xC1 address of pwm duty cycle control register for discrete 2
+#define adrsDutyCycle03       0xC2                                                        // address_xC2 address of pwm duty cycle control register for discrete 3
+#define adrsDutyCycle04       0xC3                                                        // address_xC2 address of pwm duty cycle control register for discrete 3
+//----------------------------------------------------------------------------------------//
+//           end fpga #define declarations                                               //
+//----------------------------------------------------------------------------------------//
+
+//----------------------------------------------------------------------------------------//
+//          GLOBAL VARIABLES DECLARATIONS                                                 //
+//----------------------------------------------------------------------------------------//
+typedef struct app_buf {                                                                  //
+      ulong ipaddr;                                                                       //
+      byte  buf[100];                                                                     //
+      uint  uip_len;                                                                      //
+      uint  PayLoadOffset;                                                                //
+      byte  wait;                                                                         //
+}APP_BUF;                                                                                 //
+
+APP_BUF     app_arp_buf;                                                                  //
+
+ulong  processEthernetTraffic(ulong ptc, dls);                                            //
+//----------------------------------------------------------------------------------------//
+//          static variable declarations                                                  //
+//----------------------------------------------------------------------------------------//
+byte  EthTxBuffer[EthMaxTxSize];                                                          //
+uint              EthTxBufHead            = 0;                                            // array index to write data into the temporary buffer
+uint              EthTxBufTail            = 0;                                            // array index to transfer data into the actual transmit buffer
+uint              EthTxCount              = 0;                                            // number of bytes in the temporary buffer to transmit
+uint              EthTxBufIndx            = 0;                                            // number of bytes in the temporary buffer to transmit
+
+uint              HrtBeatCnt              = 0x00;                                         //
+static byte       MinMsgLen;                                                              //
+       byte       HardwareSettings;                                                       //
+//----------------------------------------------------------------------------------------//
+//          hardware specific definitions                                                 //
+//----------------------------------------------------------------------------------------//
+// ACC (0xE0) Bit Registers                                                               //
+sbit A_0                      = 0xE0;                                                     //
+sbit A_1                      = 0xE1;                                                     //
+sbit A_2                      = 0xE2;                                                     //
+sbit A_3                      = 0xE3;                                                     //
+sbit A_4                      = 0xE4;                                                     //
+sbit A_5                      = 0xE5;                                                     //
+sbit A_6                      = 0xE6;                                                     //
+sbit A_7                      = 0xE7;                                                     //
+
+       uint idata Word1    _at_ 0x20;                                                     //
+       byte bdata HiByte   _at_ 0x20;                                                     //
+       byte bdata LoByte   _at_ 0x21;                                                     //
+    sbit          bits00  = LoByte^0;                                                     //
+    sbit          bits01  = LoByte^1;                                                     //
+    sbit          bits02  = LoByte^2;                                                     //
+    sbit          bits03  = LoByte^3;                                                     //
+    sbit          bits04  = LoByte^4;                                                     //
+    sbit          bits05  = LoByte^5;                                                     //
+    sbit          bits06  = LoByte^6;                                                     //
+    sbit          bits07  = LoByte^7;                                                     //
+    sbit          bits08  = HiByte^0;                                                     //
+    sbit          bits09  = HiByte^1;                                                     //
+    sbit          bits0A  = HiByte^2;                                                     //
+    sbit          bits0B  = HiByte^3;                                                     //
+    sbit          bits0C  = HiByte^4;                                                     //
+    sbit          bits0D  = HiByte^5;                                                     //
+    sbit          bits0E  = HiByte^6;                                                     //
+    sbit          bits0F  = HiByte^7;                                                     //
+//========================================================================================//
+//          port pin name definition                                                      //
+//========================================================================================//
+byte PinDefStr0[] = PORT0_PIN_NAMES;                                                      //
+byte PinDefStr1[] = PORT1_PIN_NAMES;                                                      //
+byte PinDefStr2[] = PORT2_PIN_NAMES;                                                      //
+byte PinDefStr3[] = PORT3_PIN_NAMES;                                                      //
+//========================================================================================//
+//          ethernet message frames                                                       //
+//========================================================================================//
+       byte bufStatusData[bufStatusRspLength];                                            //
+       byte bufIndicatorData[bufIndicatorReqLength];                                      //
+       byte bufDimmingData[bufDimmingReqLength];                                          //
+       byte bufFirmwareData[bufFirmwareRspLength];                                        //
+//       byte DebugStr[DebugAPFStrLen];                                                     //
+//----------------------------------------------------------------------------------------//
+byte    SwBank02Cnt;                                                                      // 
+#define SwBank02Delay 0x20;                                                               //
+byte    SwBank03Cnt;                                                                      // 
+#define SwBank03Delay 0x20;                                                               //
+byte    SwBank04Cnt;                                                                      // 
+#define SwBank04Delay 0x20;                                                               //
+//----------------------------------------------------------------------------------------//
+//                local variables declarations                                            //
+//----------------------------------------------------------------------------------------//
+byte fpgaOutputData[FPGADataLen];                                                         // data output from the FPGA -- switch/a2d/fpga revision
+byte bitmap[numof5841used];                                                               //
+uint ADCount;                                                                             //
+static byte oP0;                                                                          //
+static byte oP1;                                                                          //
+static byte oP2;                                                                          //
+static byte oP3;                                                                          //
+bool fDebugMode;                                                                          //
+bool fTransmitMode;                                                                       //
+uint acReadP0;                                                                            //
+uint acReadP1;                                                                            //
+uint acReadP2;                                                                            //
+uint acReadP3;                                                                            //
+uint acRDFU;                                                                              //
+uint acAPF;                                                                               //
+byte ChngCnt;                                                                             //
+//----------------------------------------------------------------------------------------//
+//                bit addressable register definitions                                    //
+//----------------------------------------------------------------------------------------//
+static uint idata      wordreg _at_ 0x20;                                                 //
+static byte bdata btmpH _at_ 0x20;                                                        //
+    sbit          btmpH0 = btmpH^0;                                                       //
+    sbit          btmpH1 = btmpH^1;                                                       //
+    sbit          btmpH2 = btmpH^2;                                                       //
+    sbit          btmpH3 = btmpH^3;                                                       //
+    sbit          btmpH4 = btmpH^4;                                                       //
+    sbit          btmpH5 = btmpH^5;                                                       //
+    sbit          btmpH6 = btmpH^6;                                                       //
+    sbit          btmpH7 = btmpH^7;                                                       //
+static byte bdata btmpL _at_ 0x21;                                                        //
+    sbit          btmpL0 = btmpL^0;                                                       //
+    sbit          btmpL1 = btmpL^1;                                                       //
+    sbit          btmpL2 = btmpL^2;                                                       //
+    sbit          btmpL3 = btmpL^3;                                                       //
+    sbit          btmpL4 = btmpL^4;                                                       //
+    sbit          btmpL5 = btmpL^5;                                                       //
+    sbit          btmpL6 = btmpL^6;                                                       //
+    sbit          btmpL7 = btmpL^7;                                                       //
+//te bufIndicatorData[ix01];                                                                 //
+    sbit          POWERON   = btmpL^0;                                                    //
+    sbit          SLAVEGRN  = btmpL^1;                                                    //
+    sbit          SLAVEAMB  = btmpL^2;                                                    //
+    sbit          LOADGRN   = btmpL^3;                                                    //
+    sbit          LOADAMB   = btmpL^4;                                                    //
+    sbit          MANUALGRN = btmpL^5;                                                    //
+    sbit          MANUALAMB = btmpL^6;                                                    //
+//te bufIndicatorData[ix02];                                                                 //
+    sbit          STOWGRN   = btmpL^0;                                                    //
+    sbit          STOWAMB   = btmpL^1;                                                    //
+    sbit          FAST      = btmpL^2;                                                    //
+//te bufIndicatorData[ix03];                                                                 //
+    sbit          UP        = btmpL^4;                                                    //
+    sbit          LEFT      = btmpL^5;                                                    //
+    sbit          RIGHT     = btmpL^6;                                                    //
+    sbit          DOWN      = btmpL^7;                                                    //
+//te bufIndicatorData[ix04];                                                                 //
+    sbit          APDS      = btmpL^0;                                                    //
+    sbit          HEI       = btmpL^1;                                                    //
+    sbit          API       = btmpL^2;                                                    //
+    sbit          TP        = btmpL^3;                                                    //
+                                          // block sch    connector.pin
+static byte bdata U03_0 _at_ 0x22;        // name  sch    connector       sch U#_seg   name/
+    sbit          S02_BR = U03_0^7;       // S02.6 seg-01 connector-J1.01 driver-U03_1 name-POWER.BR
+    sbit          S02_TL = U03_0^6;       // S02.8 seg-02 connector-J1.02 driver-U03_2 name-POWER.TL
+    sbit          S03_BR = U03_0^5;       // S03.6 seg-03 connector-J1.03 driver-U03_3 name-SLAVE.BR
+    sbit          S03_TL = U03_0^4;       // S03.8 seg-04 connector-J1.04 driver-U03_4 name-SLAVE.TL
+    sbit          S04_BR = U03_0^3;       // S04.6 seg-05 connector-J1.05 driver-U03_5 name-LOAD.BR
+    sbit          S04_TL = U03_0^2;       // S04.8 seg-06 connector-J1.06 driver-U03_6 name-LOAD.TL
+    sbit          S05_BR = U03_0^1;       // S05.6 seg-07 connector-J1.07 driver-U03_7 name-MANUAL.BR
+    sbit          S05_TL = U03_0^0;       // S05.8 seg-08 connector-J1.08 driver-U03_8 name-MANUAL.TL
+static byte bdata U05_0 _at_ 0x23;                                                        //
+    sbit          S02_BL = U05_0^7;       // S02.5 seg-09 connector-J1.09 driver-U05_1 name-POWER.BL
+    sbit          S02_TR = U05_0^6;       // S02.9 seg-10 connector-J1.10 driver-U05_2 name-POWER.TR
+    sbit          S03_BL = U05_0^5;       // S03.5 seg-11 connector-J1.11 driver-U05_3 name-SLAVE.BL
+    sbit          S03_TR = U05_0^4;       // S03.9 seg-12 connector-J1.12 driver-U05_4 name-SLAVE.TR
+    sbit          S04_BL = U05_0^3;       // S04.5 seg-13 connector-J1.13 driver-U05_5 name-LOAD.BL
+    sbit          S04_TR = U05_0^2;       // S04.9 seg-14 connector-J1.14 driver-U05_6 name-LOAD.TR
+    sbit          S05_BL = U05_0^1;       // S05.5 seg-15 connector-J1.15 driver-U05_7 name-MANUAL.BL
+    sbit          S05_TR = U05_0^0;       // S05.9 seg-16 connector-J1.16 driver-U05_8 name-MANUAL.TR
+static byte bdata U07_0 _at_ 0x22;                                                        //
+    sbit          S06_BR = U07_0^7;       // S06.6 seg-17 connector-J1.17 driver-U07_1 name-STOW.BR
+    sbit          S06_TL = U07_0^6;       // S06.8 seg-18 connector-J1.18 driver-U07_2 name-STOW.TL
+    sbit          S08_BR = U07_0^5;       // S08.6 seg-19 connector-J1.19 driver-U07_3 name-UP.BR
+    sbit          S08_TL = U07_0^4;       // S08.8 seg-20 connector-J1.20 driver-U07_4 name-UP.TL
+    sbit          S09_BR = U07_0^3;       // S09.6 seg-21 connector-J1.21 driver-U07_5 name-LEFT.BR
+    sbit          S09_TL = U07_0^2;       // S09.8 seg-22 connector-J1.22 driver-U07_6 name-LEFT.TL
+    sbit          S10_BR = U07_0^1;       // S10.6 seg-23 connector-J1.23 driver-U07_7 name-FAST.BR
+    sbit          S10_TL = U07_0^0;       // S10.8 seg-24 connector-J1.24 driver-U07_8 name-FAST.TL
+static byte bdata U09_0 _at_ 0x23;                                                        //
+    sbit          S06_BL = U09_0^7;       // S06.5 seg-25 connector-J1.25 driver-U09_1 name-STOW.BL
+    sbit          S06_TR = U09_0^6;       // S06.9 seg-26 connector-J1.26 driver-U09_2 name-STOW.TR
+    sbit          S08_BL = U09_0^5;       // S08.5 seg-27 connector-J1.27 driver-U09_3 name-UP.BL
+    sbit          S08_TR = U09_0^4;       // S08.9 seg-28 connector-J1.28 driver-U09_4 name-UP.TR
+    sbit          S09_BL = U09_0^3;       // S09.5 seg-29 connector-J1.29 driver-U09_5 name-LEFT.BL
+    sbit          S09_TR = U09_0^2;       // S09.9 seg-30 connector-J1.30 driver-U09_6 name-LEFT.TR
+    sbit          S10_BL = U09_0^1;       // S10.5 seg-31 connector-J1.31 driver-U09_7 name-FAST.BL
+    sbit          S10_TR = U09_0^0;       // S10.9 seg-32 connector-J1.32 driver-U09_8 name-FAST.TR
+static byte bdata U11_0 _at_ 0x22;                                                        //
+    sbit          S11_BR = U11_0^7;       // S11.6 seg-33 connector-J2.01 driver-U11_1 name-RIGHT.BR
+    sbit          S11_TL = U11_0^6;       // S11.8 seg-34 connector-J2.02 driver-U11_2 name-RIGHT.TL
+    sbit          S12_BR = U11_0^5;       // S12.6 seg-35 connector-J2.03 driver-U11_3 name-DOWN.BR
+    sbit          S12_TL = U11_0^4;       // S12.8 seg-36 connector-J2.04 driver-U11_4 name-DOWN.TL
+    sbit          S13_BR = U11_0^3;       // N01.0 seg-37 connector-J2.05 driver-U11_5 name-NU.BR
+    sbit          S13_TL = U11_0^2;       // N01.0 seg-38 connector-J2.06 driver-U11_6 name-NU.TL
+    sbit          S14_BR = U11_0^1;       // S14.6 seg-39 connector-J2.07 driver-U11_7 name-APDS.BR
+    sbit          S14_TL = U11_0^0;       // S14.8 seg-40 connector-J2.08 driver-U11_8 name-APDS.TL
+static byte bdata U13_0 _at_ 0x23;        
+    sbit          S11_BL = U13_0^7;       // S11.5 seg-41 connector-J2.09 driver-U13_1 name-RIGHT.BL
+    sbit          S11_TR = U13_0^6;       // S11.9 seg-42 connector-J2.10 driver-U13_2 name-RIGHT.TR
+    sbit          S12_BL = U13_0^5;       // S12.5 seg-43 connector-J2.11 driver-U13_3 name-DOWN.BL
+    sbit          S12_TR = U13_0^4;       // S12.9 seg-44 connector-J2.12 driver-U13_4 name-DOWN.TR
+    sbit          S13_BL = U13_0^3;       // N01.0 seg-45 connector-J2.13 driver-U13_5 name-NU.BL
+    sbit          S13_TR = U13_0^2;       // N01.0 seg-46 connector-J2.14 driver-U13_6 name-NU.TR
+    sbit          S14_BL = U13_0^1;       // S14.5 seg-47 connector-J2.15 driver-U13_7 name-APDS.BL
+    sbit          S14_TR = U13_0^0;       // S14.9 seg-48 connector-J2.16 driver-U13_8 name-APDS.TR
+static byte bdata U04_0 _at_ 0x22;                                                        //
+    sbit          S15_BR = U04_0^7;       // S15.6 seg-49 connector-J2.17 driver-U04_1 name-HEI.BR
+    sbit          S15_TL = U04_0^6;       // S15.8 seg-50 connector-J2.18 driver-U04_2 name-HEI.TL
+    sbit          S16_BR = U04_0^5;       // S16.6 seg-51 connector-J2.19 driver-U04_3 name-API.BR
+    sbit          S16_TL = U04_0^4;       // S16.8 seg-52 connector-J2.20 driver-U04_4 name-API.TL
+    sbit          S17_BR = U04_0^3;       // S17.6 seg-53 connector-J2.21 driver-U04_5 name-TP.BR
+    sbit          S17_TL = U04_0^2;       // S17.8 seg-54 connector-J2.22 driver-U04_6 name-TP.TL
+    sbit          S18_BR = U04_0^1;       // N02.0 seg-55 connector-J2.23 driver-U04_7 name-NU.BR
+    sbit          S18_TL = U04_0^0;       // N02.0 seg-56 connector-J2.24 driver-U04_8 name-NU.TL
+static byte bdata U06_0 _at_ 0x23;                                                        //
+    sbit          S15_BL = U06_0^7;       // S15.5 seg-57 connector-J2.25 driver-U06_1 name-HEI.BL
+    sbit          S15_TR = U06_0^6;       // S15.9 seg-58 connector-J2.26 driver-U06_2 name-HEI.TR
+    sbit          S16_BL = U06_0^5;       // S16.5 seg-59 connector-J2.27 driver-U06_3 name-AP1.BL
+    sbit          S16_TR = U06_0^4;       // S16.9 seg-60 connector-J2.28 driver-U06_4 name-AP1.TR
+    sbit          S17_BL = U06_0^3;       // S17.5 seg-61 connector-J2.29 driver-U06_5 name-TP.BL
+    sbit          S17_TR = U06_0^2;       // S17.9 seg-62 connector-J2.30 driver-U06_6 name-TP.TR
+    sbit          S18_BL = U06_0^1;       // N02.0 seg-63 connector-J2.31 driver-U06_7 name-NU.BL
+    sbit          S18_TR = U06_0^0;       // N02.0 seg-64 connector-J2.32 driver-U06_8 name-NU.TR
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          action counters                                                               //
+//========================================================================================//
+uint acResetRequest;                                  // host requested       //          //
+uint acOptionsRequest;                                // host requested       //          //
+uint acFirmwareRequest;                               // host requested       //          //
+uint acStatusRequest;                                 // host requested       //          //
+
+uint acInternalReset;                                 // internally generated //          //
+uint acDimmingRequest;                                // host requested       //          //
+uint acIndicatorRequest;                              // host requested       //          //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//                local subprogram prototype declarations                                 //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+static void UpdateIpSettings(ulong);                                                      // update the IP and port setting
+void NOP(uint loop);                                                                      //
+// ==== function used to access the TOE buffers and controls =============================//
+uint wrChrEthTxBuffer(byte ch, uint Count);                                               //
+uint wrStrEthTxBuffer(byte* pData, uint cnt);                                             // write data to the ethernet transmit buffer
+void  printFirmwareInformation();                                                         //
+void  printDeviceConfigurationInformation();                                              //
+
+void writeEthTxCount(uint TempCount);                                                     //
+uint readEthTxBufCount(void);                                                             //
+// ==== functions to place data in the ethernet buffer for transmission ==================//
+
+// ==== functions to retrive user data and process it ====================================//
+void processSwitchBank2(byte reportblock);                                                //
+void processSwitchBank3(byte reportblock);                                                //
+void processSwitchBank4(byte reportblock);                                                //
+// ==== functions to read and write to the FPGA registers ================================//
+void fpgaWriteAddress(byte adrs);                                                         //
+void fpgaWriteData(byte adrs, uint dat, byte numofbits);                                  //
+void fpgaWriteDataL(byte adrs, byte *pdat, byte numofbits);                                  //
+uint fpgaReadData(byte adrs, numofbits);                                                  //
+// ==== serial sink driver control functions =============================================//
+void loaddriverMIC5841(byte *ptrb, byte num);                                             // Serial sink driver load
+void createbitmap5124(byte *ptrs,byte *ptrb);                                             //
+                                                                                          //
+void  processResetRsp(void);                                                              //
+ulong setupEthernet(byte enabled);                                                        //
+
+
+void printdHex2Bin(byte num);                                                             //
+//== ---------------------------------------------------------------------------------- ==//
+//== -                       local subprogram definitions                             - ==//
+//== ---------------------------------------------------------------------------------- ==//
+
+//----------------------------------------------------------------------------------------//
+// Name          : NOP                                                                    //
+// Purpose       : create a small runtime delay                                           //
+// Params        : the number of times to loop                                            //
+// Returns       : void                                                                   //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------//
+void NOP(uint loop)                                                                       //
+{
+      uint i;                                                                             //
+
+      for (i = 0; i < loop; i++)                                                          //
+       {    _nop_();    }                                                                 //
+}
+
+// Name          : wrChrEthTxBuffer(byte ch, uint Count)                                  //
+// Purpose       : write data to the ring buffer to transmit over Ethernet                //
+// Params        : Data byte to write, Count of bytes currently in buffer                 //
+// Returns       : updated count of bytes in buffer                                       //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+uint wrChrEthTxBuffer(byte ch, uint Count)                                                // write data to the ethernet transmit buffer
+{
+      EthTxBuffer[EthTxBufIndx] = ch;                                                     // add the data to the ethernet buffer
+      EthTxBufIndx++;                                                                     // update the ethernet buffer index
+      Count++;                                                                            // update the count showing the number of bytes in the buffer
+      if (EthTxBufIndx == EthMaxTxSize)                                                   // check to see if the index is at the maximum
+        EthTxBufIndx = 0;                                                                 // reset the index to the first byte of the buffer
+      return Count;                                                                       // pass the buffer count back to the calling routine
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : wrStrEthTxBuffer(byte* pData, uint cnt)                                //
+// Purpose       : write data to the ring buffer to transmit over Ethernet                //
+// Params        : pointer to the data bytes to write, number of bytes to write           //
+// Returns       : number of bytes sucessfully written into the buffer                    //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+uint wrStrEthTxBuffer(byte* pData, uint cnt)                                              // write data to the ethernet transmit buffer
+{
+      uint TmpCnt;                                                                        //
+      uint offset;                                                                        //
+
+      if((EthTxBufIndx + cnt) > EthMaxTxSize)                                             // make sure that the number of bytes to write added to the number
+      {                                                                                   //  of bytes in the buffer already is not greater then the buffer
+        offset = EthMaxTxSize - EthTxBufIndx;                                             // find the number of bytes that will fit in the buffer before overflow
+        memmove(&EthTxBuffer[EthTxBufIndx], pData, offset);                               // fill the remainder of the buffer with the given data
+        memmove(&EthTxBuffer[ix01], pData+offset, cnt - offset);                          // add the remainder of the given data to the begining of the buffer
+        }
+      else                                                                                // else all of the given data will still fit in the buffer
+        {
+        memmove(&EthTxBuffer[EthTxBufIndx], pData, cnt);                                  // place all of the given data into the buffer
+        }
+      EthTxBufIndx += cnt;                                                                // make sure that the index points at the first empty byte
+      EthTxBufIndx &= EthMaxTxMask;                                                       // mask the index to wrap the buffer around into a ring
+      TmpCnt = readEthTxBufCount() + cnt;                                                 // adjust the current buffer count
+      return TmpCnt;                                                                      // return the number of bytes in the buffer
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : WriteEthTxCount(uint TempCount)                                        //
+// Purpose       : update the count checked by Ethernet process                           //
+// Params        : updated count                                                          //
+// Returns       : void                                                                   //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void writeEthTxCount(uint TempCount)                                                      // update the global ethernet transmit buffer count
+{
+      EthTxCount = TempCount;                                                             // write the new count to the global buffer
+}
+
+//----------------------------------------------------------------------------------------
+// name          : main_readEthChar(byte* pDat)                                            //
+// Purpose       : retrieve data from buffer to place in ethernet transmit buffer         //
+// Params        : pointer to variable to return                                          //
+// Returns       : count of data left in buffer                                           //
+// note    : this routine replaced GetEthChar defined in main.c.                          //
+//----------------------------------------------------------------------------------------
+uint main_readEthChar(byte* pDat)                                                         // read a data byte from the ethernet buffer
+{
+      uint temp;                                                                         //
+      
+      temp = readEthTxBufCount();                                                          // get the current ethernet buffer count
+      if (temp > 0)                                                                       // see if there are any bytes in the buffer
+        {
+        *pDat = EthTxBuffer[EthTxBufTail];                                                   // write the data to the location pointed to by the pointer
+        EthTxBufTail++;                                                                      // update the ethernet ring buffer index
+        if (EthTxBufTail == EthMaxTxSize)                                                    // check the index to make sure that the index remains within the buffer space 
+          {  EthTxBufTail = 0;  }                                                            // reset the index to the first byte of the buffer
+        EthTxCount--;                                                                     // update the count of the bytes in the buffer
+        return EthTxCount;                                                                // pass the altered count back to the calling routine
+        }
+      return 0;                                                                           // write the default value for the count
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : readEthTxBufCount(void)                                                //
+// Purpose       : read the current number of bytes in the Ethernet ring buffer           //
+// Params        : void                                                                   //
+// Returns       : current number of bytes in the Ethernet ring buffer                    //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+uint readEthTxBufCount(void)                                                               // retrieve the current number of bytes in the ethernet transmit buffer
+{
+      return EthTxCount;                                                                  // pass the ethernet transmit buffer to the calling routine
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : processSwitchBank2                                                     //
+// Purpose       : read the switch bank and look for changes, record any actions found    //
+// Params        : byte reportblock                                                       //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+void processSwitchBank2(byte reportblock)                                                 //
+{
+      byte tmp, swadr, dat;                                                               // create variables for local use
+// s06 - stow      input_bank01<6>  : inout std_logic; -- 76 -- J3.14             -- GIO18    -- GENERAL PURPOSE I/O
+// s05 - manual    input_bank01<5>  : inout std_logic; -- 72 -- J3.12             -- GIO22    -- GENERAL PURPOSE I/O
+// s04 - load      input_bank01<4>  : inout std_logic; -- 70 -- J3.10             -- GIO24    -- GENERAL PURPOSE I/O
+// s03 - slave     input_bank01<3>  : inout std_logic; -- 65 -- J3.8              -- GIO26    -- GENERAL PURPOSE I/O
+// s02 - power     input_bank01<2>  : inout std_logic; -- 64 -- J3.6              -- GIO27    -- GENERAL PURPOSE I/O
+// s01 - error     input_bank01<1>  : inout std_logic; -- 63 -- J3.4              -- GIO28    -- GENERAL PURPOSE I/O
+// s01 - rx        input_bank01<0>  : inout std_logic; -- 62 -- J3.2              -- GIO29    -- GENERAL PURPOSE I/O
+      wordreg   = fpgaReadData(adrsswitchbank1,7);                                        // get the fpga swich bank one register data
+      dat       = (btmpL) & 0x7F;                                                         // read the switch data and mask off unused bits
+
+      if (bufStatusData[ix02] != dat)                                                 // if current state does not match old state there are changes to process
+        {
+        if(SwBank02Cnt == 0)                                                              // se if the debounce change time out has expired
+          {
+          if(reportblock == OFF)                                                          // see if this change should be logged
+            {
+            tmp = bufStatusData[ix02] ^ dat;                                          // find any differences between the last reading and the current reading
+            if((tmp & 0x7F) != 0)                                                         // check for any changes in the switch bank,
+              {
+              if((tmp & 0x03) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x03))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x01 : swadr = acodeS1_Position1; break;                           // load the switch action code buffer with the switch position action code
+                  case 0x02 : swadr = acodeS1_Position2; break;                           // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x04) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x04))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x04 : swadr = acodeS2_Position1; break;                           // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS2_Position2; break;                           // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x08) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x08))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x08 : swadr = acodeS3_Position1; break;                           // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS3_Position2; break;                           // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x10) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x10))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x10 : swadr = acodeS4_Position1; break;                           // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS4_Position2; break;                           // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x20) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x20))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x20 : swadr = acodeS5_Position1; break;                           // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS5_Position2; break;                           // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x40) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x40))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x40 : swadr = acodeS6_Position1; break;                           // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS6_Position2; break;                           // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              }
+            }
+          bufStatusData[ix02] = dat;                                                  // save the current switch state for the next switch check
+          SwBank02Cnt = SwBank02Delay;                                                    // reset the debounce delay counter
+          }
+        else
+          {  SwBank02Cnt--;  }                                                               // decrement debounce delay counter
+        }
+      else
+        {  SwBank02Cnt = SwBank02Delay;  }                                                 // reset the debounce delay counter
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : processSwitchBank3                                                     //
+// Purpose       : read the switch bank and look for changes, record any actions found    //
+// Params        : byte reportblock                                                       //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+void processSwitchBank3(byte reportblock)                                                 //
+{
+      byte tmp, swadr, dat;                                                               // create variables for local use
+// s12 - down      input_bank02<6>  : inout std_logic; -- 11 -- J15.7  & U9.7(o)  -- GIO14    -- GENERAL PURPOSE I/O & U9.7(o) CAN BUS ~TX0RTS
+// s11 - right     input_bank02<5>  : inout std_logic; -- 08 -- J15.9  & U9.25(o) -- GIO16    -- GENERAL PURPOSE I/O & U9.9(o) CAN BUS ~TX2RTS
+// s10 - fast      input_bank02<4>  : inout std_logic; -- 77 -- J3.15             -- GIO19    -- GENERAL PURPOSE I/O
+// s09 - left      input_bank02<3>  : inout std_logic; -- 73 -- J3.13             -- GIO21    -- GENERAL PURPOSE I/O
+// sxx - 0         input_bank02<2>  : inout std_logic; -- 71 -- J3.11  & Q14.2    -- GIO23 X  -- GENERAL PURPOSE I/O & CONTROL A2D CH0 SOURCE VOLTAGE
+// s07 - safe      input_bank02<1>  : inout std_logic; -- 69 -- J3.9   & Q15.2    -- GIO25 X  -- GENERAL PURPOSE I/O & CONTROL A2D CH1 SOURCE VOLTAGE
+// s07 - arm       input_bank02<0>  : inout std_logic; -- 78 -- J3.16             -- GIO20    -- GENERAL PURPOSE I/O
+      wordreg   =  fpgaReadData(adrsswitchbank2,7);                                       // get the fpga swich bank one register data
+      btmpH     =  btmpL;                                                                 //
+      btmpL0    = ~btmpH0;                                                                // 
+      btmpL1    =  btmpH0;                                                                // 
+      tmp       =  btmpL;
+      wordreg   =  fpgaReadData(adrsswitchbank3,7);                                       // get the fpga swich bank one register data
+      btmpH     =  btmpL;                                                                 //
+      btmpL     =  tmp;
+      btmpL2    =  btmpH5;                                                                // 
+      dat       =  (btmpL) & 0x7F;                                                        // read the switch data and mask off unused bits
+
+      if (bufStatusData[ix03] != dat)                                                 // if current state does not match old state there are changes to process
+        {
+        if(SwBank03Cnt == 0)                                                              // se if the debounce change time out has expired
+          {
+//      printd("sw3=%02bx,%02bx\n\r",btmpL, dat);
+          if(reportblock == OFF)                                                          // see if this change should be logged
+            {
+            tmp = bufStatusData[ix03] ^ dat;                                          // find any differences between the last reading and the current reading
+            if((tmp & 0x7F) != 0)                                                         // check for any changes in the switch bank,
+              {
+              if((tmp & 0x03) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x01))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x01 : swadr = acodeS7_Position1; break;                           // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS7_Position2; break;                           // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x04) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x04))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x04 : swadr = acodeS8_Position1; break;                           // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS8_Position2; break;                           // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x08) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x08))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x08 : swadr = acodeS9_Position1; break;                           // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS9_Position2; break;                           // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x10) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x10))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x10 : swadr = acodeS10_Position1; break;                          // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS10_Position2; break;                          // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x20) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x20))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x20 : swadr = acodeS11_Position1; break;                          // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS11_Position2; break;                          // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x40) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x40))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x40 : swadr = acodeS12_Position1; break;                          // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS12_Position2; break;                          // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              }
+            }
+          bufStatusData[ix03] = dat;                                                  // save the current switch state for the next switch check
+          SwBank03Cnt = SwBank03Delay;                                                    // reset the debounce delay counter
+          }
+        else
+          {  SwBank03Cnt--;  }                                                               // decrement debounce delay counter
+        }
+      else
+        {  SwBank03Cnt = SwBank03Delay;  }                                                   // reset the debounce delay counter
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : processSwitchBank4                                                     //
+// Purpose       : read the switch bank and look for changes, record any actions found    //
+// Params        : byte reportblock                                                       //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+void processSwitchBank4(byte reportblock)                                                 //
+{
+      byte tmp, swadr, dat;                                                               // create variables for local use
+// sxx - 0         input_bank03<6>  : inout std_logic; -- 05 -- J13.8  & U9.21(i) -- GIO03    -- GENERAL PURPOSE I/O & U9.21(o) Osc1
+// s08 - up arrow  input_bank03<5>  : inout std_logic; -- 16 -- J15.4             -- GIO11    -- GENERAL PURPOSE I/O
+// s17 - tp        input_bank03<4>  : inout std_logic; -- 13 -- J15.6  & U9.6(o)  -- GIO13    -- GENERAL PURPOSE I/O & U9.6(o) CAN BUS ~RESET
+// s16 - ap1       input_bank03<3>  : inout std_logic; -- 10 -- J15.8  & U9.9(o)  -- GIO15    -- GENERAL PURPOSE I/O & U9.8(o) CAN BUS ~TX1RTS
+// s15 - hei       input_bank03<2>  :   out std_logic; -- 07 -- J15.10 & U9.15(i) -- GIO17    -- GENERAL PURPOSE I/O & U9.15(o) CAN BUS STBY 1 = off
+// s14 - apds      input_bank03<1>  : inout std_logic; -- 19 -- J15.3             -- GIO10    -- GENERAL PURPOSE I/O
+// s13 - lamp test input_bank03<0>  : inout std_logic; -- 15 -- J15.5             -- GIO12    -- GENERAL PURPOSE I/O
+      wordreg   = fpgaReadData(adrsswitchbank3,7);                                        // get the fpga swich bank one register data
+      dat       = (btmpL) & 0x7F;                                                         // read the switch data and mask off unused bits
+
+      if (bufStatusData[ix04] != dat)                                                 // if current state does not match old state there are changes to process
+        {
+        if(SwBank04Cnt == 0)                                                              // se if the debounce change time out has expired
+          {
+//      printd("sw4=%02bx,%02bx\n\r",btmpL, dat);
+          if(reportblock == OFF)                                                          // see if this change should be logged
+            {
+            tmp = bufStatusData[ix04] ^ dat;                                          // find any differences between the last reading and the current reading
+            if((tmp & 0x7F) != 0)                                                         // check for any changes in the switch bank,
+              {
+              if((tmp & 0x01) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x01))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x01 : swadr = acodeS13_Position1; break;                          // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS13_Position2; break;                          // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x02) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x02))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x02 : swadr = acodeS14_Position1; break;                          // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS14_Position2; break;                          // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x04) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x04))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x04 : swadr = acodeS15_Position1; break;                          // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS15_Position2; break;                          // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x08) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x08))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x08 : swadr = acodeS16_Position1; break;                          // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS16_Position2; break;                          // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              if((tmp & 0x10) != 0)                                                       // check for any changes in switch S1
+                {
+                switch((dat & 0x10))                                                      // mask off the other switches data and find the switch position
+                  {
+                  case 0x10 : swadr = acodeS17_Position1; break;                          // load the switch action code buffer with the switch position action code
+                  case 0x00 : swadr = acodeS17_Position2; break;                          // load the switch action code buffer with the switch position action code
+                  default   : swadr = acodeSS_NullPosition; break;                        // default to the 1st position
+                  }
+                //wrRealtimeSwitchReport(swadr);                                            // place a realtime switch report in the transmit buffer
+                }
+              }
+            }
+          bufStatusData[ix04] = dat;                                                  // save the current switch state for the next switch check
+          SwBank04Cnt = SwBank04Delay;                                                    // reset the debounce delay counter
+          }
+        else
+          {  SwBank04Cnt--;  }                                                               // decrement debounce delay counter
+        }
+      else
+        {  SwBank04Cnt = SwBank04Delay;  }                                                   // reset the debounce delay counter
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : UpdateIpSettings                                                       //
+// Purpose       : Update IP address, subnet mak, gateway IP address and DNS IP address   //
+// Params        : IP to use for update                                                   //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+void UpdateIpSettings(ulong ip)                                                           // Update IP address, subnet mask, gateway IP address and DNS IP address
+{
+      if (ip > 0)                                                                         // check the IP to see if it is valid
+        {
+        printd("IP  : %bu.%bu.%bu.%bu\n\r", (byte) ((ip >> 24) & 0x000000FF),             // write the IP address to the user debug port
+                                            (byte) ((ip >> 16) & 0x000000FF),             //
+                                            (byte) ((ip >> 8)  & 0x000000FF),             //
+                                            (byte) ( ip        & 0x000000FF));            //
+        }
+      else                                                                                // the IP was valid
+        if (ip == 0)                                                                      // check the IP to see if it is valid
+          {
+          ulong mask = GCONFIG_GetNetmask();                                              // retrieve the default net mask
+//          ulong gateway = GCONFIG_GetGateway();                                         // retrieve the default gateway address
+          ip = GCONFIG_GetServerStaticIP();                                               // retrieve the static IP
+          TCPIP_SetIPAddr(ip);                                                            // write the default IP addess into the DCB
+          STOE_SetIPAddr(ip);                                                             // write the default IP addess into the DCB
+          TCPIP_SetSubnetMask(mask);                                                      // write the default net mask into the DCB
+          STOE_SetSubnetMask(mask);                                                       // write the default net mask into the DCB
+//          TCPIP_SetGateway(gateway);                                                      // write the gateway address to the DCB
+//          STOE_SetGateway(gateway);                                                       //
+          }
+//      GCONFIG_SetServerDynamicIP(ip);                                                     // write the server IP address to the DCB
+      GS2E_Init();                                                                        //
+} // End of UpdateIpSettings //
+
+//----------------------------------------------------------------------------------------
+// Name          : processDebugActionCounters                                             //
+// Purpose       : check and process all called debug functions                           //
+// Params        : void                                                                   //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+//void processDebugActionCounters(void)
+//{
+//      uint tmp, cnt;                                                                      //
+//
+//      if(acReadP0 > 0)
+//        {
+//        DebugStr[dbCmd] = 0x0C;                                                           // load the buffer with the command bytes
+//        DebugStr[dbDat01] = P0;                                                           // load the buffer with a data byte
+//        tmp = wrStrEthTxBuffer(&DebugStr[ix01], DebugDefStrLen);                          // write the special debug response string to the ethernet buffer
+//        writeEthTxCount(tmp);                                                             // write the new buffer count to the global buffer count
+//        acReadP0--;                                                                       // clear the read P0 request flag
+//        }
+//      if(acReadP1 > 0)
+//        {
+//        DebugStr[dbCmd] = 0x0D;                                                           // load the buffer with the command bytes
+//        DebugStr[dbDat01] = P1;                                                           // load the buffer with a data byte
+//        tmp = wrStrEthTxBuffer(&DebugStr[ix01], DebugDefStrLen);                          // write the special debug response string to the ethernet buffer
+//        writeEthTxCount(tmp);                                                             // write the new buffer count to the global buffer count
+//        acReadP1--;                                                                       // clear the read P1 request flag
+//        }
+//      if(acReadP2 > 0)
+//        {
+//        DebugStr[dbCmd] = 0x0E;                                                           // load the buffer with the command bytes
+//        DebugStr[dbDat01] = P2;                                                           // load the buffer with a data byte
+//        tmp = wrStrEthTxBuffer(&DebugStr[ix01], DebugDefStrLen);                          // write the special debug response string to the ethernet buffer
+//        writeEthTxCount(tmp);                                                             // write the new buffer count to the global buffer count
+//        acReadP2--;                                                                       // clear the read P2 request flag
+//        }
+//      if(acReadP3 > 0)                                                                    //
+//        {
+//        DebugStr[dbCmd] = 0x0F;                                                           // load the buffer with the command bytes
+//        DebugStr[dbDat01] = P3;                                                           // load the buffer with a data byte
+//        tmp = wrStrEthTxBuffer(&DebugStr[ix01], DebugDefStrLen);                          // write the special debug response string to the ethernet buffer
+//        writeEthTxCount(tmp);                                                             // write the new buffer count to the global buffer count
+//        acReadP3--;                                                                       // clear the read P3 request flag
+//        }
+//}
+
+//----------------------------------------------------------------------------------------
+// Name          : iRamCheck                                                              //
+// Purpose       : test a cell of the internal RAM to make sure it functions properly     //
+// Params        : pointer to the memory cell to check                                    //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+byte iRamCheck(byte IDATA* ptr)                                                           // check the external RAM for malfunctioning bits
+{
+      byte state = 0;
+      *ptr = 0x00;                                                                        // write all bits off to the location
+      if (*ptr != 0x00) {state = 0x40;}                                                   // make sure that the current location is 0x00 if not set the error flag
+      *ptr = 0xFF;                                                                        // write all bits on to the location
+      if (*ptr != 0xFF) {state = 0x40;}                                                   // make sure that the current location is 0xff if not set the error flag
+      *ptr = 0x00;                                                                        // write all bits off to the location
+      return state;                                                                       // return to status of the ram test
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : xRamCheck                                                              //
+// Purpose       : test a cell of the external RAM to make sure it functions properly     //
+// Params        : pointer to the memory cell to check                                    //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+byte xRamCheck(byte XDATA* ptr)                                                           // check the external RAM for malfunctioning bits
+{
+      byte state = 0;
+      *ptr = 0x00;                                                                        // write all bits off to the location
+      if (*ptr != 0x00) {state = 0x40;}                                                   // make sure that the current location is 0x00 if not set the error flag
+      *ptr = 0xFF;                                                                        // write all bits on to the location
+      if (*ptr != 0xFF) {state = 0x40;}                                                   // make sure that the current location is 0xff if not set the error flag
+      *ptr = 0x00;                                                                        // write all bits off to the location
+       return state;                                                                      // return to status of the ram test
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : fpgaWriteAddress                                                       //
+// Purpose       : write the address of the register to access within the FPGA            //
+// Params        : the address of the register                                            //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+void fpgaWriteAddress(byte adrs)                                                          //
+{
+      byte i;
+
+      fpgaserialale     = 1;                                                              // make sure the fpga ale is deactived before starting
+      fpgaserialale     = 1;                                                              // make sure the fpga ale is deactived before starting
+      fpgaserialclock   = 1;                                                              // make sure the fpga serial register clock is deactived before starting
+      fpgaserialclock   = 1;                                                              // make sure the fpga serial register clock is deactived before starting
+      btmpH             = adrs;                                                           // zero out the read byte to start
+      fpgaserialale     = 0;                                                              // activate the ale to move the address into the address latch from the sipo function
+      for (i = 0; i < 8; i++)                                                             // loop until all bits are read
+        {
+        fpgadatain      = btmpH0;                                                         // write the bit of the data to the fpga data input pin
+        fpgadatain      = btmpH0;                                                         // burn a ccyle
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // burn a ccyle
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // burn a ccyle
+        btmpH           = btmpH >> 1;                                                     // shift the next bit into position for the next bit write
+        fpgaserialclock = 1;                                                              // set the clock to activate
+        fpgaserialclock = 1;                                                              // set the clock to activate
+        fpgaserialclock = 1;                                                              // set the clock to activate
+        fpgaserialclock = 1;                                                              // set the clock to activate
+        }
+      fpgaserialclock   = 1;                                                              // set the clock to high to burn a cycle
+      fpgaserialale     = 1;                                                              // now that the address is latched deactivate the ale
+      fpgaserialale     = 1;                                                              // now that the address is latched deactivate the ale
+      fpgadatain        = 1;                                                              // write the bit of the data to the fpga data input pin
+      fpgadatain        = 1;                                                              // write the bit of the data to the fpga data input pin
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : fpgaWriteData                                                          //
+// Purpose       : write the address of the register to access within the FPGA            //
+// Params        : the address of the register, and the bits of resolution                //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+void fpgaWriteData(byte adrs, uint dat, byte numofbits)                                   //
+{
+      byte i;
+
+      fpgaWriteAddress(adrs);                                                             // output the fpga register address
+      fpgaserialload    = 1;                                                              // make sure the fpga load is deactived before starting
+      fpgaserialclock   = 1;                                                              // make sure the fpga serial register clock is deactived before starting
+      wordreg           = dat;                                                            // load the data uint to write to the register 
+      fpgaserialload    = 0;                                                              // activate the load ale to move the address into the address latch from the sipo function
+      for (i = 0; i < numofbits; i++)                                                     // loop until all bits are read
+        {
+        fpgadatain      = btmpL0;                                                         // write the bit of the data to the fpga data input pin
+        fpgadatain      = btmpL0;                                                         // burn a ccyle
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // burn a ccyle
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // burn a ccyle
+        wordreg         = wordreg >> 1;                                                   // shift the next bit into position for the next bit write
+        fpgaserialclock = 1;                                                              // activate the fpga serial register clock
+        fpgaserialclock = 1;                                                              // activate the fpga serial register clock
+        }
+      fpgaserialclock   = 1;                                                              // set the clock to high again to burn a cycle
+      fpgaserialload    = 1;                                                              // now that the data is clocked in activate the load
+      fpgadatain        = 1;                                                              // write the bit of the data to the fpga data input pin
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : fpgaWriteData                                                          //
+// Purpose       : write the address of the register to access within the FPGA            //
+// Params        : the address of the register, and the bits of resolution                //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+void fpgaWriteDataL(byte adrs, byte *pdat, byte numofbits)                                   //
+{
+      byte i, dat;
+      
+      dat = *pdat;
+
+      fpgaWriteAddress(adrs);                                                             // output the fpga register address
+      fpgaserialload    = 1;                                                              // make sure the fpga load is deactived before starting
+      fpgaserialclock   = 1;                                                              // make sure the fpga serial register clock is deactived before starting
+      wordreg           = dat;                                                            // load the data uint to write to the register 
+      fpgaserialload    = 0;                                                              // activate the load ale to move the address into the address latch from the sipo function
+      for (i = 0; i < numofbits; i++)                                                     // loop until all bits are read
+        {
+        if((i % 8) == 0)                                                                  //
+          {
+          btmpL           = *pdat;                                                        //
+          pdat++;                                                                         //
+ //  printd("%02bx\n\r",btmpL);
+          }
+        fpgadatain      = btmpL0;                                                         // write the bit of the data to the fpga data input pin
+//   if(btmpL0 == 0) printd("0"); else  printd("1");
+        fpgadatain      = btmpL0;                                                         // burn a ccyle
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // burn a ccyle
+        fpgaserialclock = 0;                                                              // deactivate the fpga serial register clock
+        fpgaserialclock = 0;                                                              // burn a ccyle
+        btmpL           = btmpL >> 1;                                                     // shift the next bit into position for the next bit write
+        fpgaserialclock = 1;                                                              // activate the fpga serial register clock
+        fpgaserialclock = 1;                                                              // activate the fpga serial register clock
+        }
+      fpgaserialclock   = 1;                                                              // set the clock to high again to burn a cycle
+      fpgaserialload    = 1;                                                              // now that the data is clocked in activate the load
+//   printd("\n\r");
+      fpgadatain        = 1;                                                              // write the bit of the data to the fpga data input pin
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : fpgaReadData                                                           //
+// Purpose       : read the data from the register address given                          //
+// Params        : the address of the register, and the bits of resolution                //
+// Returns       : void                                                                   //
+// Note          : this routine is setup for a max of 16 bits                             //
+//----------------------------------------------------------------------------------------
+uint fpgaReadData(byte adrs, numofbits)                                                   //
+{
+      byte i;
+
+      fpgaWriteAddress(adrs);                                                             // output the fpga register address
+      fpgaserialclock   = 1;                                                              // set the clock and, the load line to make sure
+      fpgaserialload    = 1;                                                              //  the index starts at zero , and the data is latched
+      fpgadataout       = 1;                                                              // setup pin for reading
+      fpgaserialload    = 0;                                                              // activate the load to move the parallel data into the serial hold register
+      wordreg           = 0;                                                              // clear the data uint before starting read 
+      for (i = 0; i < numofbits; i++)                                                     // loop until all bits are read
+        {
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        fpgaserialclock = 1;                                                              // the data is written on the rising edge
+        wordreg         = wordreg >> 1;                                                   // shift the next bit into position for the next bit write
+        btmpH7          = fpgadataout;                                                    // write the bit of the data to the fpga data input pin
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        fpgaserialclock = 0;                                                              // toggle the fpga serial clock,
+        }
+      fpgaserialclock   = 1;                                                              // burn a cycle to make sure that the data pin has settled
+      fpgaserialclock   = 1;                                                              // burn a cycle to make sure that the data pin has settled
+      fpgaserialclock   = 1;                                                              // burn a cycle to make sure that the data pin has settled
+      fpgaserialclock   = 1;                                                              // burn a cycle to make sure that the data pin has settled
+      fpgaserialclock   = 1;                                                              // burn a cycle to make sure that the data pin has settled
+      fpgaserialclock   = 1;                                                              // burn a cycle to make sure that the data pin has settled
+      fpgaserialclock   = 1;                                                              // burn a cycle to make sure that the data pin has settled
+      fpgaserialclock   = 1;                                                              // burn a cycle to make sure that the data pin has settled
+      fpgaserialload    = 1;                                                              // make sure the fpga ale is deactived before starting
+      i = 16 - numofbits;                                                                 // find number of bits to adjust data passed back
+      if(i != 0)  {                                                                       // if the data is a full 16 no adjustment is necessary
+        while(i != 0)                                                                     // keep shifting until data placement is right for numofbits
+          {  wordreg    = wordreg >> 1; i--;  }}                                          // shift the data over one bit, adjust count for one shift done
+      return wordreg;                                                                     // return the data
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : printdHex2Bin(byte num)
+// Purpose       : 
+// Params        : 
+// Returns       : 
+// Note          : 
+//----------------------------------------------------------------------------------------
+void printdHex2Bin(byte num)
+{
+  if((num & 0x80) == 0) printd("0");  else printd("1");
+  if((num & 0x40) == 0) printd("0");  else printd("1");
+  if((num & 0x20) == 0) printd("0");  else printd("1");
+  if((num & 0x10) == 0) printd("0");  else printd("1");
+  if((num & 0x08) == 0) printd("0");  else printd("1");
+  if((num & 0x04) == 0) printd("0");  else printd("1");
+  if((num & 0x02) == 0) printd("0");  else printd("1");
+  if((num & 0x01) == 0) printd("0 "); else printd("1 ");
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : 
+// Purpose       : reformat host data to match device hardware
+// Params        : 
+// Returns       : void
+// Note          : using serial sink drivers MIC-5841
+//----------------------------------------------------------------------------------------
+void createbitmap5124(byte *ptrs,byte *ptrb)
+{
+      btmpL  = *ptrs;    // BYTE 2                                                        // load a byte of host indicator data
+      ptrs++;                                                                             // move the pointer to the previous byte of host data
+   U03_0 = 0;
+   U05_0 = 0;                                                        //
+      S02_BR = POWERON;       // S02.6 seg-01 connector-J1.01 driver-U03_1 name-POWER.BR
+      S02_TL = POWERON;       // S02.8 seg-02 connector-J1.02 driver-U03_2 name-POWER.TL
+      S03_BR = SLAVEAMB;      // S03.6 seg-03 connector-J1.03 driver-U03_3 name-SLAVE.BR
+      S03_TL = SLAVEAMB;      // S03.8 seg-04 connector-J1.04 driver-U03_4 name-SLAVE.TL
+      S04_BR = LOADAMB;       // S04.6 seg-05 connector-J1.05 driver-U03_5 name-LOAD.BR
+      S04_TL = LOADAMB;       // S04.8 seg-06 connector-J1.06 driver-U03_6 name-LOAD.TL
+      S05_BR = MANUALAMB;     // S05.6 seg-07 connector-J1.07 driver-U03_7 name-MANUAL.BR
+      S05_TL = MANUALAMB;     // S05.8 seg-08 connector-J1.08 driver-U03_8 name-MANUAL.TL
+      S02_BL = POWERON;       // S02.5 seg-09 connector-J1.09 driver-U05_1 name-POWER.BL
+      S02_TR = POWERON;       // S02.9 seg-10 connector-J1.10 driver-U05_2 name-POWER.TR
+      S03_BL = SLAVEGRN;      // S03.5 seg-11 connector-J1.11 driver-U05_3 name-SLAVE.BL
+      S03_TR = SLAVEGRN;      // S03.9 seg-12 connector-J1.12 driver-U05_4 name-SLAVE.TR
+      S04_BL = LOADGRN;       // S04.5 seg-13 connector-J1.13 driver-U05_5 name-LOAD.BL
+      S04_TR = LOADGRN;       // S04.9 seg-14 connector-J1.14 driver-U05_6 name-LOAD.TR
+      S05_BL = MANUALGRN;     // S05.5 seg-15 connector-J1.15 driver-U05_7 name-MANUAL.BL
+      S05_TR = MANUALGRN;     // S05.9 seg-16 connector-J1.16 driver-U05_8 name-MANUAL.TR
+      *ptrb  = U03_0;                                                                     // save the IC bit control data for ouput
+      ptrb--;                                                                             // move the pointer to bitmapped data to the next cell
+      *ptrb  = U05_0;                                                                     // save the IC bit control data for ouput
+      ptrb--;                                                                             // move the pointer to bitmapped data to the next cell
+
+      btmpL  = *ptrs;    // BYTE 3                                                        // load a byte of host indicator data
+      ptrs++;                                                                             // move the pointer to the previous byte of host data
+   U07_0 = 0;                                                        //
+   U09_0 = 0;                                                        //
+      S06_BR = STOWAMB;       // S06.6 seg-17 connector-J1.17 driver-U07_1 name-STOW.BR
+      S06_TL = STOWAMB;       // S06.8 seg-18 connector-J1.18 driver-U07_2 name-STOW.TL
+      S10_BR = FAST;          // S10.6 seg-23 connector-J1.23 driver-U07_7 name-FAST.BR
+      S10_TL = FAST;          // S10.8 seg-24 connector-J1.24 driver-U07_8 name-FAST.TL
+      S06_BL = STOWGRN;       // S06.5 seg-25 connector-J1.25 driver-U09_1 name-STOW.BL
+      S06_TR = STOWGRN;       // S06.9 seg-26 connector-J1.26 driver-U09_2 name-STOW.TR
+      S10_BL = FAST;          // S10.5 seg-31 connector-J1.31 driver-U09_7 name-FAST.BL
+      S10_TR = FAST;          // S10.9 seg-32 connector-J1.32 driver-U09_8 name-FAST.TR
+
+      btmpL  = *ptrs;    // BYTE 4                                                        // load a byte of host indicator data
+      ptrs++;                                                                             // move the pointer to the previous byte of host data
+      S08_BR = UP;            // S08.6 seg-19 connector-J1.19 driver-U07_3 name-UP.BR
+      S08_TL = UP;            // S08.8 seg-20 connector-J1.20 driver-U07_4 name-UP.TL
+      S09_BR = LEFT;          // S09.6 seg-21 connector-J1.21 driver-U07_5 name-LEFT.BR
+      S09_TL = LEFT;          // S09.8 seg-22 connector-J1.22 driver-U07_6 name-LEFT.TL
+      S08_BL = UP;            // S08.5 seg-27 connector-J1.27 driver-U09_3 name-UP.BL
+      S08_TR = UP;            // S08.9 seg-28 connector-J1.28 driver-U09_4 name-UP.TR
+      S09_BL = LEFT;          // S09.5 seg-29 connector-J1.29 driver-U09_5 name-LEFT.BL
+      S09_TR = LEFT;          // S09.9 seg-30 connector-J1.30 driver-U09_6 name-LEFT.TR
+      *ptrb  = U07_0;                                                                     // save the IC bit control data for ouput
+      ptrb--;                                                                             // move the pointer to bitmapped data to the next cell
+      *ptrb  = U09_0;                                                                     // save the IC bit control data for ouput
+      ptrb--;                                                                             // move the pointer to bitmapped data to the next cell
+
+   U11_0 = 0;                                                        //
+   U13_0 = 0;        
+      S11_BR = RIGHT;         // S11.6 seg-33 connector-J2.01 driver-U11_1 name-RIGHT.BR
+      S11_TL = RIGHT;         // S11.8 seg-34 connector-J2.02 driver-U11_2 name-RIGHT.TL
+      S12_BR = DOWN;          // S12.6 seg-35 connector-J2.03 driver-U11_3 name-DOWN.BR
+      S12_TL = DOWN;          // S12.8 seg-36 connector-J2.04 driver-U11_4 name-DOWN.TL
+      S11_BL = RIGHT;         // S11.5 seg-41 connector-J2.09 driver-U13_1 name-RIGHT.BL
+      S11_TR = RIGHT;         // S11.9 seg-42 connector-J2.10 driver-U13_2 name-RIGHT.TR
+      S12_BL = DOWN;          // S12.5 seg-43 connector-J2.11 driver-U13_3 name-DOWN.BL
+      S12_TR = DOWN;          // S12.9 seg-44 connector-J2.12 driver-U13_4 name-DOWN.TR
+
+      btmpL  = *ptrs;    // BYTE 5                                                        // load a byte of host indicator data
+      S14_BR = APDS;          // S14.6 seg-39 connector-J2.07 driver-U11_7 name-APDS.BR
+      S14_TL = APDS;          // S14.8 seg-40 connector-J2.08 driver-U11_8 name-APDS.TL
+      S14_BL = APDS;          // S14.5 seg-47 connector-J2.15 driver-U13_7 name-APDS.BL
+      S14_TR = APDS;          // S14.9 seg-48 connector-J2.16 driver-U13_8 name-APDS.TR
+      *ptrb  = U11_0;                                                                     // save the IC bit control data for ouput
+      ptrb--;                                                                             // move the pointer to bitmapped data to the next cell
+      *ptrb  = U13_0;                                                                     // save the IC bit control data for ouput
+      ptrb--;                                                                             // move the pointer to bitmapped data to the next cell
+   U04_0 = 0;                                                        //
+   U06_0 = 0;                                                        //
+      S15_BR = HEI;           // S15.6 seg-49 connector-J2.17 driver-U04_1 name-HEI.BR
+      S15_TL = HEI;           // S15.8 seg-50 connector-J2.18 driver-U04_2 name-HEI.TL
+      S16_BR = API;           // S16.6 seg-51 connector-J2.19 driver-U04_3 name-API.BR
+      S16_TL = API;           // S16.8 seg-52 connector-J2.20 driver-U04_4 name-API.TL
+      S17_BR = TP;            // S17.6 seg-53 connector-J2.21 driver-U04_5 name-TP.BR
+      S17_TL = TP;            // S17.8 seg-54 connector-J2.22 driver-U04_6 name-TP.TL
+      S15_BL = HEI;           // S15.5 seg-57 connector-J2.25 driver-U06_1 name-HEI.BL
+      S15_TR = HEI;           // S15.9 seg-58 connector-J2.26 driver-U06_2 name-HEI.TR
+      S16_BL = API;           // S16.5 seg-59 connector-J2.27 driver-U06_3 name-API.BL
+      S16_TR = API;           // S16.9 seg-60 connector-J2.28 driver-U06_4 name-API.TR
+      S17_BL = TP;            // S17.5 seg-61 connector-J2.29 driver-U06_5 name-TP.BL
+      S17_TR = TP;            // S17.9 seg-62 connector-J2.30 driver-U06_6 name-TP.TR
+      *ptrb  = U04_0;                                                                     // save the IC bit control data for ouput
+      ptrb--;                                                                             // move the pointer to bitmapped data to the next cell
+      *ptrb  = U06_0;                                                                     // save the IC bit control data for ouput
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : loaddriverMIC5841                                                      //
+// Purpose       : Load data into MIC5841 serial sink drivers                             //
+// Params        : Fpga Address for 5841 control pins                                     //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+void loaddriverMIC5841(byte *ptrb, byte num)                                              // Serial sink driver load
+{
+      byte loop, cnt;
+
+
+      Load5841 = 0;                                                                       //
+      Clk5841  = 0;                                                                       // make sure the driver clock is deactivated
+      Din5841  = 0;                                                                       //
+      NOP(1);                                                                             // give the display time to see the data
+      for(cnt  = 0; cnt < num; cnt++)                                                     // loop so all the bytes are output to the high current sink drivers
+        {
+        btmpL = *ptrb;                                                                    // get a byte of the bitmapped data
+        ptrb++;                                                                             // move the pointer to bitmapped data to the next cell
+        for (loop = 0; loop < 8; loop++)                                                  // loop until one drivers worth of bits is loaded
+          {
+          Din5841 = btmpL0;                                                               // write the bit of the data to the fpga data input pin
+          Din5841 = btmpL0;                                                               // burn a cycle
+          Clk5841 = 0;                                                                    // deactivate the fpga serial register clock
+          Clk5841 = 0;                                                                    // burn a cycle
+          Clk5841 = 0;                                                                    // deactivate the fpga serial register clock
+          Clk5841 = 0;                                                                    // burn a cycle
+          btmpL   = btmpL >> 1;                                                           // shift the next bit into position for the next bit write
+          Clk5841 = 1;                                                                    // activate the fpga serial register clock
+          Clk5841 = 1;                                                                    // activate the fpga serial register clock
+          }
+        }
+      Load5841 = 1;                                                                       // activate display driver load
+      Load5841 = 1;                                                                       // activate display driver load
+      Load5841 = 1;                                                                       // activate display driver load
+      Load5841 = 1;                                                                       // activate display driver load
+      Load5841 = 0;                                                                       // deactivate display driver load      
+      Clk5841  = 0;                                                                       // make sure the driver clock is deactivated
+      Din5841  = 0;                                                                       //
+}
+
+//----------------------------------------------------------------------------------------
+// name    : printFirmwareInformation                                                     //
+// purpose : display the  firmware information in the debug window                        //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// note    :                                                                              //
+//----------------------------------------------------------------------------------------
+void  printFirmwareInformation()                                                          //
+{
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    printd("uC Firmware PN          : ");                                                 // output the firmware data for the master processor
+    printd("%02bx-",   bufFirmwareData[ix02]);                                             //
+    printd("%02bx",    bufFirmwareData[ix03]);                                             //
+    printd("%02bx",    bufFirmwareData[ix04]);                                             //
+    printd(" : %c\n\r",bufFirmwareData[ix05]);                                             //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    printd("FPGA Firmware PN        : ");                                                 // output the firmware data for the slave 0 processor
+    printd("%02bx-",   bufFirmwareData[ix06]);                                             //
+    printd("%02bx",    bufFirmwareData[ix07]);                                             //
+    printd("%02bx",    bufFirmwareData[ix08]);                                             //
+    printd(" : %c\n\r",bufFirmwareData[ix09]);                                             //
+}
+
+//----------------------------------------------------------------------------------------
+// name    : printDeviceConfigurationInformation                                          //
+// purpose : show the user the device information in the debug window                     //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void  printDeviceConfigurationInformation()                                               //
+{
+    printd("Debug Routines          : ");                                                 //
+    if(fDebugMode == OFF)                                                                 // get the state of the debug bit
+      printd("disabled\n\r");                                                             // alert the user to port status
+    else                                                                                  //
+      printd("enabled\n\r");                                                              // alert the user to port status
+    printd("Transmit Mode           : ");                                                 // alert the user to port status
+    if(fDebugMode == OFF)                                                                 // get the state of the debug bit
+      {
+      if(fTransmitMode == Server)                                                         // get the state of the client port bit
+        printd("Server\n\r");                                                             // alert the user to port status
+      else                                                                                //
+        printd("Client\n\r");                                                             // alert the user to port status
+      }
+    else                                                                                  //
+      printd("Server\n\r");                                                               // alert the user to port status
+    gconfig_ExDisplayConfigData();                                                        //
+    printd("*****************************************************\n\r");                  //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          display the firmware information for all programs in the debug window         //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    printFirmwareInformation();                                                           //
+    printd("*****************************************************\n\r");                  //
+}
+
+//----------------------------------------------------------------------------------------
+// name    : processResetRsp                                                              //
+// purpose : execute all steps required for a response                                    //
+// params  : void                                                                         //
+// returns : void                                                                         //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+void  processResetRsp(void)                                                               //
+{
+      int   i     = 0;
+      byte  tmp   = 0;
+      char  ch    = ' ';
+//      GCONFIG_MAC_ADDR mac;
+//      char  sPortNum[8];
+//      char  sVersion[8];
+      uint  port;
+//      uint  version;
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the message buffers                                                //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      port = GCONFIG_GetServerDataPktListenPort();                                        // get the port number used by the device
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the message buffers device host communications                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      strncpy(&bufStatusData[ix01],statusdefault,sizeof(statusdefault));                  //
+      strncpy(&bufIndicatorData[ix01],indicatordefault,sizeof(indicatordefault));         //
+      strncpy(&bufDimmingData[ix01],dimmingdefault,sizeof(dimmingdefault));               //
+      strncpy(&bufFirmwareData[ix01],firmwaredefault,sizeof(firmwaredefault));            //
+      wordreg = fpgaReadData(adrsfirmware1,8);                                            // get the fpga firmware data MSB
+//  printd("adrsfirmware1 = 0x%04dx \n\r",wordreg);
+      bufFirmwareData[ix06] = btmpL;
+      wordreg = fpgaReadData(adrsfirmware2,8);                                            // get the fpga firmware data 2nd MSB
+//  printd("adrsfirmware2 = 0x%04dx \n\r",wordreg);
+      bufFirmwareData[ix07] = btmpL;
+      wordreg = fpgaReadData(adrsfirmware3,8);                                            // get the fpga firmware data 3rd MSB
+//  printd("adrsfirmware3 = 0x%04dx \n\r",wordreg);
+      bufFirmwareData[ix08] = btmpL;
+      wordreg = fpgaReadData(adrsfirmware4,8);                                            // get the fpga firmware data LSB
+//  printd("adrsfirmware4 = 0x%04dx \n\r",wordreg);
+      bufFirmwareData[ix09] = btmpL;
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//          reset the external hardware functions                                         //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      LogicRst = 1;                                                                       // activate FPGA reset
+      DELAY_Ms(5);                                                                        // wait for the FPGA to see the reset signal
+      LogicRst = 0;                                                                       // activate FPGA reset
+      DELAY_Ms(10);                                                                       // wait for the FPGA to see the reset signal
+//      fpgaWriteData(adrsexternalenables,defaultexternal,5);                               // enable the pullup for the input banks
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize the action counters to zero                                        //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      acResetRequest         = 0;                                                         // clear the display change request flag
+      HrtBeatCnt             = 0;                                                         // turn the heartbeat LED on
+      acStatusRequest        = 0;                                                         // clear the status response action count
+      acIndicatorRequest     = 1;                                                         // clear the status response action count
+      acDimmingRequest       = 1;                                                         // clear the status response action count
+      acFirmwareRequest      = 0;                                                         // clear the firmware response action count
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize the menu for debug port operations                                 //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      UTIL_MenuInit();                                                                    // process any messages entered in the debug window
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//                                                                                        //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      printd("Hardware init           : pass\n\r");                                       //
+      HardwareSettings = 0;                                                               //
+//          memset(&bitmap[ix01],0,numof5841used);                                          // clear the indicator bitmap array
+//          loaddriverMIC5841(&bitmap[0], numof5841used);                                   // load the serial sink drivers
+
+//          btmpL = bufIndicatorData[ix03];                                                    // get the data for the fpga register
+//          btmpH = 0;                                                                      // make sure all the other bits are off
+//          btmpH7 =       1;     // pushbutton dimming                                     // move the indicator control bit into its fpga location
+//          btmpH6 =       1;     // edge lighting                                          // move the indicator control bit into its fpga location
+//          btmpH5 =       1;     // display dim                                            // move the indicator control bit into its fpga location
+//          btmpH4 =       1;     //                                                        // move the indicator control bit into its fpga location
+//          btmpH3 =  btmpL3;     // ready                                                  // move the indicator control bit into its fpga location
+//          btmpH2 =  btmpL1;     // select                                                 // move the indicator control bit into its fpga location
+//          btmpH1 =  btmpL2;     // safe                                                   // move the indicator control bit into its fpga location
+//          btmpH0 =  btmpL0;     // armed                                                  // move the indicator control bit into its fpga location
+//          fpgaWriteData(adrsbitcontrol1,btmpH,8);                                         // output data to duty cycle register
+//          createbitmap5124(&bufIndicatorData[ix01],&bitmap[7]);                              // map all the annunciators states into the proper location
+//          loaddriverMIC5841(&bitmap[0], numof5841used);                                   // load the serial sink drivers
+//          bitmap[0] = (~bufIndicatorData[ix04]) | 0x0F;
+//          bitmap[6] = 0xFF;
+//          bitmap[7] = 0xFF;
+//          memcpy(&bitmap[1],&bufIndicatorData[ix05],5);                                      //
+
+////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+////          initailize the status message array                                           //
+////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//          ChngCnt                   = 1;                                                  // initailize variable
+//          SwBank02Cnt               = 0;                                                  // set the delay so the current data is accepted to initailize
+//          SwBank03Cnt               = 0;                                                  // set the delay so the current data is accepted to initailize
+//          SwBank04Cnt               = 0;                                                  // set the delay so the current data is accepted to initailize
+//          ChngCnt                   = 1;                                                  // initailize variable
+//          processSwitchBank2(ON);                                                         // 
+//          processSwitchBank3(ON);                                                         // 
+//          processSwitchBank4(ON);                                                         // 
+//          SwBank02Cnt               = SwBank02Delay                                       // initailize variable
+//          SwBank03Cnt               = SwBank03Delay                                       // initailize variable
+//          SwBank04Cnt               = SwBank04Delay                                       // initailize variable
+////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+////          initailize the dimming data array                                             //
+////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//          memset(&bufDimmingData[ix01],0,bufDimmingReqLength);                                     // clear the dimming data array
+////          fpgaWriteData(adrsbitcontrol1,defaultbitonbit1,8);
+////          fpgaWriteData(adrsbitcontrol2,defaultbitonbit2,6);
+//          fpgaWriteData(adrsbitcontrol3,defaultbitonbit3,6);
+//          fpgaWriteData(adrspwmon01,defaultpwmctrl01,8);
+//          fpgaWriteData(adrspwmon02,defaultpwmctrl02,6);
+//          fpgaWriteData(adrspwmon03,defaultpwmctrl03,6);
+//          fpgaWriteData(adrsDutyCycle04,temp16,12);                                          // output data to duty cycle register
+////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+////          initailize the indicator data array                                           //
+////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//          memset(&bufIndicatorData[ix01],0,4);                                                 // clear the indicator data array
+//          memset(&bufIndicatorData[ix05],0xFF,5);                                              // clear the indicator data array
+////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+////          initailize the read debug string registers                                    //
+////~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+}
+
+//----------------------------------------------------------------------------------------
+// name    : processEthernetTraffic                                                       //
+// purpose : check for new Ethernet traffic and process new data                          //
+// params  : last software timer count, display link speed flag                           //
+// returns : current timer count                                                          //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+ulong processEthernetTraffic(ulong ptc, dls)                                              //
+{
+    ulong tc;                                                                             //
+    byte  linkSpeed = 0;                                                                  //
+    
+    tc              = (uint)SWTIMER_Tick();                                               // get the current timer count
+    if ((tc - ptc) >= TIME_OUT_COUNTER)                                                   // see if the difference in the curent & last time differs more then the timeout
+      {
+      ptc           = tc;                                                                 // set the last time to the current time
+      TCPIP_PeriodicCheck();                                                              // check the for any TCPIP traffic
+      }
+    STOE_ProcessInterrupt();                                                              // process all TOE buffers input/output
+    if (MAC_GetInterruptFlag())                                                           // get the data for this device
+      { linkSpeed   = MAC_ProcessInterruptExt(); }                                        // find the linkage speed, and process device traffic
+    if(dls == ON) printd("Ethernet Link Speed = bps\n\r", linkSpeed);                     // display the linkage speed
+    return ptc;                                                                           // return the current timer count
+}
+
+//----------------------------------------------------------------------------------------
+// name    : setupEthernet                                                                //
+// purpose : initailize and start all of the Ethernet processes                           //
+// params  : enabled                                                                      //
+// returns : the last updated timer count                                                 //
+// notes   :                                                                              //
+//----------------------------------------------------------------------------------------
+ulong setupEthernet(byte enabled)
+{
+    ulong ip;                                                                             //
+    ulong mask;                                                                           //
+    byte  cmdDhcpFlag      = 0;                                                           //
+    ulong dhcpTimeStart    = 0;                                                           //
+    ulong swtc;                                                                           //
+
+    if(enabled == TRUE)                                                                   //
+      {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize network adapter                                                    //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      ETH_Init();                                                                         //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the device configurationnitialization                              //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      GCONFIG_Init();                                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          iniailize the software timer                                                  //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      SWTIMER_Init();                                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          enable transmit socket for runtime mode                                       //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//      dport = GCONFIG_GetClientDestPort();                                                // get the host server port number
+//      gudpdat_ClientOpen(TrxSocket, dport);                                               //
+//      if ((fDebugMode == OFF) && fTransmitMode == Client)                                 //
+        {   gudpdat_ClientOpen(TrxSocket);  }                                             //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          Start the Ethernet Engine and Software Timer for DMA                          //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      ETH_Start();                                                                        // start the ethernet process
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          Start the Ethernet Engine and Software Timer for DMA                          //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      SWTIMER_Start();                                                                    // start the software timer
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the hardware DCB                                                   //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      mask    = GCONFIG_GetNetmask();                                                     //
+      ip      = GCONFIG_GetServerStaticIP();                                              //
+      TCPIP_SetIPAddr(ip);                                                                //
+      STOE_SetIPAddr(ip);                                                                 //
+      TCPIP_SetSubnetMask(mask);                                                          //
+      STOE_SetSubnetMask(mask);                                                           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          update device IP and port settings                                            //
+      if ((GCONFIG_GetNetwork() & GCONFIG_NETWORK_DHCP_ENABLE) == GCONFIG_NETWORK_DHCP_ENABLE)
+        {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize network adapter                                                    //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        printd("DHCP     init           : ");                                             //
+        if (DHCP_Init())                                                                  //
+          printd("pass\n\r");                                                             //
+        else
+          printd("**ERROR**\n\r");                                                        //
+        printd("DHCP Assigned IP    : ");                                                 // tell user that the DHCP process has started
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//    start the DHCP engine                                                               //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        DHCP_Start();                                                                     // start the DHCP process
+        cmdDhcpFlag   = 1;                                                                // set the DHCP initailization flag to start
+        dhcpTimeStart = SWTIMER_Tick();                                                   // record the DHCP process start time
+        }
+      else                                                                                //
+        {
+        ip            = 0;                                                                // update the IP settings to the static IP and port
+        cmdDhcpFlag   = 0;                                                                // set the DHCP initailization flag to bypass
+        }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          start DHCP process loop                                                       //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      DELAY_Ms(1000);                                                                     // wait 1S to give the internal hardware time to start up
+      while(cmdDhcpFlag == 1)                                                             // check the DHCP flag to see if the DHCP process has completed
+        {
+        printd("DHCP response -- ");                                                      //
+        if (DHCP_GetState() > DHCP_IDLE_STATE)                                            // see if the DHCP process is in the beginning idle state
+          { DHCP_Send(); }                                                                // send a DHCP request to the DHCP host
+        else                                                                              // the DHCP process is not in IDLE, execute the next step
+          { 
+          ulong ip = STOE_GetIPAddr();                                                    // reteieve the DHCP host proposed IP
+          if (ip == 0)                                                                    // make sure the proposed IP was not invalid
+            printd(" fail!\n\r");                                                         // let the host know that the DHCP process failed
+          cmdDhcpFlag = 0;                                                                // set the DHCP process flag to complete
+          }//if (DHCP_GetState() > DHCP_IDLE_STATE)
+        swtc = processEthernetTraffic(0, ON);                                             // check for new Ethernet traffic and process new data
+        }//while(cmdDhcpFlag == 1)do
+      UpdateIpSettings(ip);                                                               // update IP address, subnet mask, gateway IP address and DNS IP address
+      printd("*****************************************************\n\r");                // 
+      }
+      return swtc;                                                                        // return the software timer count
+}
+
+//----------------------------------------------------------------------------------------
+// Name          : main                                                                   //
+// Purpose       : execute the main loop of the program as long as powered                //
+// Params        : void                                                                   //
+// Returns       : void                                                                   //
+// Note          :                                                                        //
+//----------------------------------------------------------------------------------------
+void main(void)
+{
+//      uint  tmp;                                                                          //
+      uint  temp16 = 1;                                                                   //
+
+      byte  sysInitFlag = 1;                                                              //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      byte  linkFlag = 0;                                                                 //
+      byte  cmdDhcpFlag = 0;                                                              //
+      ulong dhcpTimeStart = 0;                                                            //
+//      ulong dhcpTimeStop = 0;                                                             //
+//      byte  dhcpArpRequest = 0;                                                           //
+//      byte  dhcpDeclineCount = 0;                                                         //
+      ulong timeCount;                                                                    //
+      ulong preTimeCount;                                                                 //
+      byte  realtimeswblock;                                                              // create a variable for the realtime report blocking
+//      byte  realtimeptblock;                                                              // create a variable for the realtime report blocking
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          Start Main Code                                                               //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      ExecuteRuntimeFlag     = 1;                                                         //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          system initiation                                                             //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      AX11000_Init();                                                                     // initailize the AX110xx setup registers
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          uart interface initiation                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      uart_Init(0,Baud___9600, FALSE);                                                    // setup port 0 for 8,1,1n, and baudrate
+      uart_Init(1,Baud___9600, FALSE);                                                    // setup port 1 for 8,1,1n, and 9600bps
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          uart interface initiation                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      printd("Instrument Part Number  : %s\n\r",SIMTEK_Inst_Number);                      //
+      printd("Firmware Last Revised   : %s %s\n\r",__DATE__,__TIME__);                    // c:\tftpd64
+      printd("Ethernet Library Ver.   : %s\n\r", GCONFIG_VERSION_STRING);                 //
+      printd("*********************************************************\n\r");            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          uart interface initiation                                                     //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      printd("UART-0   init           : pass   ");                                        //
+      printd("baud : %02bx \n\r",Baud___9600);                                            // show the user the baudrate
+      printd("UART-1   init           : pass\n\r");                                       //
+      printd("*****************************************************\n\r");                // print this in the debug widow to ease readability for user
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initailize the device configuration                                           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      preTimeCount = setupEthernet(TRUE);                                                 // initailize and start all of the Ethernet processes
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          initialize harware                                                            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      processResetRsp();                                                                  // reset all functions to the powerup state
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          display device configuration information                                      //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+      printDeviceConfigurationInformation();                                              // print the device configuration information in the debug window
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          start main loop                                                               //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//      
+
+      while (1)                                                                           // loop until power is removed
+        {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          begin action request processing for debug commands                            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        UTIL_MenuExecute();                                                               // get and process any data the user entered in the debug window
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          check for the processing count and process any dimming data changes           //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        if(fDebugMode == OFF)                                                             // check for the test/debug state
+          {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          look for changes in the switch data, and process realtime messages            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+          processSwitchBank2(realtimeswblock);                                          // read and process switch bank 1
+          processSwitchBank3(realtimeswblock);                                          // read and process switch bank 2
+          processSwitchBank4(realtimeswblock);                                          // read and process switch bank 2
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          transfer all received into the processing buffer                              //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+          ADCount--;                                                                      //
+          if (ADCount == 0)                                                               // process every
+            {
+            ScopePin = 1;                                                                 // toggle the pin for oscilloscope triggering
+            ScopePin = 0;                                                                 // toggle the pin for oscilloscope triggering
+            ADCount = a2ddelay;                                                           //
+            }
+          }
+
+        timeCount = (uint)SWTIMER_Tick();                                                 //
+        if ((timeCount- preTimeCount)>= TIME_OUT_COUNTER)                                 //
+          {
+          preTimeCount = timeCount;                                                       //
+          TCPIP_PeriodicCheck();                                                          //
+          }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//          polling mode                                                                  //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        STOE_ProcessInterrupt();                                                          //
+        if (MAC_GetInterruptFlag())                                                       //
+          {
+          linkFlag = MAC_ProcessInterruptExt();                                           //
+          }
+        GS2E_Task();                                                                      //
+        }
+} // End of main() //

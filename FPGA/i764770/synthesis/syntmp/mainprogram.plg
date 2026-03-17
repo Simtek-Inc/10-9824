@@ -1,0 +1,66 @@
+@P:  Worst Slack : -17.475
+@P:  ClockMaster|counter_inferred_clock[0] - Estimated Frequency : 79.3 MHz
+@P:  ClockMaster|counter_inferred_clock[0] - Requested Frequency : 100.0 MHz
+@P:  ClockMaster|counter_inferred_clock[0] - Estimated Period : 12.612
+@P:  ClockMaster|counter_inferred_clock[0] - Requested Period : 10.000
+@P:  ClockMaster|counter_inferred_clock[0] - Slack : -2.612
+@P:  ClockMaster|counter_inferred_clock[1] - Estimated Frequency : 87.4 MHz
+@P:  ClockMaster|counter_inferred_clock[1] - Requested Frequency : 100.0 MHz
+@P:  ClockMaster|counter_inferred_clock[1] - Estimated Period : 11.445
+@P:  ClockMaster|counter_inferred_clock[1] - Requested Period : 10.000
+@P:  ClockMaster|counter_inferred_clock[1] - Slack : -1.445
+@P:  ClockMaster|counter_inferred_clock[2] - Estimated Frequency : 67.8 MHz
+@P:  ClockMaster|counter_inferred_clock[2] - Requested Frequency : 100.0 MHz
+@P:  ClockMaster|counter_inferred_clock[2] - Estimated Period : 14.746
+@P:  ClockMaster|counter_inferred_clock[2] - Requested Period : 10.000
+@P:  ClockMaster|counter_inferred_clock[2] - Slack : -4.746
+@P:  ClockMaster|counter_inferred_clock[3] - Estimated Frequency : 36.4 MHz
+@P:  ClockMaster|counter_inferred_clock[3] - Requested Frequency : 100.0 MHz
+@P:  ClockMaster|counter_inferred_clock[3] - Estimated Period : 27.475
+@P:  ClockMaster|counter_inferred_clock[3] - Requested Period : 10.000
+@P:  ClockMaster|counter_inferred_clock[3] - Slack : -17.475
+@P:  divider|counter_inferred_clock[0] - Estimated Frequency : 112.4 MHz
+@P:  divider|counter_inferred_clock[0] - Requested Frequency : 100.0 MHz
+@P:  divider|counter_inferred_clock[0] - Estimated Period : 8.895
+@P:  divider|counter_inferred_clock[0] - Requested Period : 10.000
+@P:  divider|counter_inferred_clock[0] - Slack : 1.105
+@P:  mainprogram|SerialClock - Estimated Frequency : 113.8 MHz
+@P:  mainprogram|SerialClock - Requested Frequency : 100.0 MHz
+@P:  mainprogram|SerialClock - Estimated Period : 8.791
+@P:  mainprogram|SerialClock - Requested Period : 10.000
+@P:  mainprogram|SerialClock - Slack : 1.209
+@P:  mainprogram|XCLK - Estimated Frequency : 246.0 MHz
+@P:  mainprogram|XCLK - Requested Frequency : 100.0 MHz
+@P:  mainprogram|XCLK - Estimated Period : 4.066
+@P:  mainprogram|XCLK - Requested Period : 10.000
+@P:  mainprogram|XCLK - Slack : 5.934
+@P:  Total Area : 4606.0
+@P:  Total Area : 133.0
+@P:  Total Area : 132.0
+@P:  Total Area : 132.0
+@P:  Total Area : 132.0
+@P:  Total Area : 132.0
+@P:  Total Area : 137.0
+@P:  Total Area : 131.0
+@P:  Total Area : 131.0
+@P:  Total Area : 132.0
+@P:  Total Area : 133.0
+@P:  Total Area : 128.0
+@P:  Total Area : 29.0
+@P:  Total Area : 43.0
+@P:  Total Area : 79.0
+@P:  Total Area : 82.0
+@P:  Total Area : 34.0
+@P:  Total Area : 52.0
+@P:  Total Area : 60.0
+@P:  Total Area : 71.0
+@P:  Total Area : 58.0
+@P:  Total Area : 69.0
+@P:  Total Area : 53.0
+@P:  Total Area : 60.0
+@P:  Total Area : 1688.0
+@P:  Total Area : 49.0
+@P:  Total Area : 19.0
+@P:  Total Area : 2.0
+@P:  Total Area : 4606.0
+@P:  CPU Time : 0h:00m:36s

@@ -1,0 +1,2098 @@
+Timing Report Max Delay Analysis
+
+SmartTime Version v11.7 SP1.1
+Microsemi Corporation - Microsemi Libero Software Release v11.7 SP1.1 (Version 11.7.1.14)
+Date: Thu Jul 27 09:19:40 2017
+
+
+Design: mainprogram
+Family: IGLOO
+Die: AGLN250V5
+Package: 100 VQFP
+Temperature Range: 0 - 70 C
+Voltage Range: 1.425 - 1.575 V
+Speed Grade: STD
+Design State: Post-Layout
+Data source: Silicon verified
+Min Operating Conditions: BEST - 1.575 V - 0 C
+Max Operating Conditions: WORST - 1.425 V - 70 C
+Using Enhanced Min Delay Analysis
+Scenario for Timing Analysis: Primary
+
+
+-----------------------------------------------------
+SUMMARY
+
+Clock Domain:               SerialClock
+Period (ns):                9.782
+Frequency (MHz):            102.229
+Required Period (ns):       N/A
+Required Frequency (MHz):   N/A
+External Setup (ns):        12.417
+External Hold (ns):         -1.357
+Min Clock-To-Out (ns):      N/A
+Max Clock-To-Out (ns):      N/A
+
+Clock Domain:               XCLK
+Period (ns):                11.298
+Frequency (MHz):            88.511
+Required Period (ns):       5.000
+Required Frequency (MHz):   200.000
+External Setup (ns):        11.990
+External Hold (ns):         -2.132
+Min Clock-To-Out (ns):      N/A
+Max Clock-To-Out (ns):      N/A
+
+Clock Domain:               clock_master/counter[0]:Q
+Period (ns):                13.528
+Frequency (MHz):            73.921
+Required Period (ns):       10.000
+Required Frequency (MHz):   100.000
+External Setup (ns):        14.545
+External Hold (ns):         0.131
+Min Clock-To-Out (ns):      5.453
+Max Clock-To-Out (ns):      16.211
+
+Clock Domain:               clock_master/counter[1]:Q
+Period (ns):                9.810
+Frequency (MHz):            101.937
+Required Period (ns):       20.000
+Required Frequency (MHz):   50.000
+External Setup (ns):        2.842
+External Hold (ns):         0.618
+Min Clock-To-Out (ns):      5.438
+Max Clock-To-Out (ns):      13.788
+
+Clock Domain:               clock_master/counter[2]:Q
+Period (ns):                10.747
+Frequency (MHz):            93.049
+Required Period (ns):       40.000
+Required Frequency (MHz):   25.000
+External Setup (ns):        5.932
+External Hold (ns):         1.718
+Min Clock-To-Out (ns):      3.619
+Max Clock-To-Out (ns):      12.487
+
+Clock Domain:               clock_master/counter[7]:Q
+Period (ns):                32.342
+Frequency (MHz):            30.920
+Required Period (ns):       320.000
+Required Frequency (MHz):   3.125
+External Setup (ns):        18.447
+External Hold (ns):         2.002
+Min Clock-To-Out (ns):      5.185
+Max Clock-To-Out (ns):      17.899
+
+                            Input to Output
+Min Delay (ns):             N/A
+Max Delay (ns):             N/A
+
+END SUMMARY
+-----------------------------------------------------
+
+Clock Domain SerialClock
+
+SET Register to Register
+
+Path 1
+  From:                        discretedutycycle01/cellindex[1]:CLK
+  To:                          discretedutycycle01/paralleldata[10]:D
+  Delay (ns):                  9.022
+  Slack (ns):
+  Arrival (ns):                11.430
+  Required (ns):
+  Setup (ns):                  0.757
+  Minimum Period (ns):         9.782
+
+Path 2
+  From:                        discretedutycycle01/cellindex[2]:CLK
+  To:                          discretedutycycle01/paralleldata[10]:D
+  Delay (ns):                  8.997
+  Slack (ns):
+  Arrival (ns):                11.410
+  Required (ns):
+  Setup (ns):                  0.757
+  Minimum Period (ns):         9.762
+
+Path 3
+  From:                        addresslatch/cellindex[1]:CLK
+  To:                          addresslatch/paralleldata[3]:D
+  Delay (ns):                  8.864
+  Slack (ns):
+  Arrival (ns):                11.307
+  Required (ns):
+  Setup (ns):                  0.757
+  Minimum Period (ns):         9.602
+
+Path 4
+  From:                        discretedutycycle01/cellindex[2]:CLK
+  To:                          discretedutycycle01/paralleldata[9]:D
+  Delay (ns):                  8.835
+  Slack (ns):
+  Arrival (ns):                11.248
+  Required (ns):
+  Setup (ns):                  0.757
+  Minimum Period (ns):         9.578
+
+Path 5
+  From:                        bitcontrol01latch/cellindex[0]:CLK
+  To:                          bitcontrol01latch/paralleldata[5]:D
+  Delay (ns):                  8.742
+  Slack (ns):
+  Arrival (ns):                11.165
+  Required (ns):
+  Setup (ns):                  0.808
+  Minimum Period (ns):         9.521
+
+
+Expanded Path 1
+  From: discretedutycycle01/cellindex[1]:CLK
+  To: discretedutycycle01/paralleldata[10]:D
+  data required time                             N/C
+  data arrival time                          -   11.430
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        SerialClock
+               +     0.000          Clock source
+  0.000                        SerialClock (r)
+               +     0.000          net: SerialClock
+  0.000                        SerialClock_pad/U0/U0:PAD (r)
+               +     1.158          cell: ADLIB:IOPAD_IN
+  1.158                        SerialClock_pad/U0/U0:Y (r)
+               +     0.000          net: SerialClock_pad/U0/NET1
+  1.158                        SerialClock_pad/U0/U1:A (r)
+               +     0.636          cell: ADLIB:CLKIO
+  1.794                        SerialClock_pad/U0/U1:Y (r)
+               +     0.614          net: SerialClock_c
+  2.408                        discretedutycycle01/cellindex[1]:CLK (r)
+               +     0.886          cell: ADLIB:DFN1E0
+  3.294                        discretedutycycle01/cellindex[1]:Q (f)
+               +     2.369          net: discretedutycycle01/cellindex[1]
+  5.663                        discretedutycycle01/cellindex_RNIH8OL_0[1]:A (f)
+               +     1.220          cell: ADLIB:NOR2A
+  6.883                        discretedutycycle01/cellindex_RNIH8OL_0[1]:Y (f)
+               +     2.161          net: discretedutycycle01/un1_paralleldata_1[6]
+  9.044                        discretedutycycle01/paralleldata_RNO_1[10]:A (f)
+               +     0.423          cell: ADLIB:NOR3C
+  9.467                        discretedutycycle01/paralleldata_RNO_1[10]:Y (f)
+               +     0.223          net: discretedutycycle01/N_137
+  9.690                        discretedutycycle01/paralleldata_RNO_0[10]:S (f)
+               +     0.464          cell: ADLIB:MX2
+  10.154                       discretedutycycle01/paralleldata_RNO_0[10]:Y (f)
+               +     0.228          net: discretedutycycle01/N_137_mux
+  10.382                       discretedutycycle01/paralleldata_RNO[10]:A (f)
+               +     0.783          cell: ADLIB:NOR2A
+  11.165                       discretedutycycle01/paralleldata_RNO[10]:Y (f)
+               +     0.265          net: discretedutycycle01/paralleldata_RNO[10]
+  11.430                       discretedutycycle01/paralleldata[10]:D (f)
+                                    
+  11.430                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          SerialClock
+               +     0.000          Clock source
+  N/C                          SerialClock (r)
+               +     0.000          net: SerialClock
+  N/C                          SerialClock_pad/U0/U0:PAD (r)
+               +     1.158          cell: ADLIB:IOPAD_IN
+  N/C                          SerialClock_pad/U0/U0:Y (r)
+               +     0.000          net: SerialClock_pad/U0/NET1
+  N/C                          SerialClock_pad/U0/U1:A (r)
+               +     0.636          cell: ADLIB:CLKIO
+  N/C                          SerialClock_pad/U0/U1:Y (r)
+               +     0.611          net: SerialClock_c
+  N/C                          discretedutycycle01/paralleldata[10]:CLK (r)
+               -     0.757          Library setup time: ADLIB:DFN1
+  N/C                          discretedutycycle01/paralleldata[10]:D
+
+
+END SET Register to Register
+
+----------------------------------------------------
+
+SET External Setup
+
+Path 1
+  From:                        SerialLoad
+  To:                          pwmdisable01latch/cellindex[2]:D
+  Delay (ns):                  14.046
+  Slack (ns):
+  Arrival (ns):                14.046
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         12.417
+
+Path 2
+  From:                        SerialLoad
+  To:                          externenablelatch/paralleldata[2]:D
+  Delay (ns):                  13.835
+  Slack (ns):
+  Arrival (ns):                13.835
+  Required (ns):
+  Setup (ns):                  0.757
+  External Setup (ns):         12.191
+
+Path 3
+  From:                        SerialLoad
+  To:                          pwmdisable01latch/cellindex[0]:D
+  Delay (ns):                  13.819
+  Slack (ns):
+  Arrival (ns):                13.819
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         12.190
+
+Path 4
+  From:                        LogicReset
+  To:                          pwmdisable01latch/cellindex[2]:D
+  Delay (ns):                  13.675
+  Slack (ns):
+  Arrival (ns):                13.675
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         12.046
+
+Path 5
+  From:                        LogicReset
+  To:                          pwmdisable01latch/cellindex[0]:D
+  Delay (ns):                  13.448
+  Slack (ns):
+  Arrival (ns):                13.448
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         11.819
+
+
+Expanded Path 1
+  From: SerialLoad
+  To: pwmdisable01latch/cellindex[2]:D
+  data required time                             N/C
+  data arrival time                          -   14.046
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        SerialLoad (f)
+               +     0.000          net: SerialLoad
+  0.000                        SerialLoad_pad/U0/U0:PAD (f)
+               +     1.075          cell: ADLIB:IOPAD_IN
+  1.075                        SerialLoad_pad/U0/U0:Y (f)
+               +     0.000          net: SerialLoad_pad/U0/NET1
+  1.075                        SerialLoad_pad/U0/U1:YIN (f)
+               +     0.184          cell: ADLIB:IOIN_IB
+  1.259                        SerialLoad_pad/U0/U1:Y (f)
+               +     2.787          net: SerialLoad_pad
+  4.046                        SerialLoad_pad_RNIK82F:A (f)
+               +     1.294          cell: ADLIB:CLKINT
+  5.340                        SerialLoad_pad_RNIK82F:Y (f)
+               +     0.708          net: SerialLoad_c
+  6.048                        ioBank60reader/cellindex_1_sqmuxa_1_1:A (f)
+               +     0.598          cell: ADLIB:NOR2
+  6.646                        ioBank60reader/cellindex_1_sqmuxa_1_1:Y (r)
+               +     6.088          net: ioBank60reader_cellindex_1_sqmuxa_1_1
+  12.734                       pwmdisable01latch/cellindex_RNO[2]:C (r)
+               +     1.087          cell: ADLIB:XA1
+  13.821                       pwmdisable01latch/cellindex_RNO[2]:Y (r)
+               +     0.225          net: pwmdisable01latch/cellindex_n2
+  14.046                       pwmdisable01latch/cellindex[2]:D (r)
+                                    
+  14.046                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          SerialClock
+               +     0.000          Clock source
+  N/C                          SerialClock (r)
+               +     0.000          net: SerialClock
+  N/C                          SerialClock_pad/U0/U0:PAD (r)
+               +     1.158          cell: ADLIB:IOPAD_IN
+  N/C                          SerialClock_pad/U0/U0:Y (r)
+               +     0.000          net: SerialClock_pad/U0/NET1
+  N/C                          SerialClock_pad/U0/U1:A (r)
+               +     0.636          cell: ADLIB:CLKIO
+  N/C                          SerialClock_pad/U0/U1:Y (r)
+               +     0.643          net: SerialClock_c
+  N/C                          pwmdisable01latch/cellindex[2]:CLK (r)
+               -     0.808          Library setup time: ADLIB:DFN1E0
+  N/C                          pwmdisable01latch/cellindex[2]:D
+
+
+END SET External Setup
+
+----------------------------------------------------
+
+SET Clock to Output
+
+No Path
+
+END SET Clock to Output
+
+----------------------------------------------------
+
+SET Register to Asynchronous
+
+No Path
+
+END SET Register to Asynchronous
+
+----------------------------------------------------
+
+SET External Recovery
+
+No Path
+
+END SET External Recovery
+
+----------------------------------------------------
+
+SET Asynchronous to Register
+
+No Path
+
+END SET Asynchronous to Register
+
+----------------------------------------------------
+
+Clock Domain XCLK
+
+SET Register to Register
+
+Path 1
+  From:                        clock_master/counter[2]:CLK
+  To:                          clock_master/counter[4]:D
+  Delay (ns):                  10.741
+  Slack (ns):                  -6.298
+  Arrival (ns):                12.558
+  Required (ns):               6.260
+  Setup (ns):                  0.784
+  Minimum Period (ns):         11.298
+
+Path 2
+  From:                        clock_master/counter[0]:CLK
+  To:                          clock_master/counter[4]:D
+  Delay (ns):                  9.620
+  Slack (ns):                  -5.599
+  Arrival (ns):                11.859
+  Required (ns):               6.260
+  Setup (ns):                  0.784
+  Minimum Period (ns):         10.599
+
+Path 3
+  From:                        clock_master/counter[2]:CLK
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  10.912
+  Slack (ns):                  -5.537
+  Arrival (ns):                12.729
+  Required (ns):               7.192
+  Setup (ns):                  0.784
+  Minimum Period (ns):         10.537
+
+Path 4
+  From:                        clock_master/counter[0]:CLK
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  10.487
+  Slack (ns):                  -5.534
+  Arrival (ns):                12.726
+  Required (ns):               7.192
+  Setup (ns):                  0.784
+  Minimum Period (ns):         10.534
+
+Path 5
+  From:                        clock_master/counter[2]:CLK
+  To:                          clock_master/counter[5]:D
+  Delay (ns):                  9.767
+  Slack (ns):                  -5.122
+  Arrival (ns):                11.584
+  Required (ns):               6.462
+  Setup (ns):                  0.784
+  Minimum Period (ns):         10.122
+
+
+Expanded Path 1
+  From: clock_master/counter[2]:CLK
+  To: clock_master/counter[4]:D
+  data required time                             6.260
+  data arrival time                          -   12.558
+  slack                                          -6.298
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        XCLK
+               +     0.000          Clock source
+  0.000                        XCLK (r)
+               +     0.000          net: XCLK
+  0.000                        XCLK_pad/U0/U0:PAD (r)
+               +     0.862          cell: ADLIB:IOPAD_IN
+  0.862                        XCLK_pad/U0/U0:Y (r)
+               +     0.000          net: XCLK_pad/U0/NET1
+  0.862                        XCLK_pad/U0/U1:YIN (r)
+               +     0.188          cell: ADLIB:IOIN_IB
+  1.050                        XCLK_pad/U0/U1:Y (r)
+               +     0.767          net: XCLK_c
+  1.817                        clock_master/counter[2]:CLK (r)
+               +     0.797          cell: ADLIB:DFN1
+  2.614                        clock_master/counter[2]:Q (f)
+               +     1.242          net: clock_master/counter_i[2]
+  3.856                        clock_master/counter_RNIFBO8[2]:A (f)
+               +     1.294          cell: ADLIB:CLKINT
+  5.150                        clock_master/counter_RNIFBO8[2]:Y (f)
+               +     0.535          net: Clock03
+  5.685                        clock_master/counter_4_I_5:A (f)
+               +     0.647          cell: ADLIB:AND2
+  6.332                        clock_master/counter_4_I_5:Y (f)
+               +     0.938          net: clock_master/DWACT_ADD_CI_0_g_array_0_2[0]
+  7.270                        clock_master/counter_4_I_37:A (f)
+               +     0.547          cell: ADLIB:NOR2B
+  7.817                        clock_master/counter_4_I_37:Y (f)
+               +     0.257          net: clock_master/DWACT_ADD_CI_0_g_array_1_1[0]
+  8.074                        clock_master/counter_4_I_38:C (f)
+               +     0.785          cell: ADLIB:AO1
+  8.859                        clock_master/counter_4_I_38:Y (f)
+               +     0.916          net: clock_master/DWACT_ADD_CI_0_g_array_2[0]
+  9.775                        clock_master/counter_4_I_30:B (f)
+               +     1.510          cell: ADLIB:XOR2
+  11.285                       clock_master/counter_4_I_30:Y (r)
+               +     1.273          net: clock_master/counter_4[4]
+  12.558                       clock_master/counter[4]:D (r)
+                                    
+  12.558                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  5.000                        XCLK
+               +     0.000          Clock source
+  5.000                        XCLK (r)
+               +     0.000          net: XCLK
+  5.000                        XCLK_pad/U0/U0:PAD (r)
+               +     0.862          cell: ADLIB:IOPAD_IN
+  5.862                        XCLK_pad/U0/U0:Y (r)
+               +     0.000          net: XCLK_pad/U0/NET1
+  5.862                        XCLK_pad/U0/U1:YIN (r)
+               +     0.188          cell: ADLIB:IOIN_IB
+  6.050                        XCLK_pad/U0/U1:Y (r)
+               +     0.994          net: XCLK_c
+  7.044                        clock_master/counter[4]:CLK (r)
+               -     0.784          Library setup time: ADLIB:DFN1
+  6.260                        clock_master/counter[4]:D
+                                    
+  6.260                        data required time
+
+
+END SET Register to Register
+
+----------------------------------------------------
+
+SET External Setup
+
+Path 1
+  From:                        LogicReset
+  To:                          clock_master/counter[7]:D
+  Delay (ns):                  14.182
+  Slack (ns):
+  Arrival (ns):                14.182
+  Required (ns):
+  Setup (ns):                  0.784
+  External Setup (ns):         11.990
+
+Path 2
+  From:                        LogicReset
+  To:                          clock_master/counter[4]:D
+  Delay (ns):                  12.821
+  Slack (ns):
+  Arrival (ns):                12.821
+  Required (ns):
+  Setup (ns):                  0.784
+  External Setup (ns):         11.561
+
+Path 3
+  From:                        LogicReset
+  To:                          clock_master/counter[5]:D
+  Delay (ns):                  11.829
+  Slack (ns):
+  Arrival (ns):                11.829
+  Required (ns):
+  Setup (ns):                  0.836
+  External Setup (ns):         10.419
+
+Path 4
+  From:                        LogicReset
+  To:                          clock_master/counter[2]:D
+  Delay (ns):                  11.095
+  Slack (ns):
+  Arrival (ns):                11.095
+  Required (ns):
+  Setup (ns):                  0.836
+  External Setup (ns):         10.114
+
+Path 5
+  From:                        LogicReset
+  To:                          clock_master/counter[6]:D
+  Delay (ns):                  11.829
+  Slack (ns):
+  Arrival (ns):                11.829
+  Required (ns):
+  Setup (ns):                  0.836
+  External Setup (ns):         9.996
+
+
+Expanded Path 1
+  From: LogicReset
+  To: clock_master/counter[7]:D
+  data required time                             N/C
+  data arrival time                          -   14.182
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        LogicReset (f)
+               +     0.000          net: LogicReset
+  0.000                        LogicReset_pad/U0/U0:PAD (f)
+               +     0.578          cell: ADLIB:IOPAD_IN
+  0.578                        LogicReset_pad/U0/U0:Y (f)
+               +     0.000          net: LogicReset_pad/U0/NET1
+  0.578                        LogicReset_pad/U0/U1:YIN (f)
+               +     0.184          cell: ADLIB:IOIN_IB
+  0.762                        LogicReset_pad/U0/U1:Y (f)
+               +     2.677          net: LogicReset_pad
+  3.439                        LogicReset_pad_RNI5AOB:A (f)
+               +     1.294          cell: ADLIB:CLKINT
+  4.733                        LogicReset_pad_RNI5AOB:Y (f)
+               +     0.775          net: LogicReset_c
+  5.508                        clock_master/counter_8_I_12:B (f)
+               +     1.266          cell: ADLIB:XOR2
+  6.774                        clock_master/counter_8_I_12:Y (r)
+               +     0.909          net: clock_master/DWACT_ADD_CI_0_pog_array_0[0]
+  7.683                        clock_master/counter_8_I_36:A (r)
+               +     0.731          cell: ADLIB:AO1
+  8.414                        clock_master/counter_8_I_36:Y (r)
+               +     0.260          net: clock_master/DWACT_ADD_CI_0_g_array_1[0]
+  8.674                        clock_master/counter_8_I_35:B (r)
+               +     0.727          cell: ADLIB:AO1
+  9.401                        clock_master/counter_8_I_35:Y (r)
+               +     1.034          net: clock_master/DWACT_ADD_CI_0_g_array_2_0[0]
+  10.435                       clock_master/counter_8_I_44:A (r)
+               +     0.879          cell: ADLIB:NOR3C
+  11.314                       clock_master/counter_8_I_44:Y (r)
+               +     0.931          net: clock_master/DWACT_ADD_CI_0_g_array_12_2[0]
+  12.245                       clock_master/counter_8_I_34:B (r)
+               +     0.964          cell: ADLIB:XOR2
+  13.209                       clock_master/counter_8_I_34:Y (r)
+               +     0.973          net: clock_master/counter_4_3_0[7]
+  14.182                       clock_master/counter[7]:D (r)
+                                    
+  14.182                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          XCLK
+               +     0.000          Clock source
+  N/C                          XCLK (r)
+               +     0.000          net: XCLK
+  N/C                          XCLK_pad/U0/U0:PAD (r)
+               +     0.862          cell: ADLIB:IOPAD_IN
+  N/C                          XCLK_pad/U0/U0:Y (r)
+               +     0.000          net: XCLK_pad/U0/NET1
+  N/C                          XCLK_pad/U0/U1:YIN (r)
+               +     0.188          cell: ADLIB:IOIN_IB
+  N/C                          XCLK_pad/U0/U1:Y (r)
+               +     1.926          net: XCLK_c
+  N/C                          clock_master/counter[7]:CLK (r)
+               -     0.784          Library setup time: ADLIB:DFN1
+  N/C                          clock_master/counter[7]:D
+
+
+END SET External Setup
+
+----------------------------------------------------
+
+SET Clock to Output
+
+No Path
+
+END SET Clock to Output
+
+----------------------------------------------------
+
+SET Register to Asynchronous
+
+No Path
+
+END SET Register to Asynchronous
+
+----------------------------------------------------
+
+SET External Recovery
+
+No Path
+
+END SET External Recovery
+
+----------------------------------------------------
+
+SET Asynchronous to Register
+
+No Path
+
+END SET Asynchronous to Register
+
+----------------------------------------------------
+
+Clock Domain clock_master/counter[0]:Q
+
+SET Register to Register
+
+Path 1
+  From:                        addresslatch/output[2]:CLK
+  To:                          discretedutycycle01/output[8]:D
+  Delay (ns):                  12.736
+  Slack (ns):                  -3.528
+  Arrival (ns):                18.734
+  Required (ns):               15.206
+  Setup (ns):                  0.757
+  Minimum Period (ns):         13.528
+
+Path 2
+  From:                        addresslatch/output[4]:CLK
+  To:                          discretedutycycle01/output[8]:D
+  Delay (ns):                  12.470
+  Slack (ns):                  -3.338
+  Arrival (ns):                18.544
+  Required (ns):               15.206
+  Setup (ns):                  0.757
+  Minimum Period (ns):         13.338
+
+Path 3
+  From:                        addresslatch/output[2]:CLK
+  To:                          discretedutycycle01/output[5]:D
+  Delay (ns):                  12.483
+  Slack (ns):                  -3.274
+  Arrival (ns):                18.481
+  Required (ns):               15.207
+  Setup (ns):                  0.757
+  Minimum Period (ns):         13.274
+
+Path 4
+  From:                        addresslatch/output[7]:CLK
+  To:                          discretedutycycle01/output[8]:D
+  Delay (ns):                  12.484
+  Slack (ns):                  -3.242
+  Arrival (ns):                18.448
+  Required (ns):               15.206
+  Setup (ns):                  0.757
+  Minimum Period (ns):         13.242
+
+Path 5
+  From:                        addresslatch/output[3]:CLK
+  To:                          discretedutycycle01/output[8]:D
+  Delay (ns):                  12.385
+  Slack (ns):                  -3.143
+  Arrival (ns):                18.349
+  Required (ns):               15.206
+  Setup (ns):                  0.757
+  Minimum Period (ns):         13.143
+
+
+Expanded Path 1
+  From: addresslatch/output[2]:CLK
+  To: discretedutycycle01/output[8]:D
+  data required time                             15.206
+  data arrival time                          -   18.734
+  slack                                          -3.528
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        clock_master/counter[0]:Q
+               +     0.000          Clock source
+  0.000                        clock_master/counter[0]:Q (r)
+               +     2.856          Clock generation
+  2.856
+               +     1.218          net: clock_master/counter_i[0]
+  4.074                        clock_master/counter_RNID9O8[0]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  5.271                        clock_master/counter_RNID9O8[0]:Y (r)
+               +     0.727          net: Clock01
+  5.998                        addresslatch/output[2]:CLK (r)
+               +     0.886          cell: ADLIB:DFN1
+  6.884                        addresslatch/output[2]:Q (f)
+               +     1.461          net: internaddr[2]
+  8.345                        A2D00reader/parallelholdreg_0_sqmuxa_5:B (f)
+               +     1.006          cell: ADLIB:NOR2
+  9.351                        A2D00reader/parallelholdreg_0_sqmuxa_5:Y (r)
+               +     0.426          net: A2D01reader_parallelholdreg_0_sqmuxa_5
+  9.777                        discretedutycycle01/CellIndexUpdate.address_3:C (r)
+               +     0.974          cell: ADLIB:NOR3C
+  10.751                       discretedutycycle01/CellIndexUpdate.address_3:Y (r)
+               +     0.244          net: discretedutycycle01/address_3
+  10.995                       discretedutycycle01/CellIndexUpdate.address:A (r)
+               +     0.596          cell: ADLIB:NOR2B
+  11.591                       discretedutycycle01/CellIndexUpdate.address:Y (r)
+               +     1.221          net: discretedutycycle01/address
+  12.812                       discretedutycycle01/output_0_sqmuxa_0:A (r)
+               +     1.139          cell: ADLIB:NOR2A
+  13.951                       discretedutycycle01/output_0_sqmuxa_0:Y (r)
+               +     1.518          net: discretedutycycle01/output_0_sqmuxa_0
+  15.469                       discretedutycycle01/output_RNO_0[8]:S (r)
+               +     0.674          cell: ADLIB:MX2
+  16.143                       discretedutycycle01/output_RNO_0[8]:Y (f)
+               +     0.228          net: discretedutycycle01/N_68
+  16.371                       discretedutycycle01/output_RNO[8]:A (f)
+               +     0.783          cell: ADLIB:NOR2A
+  17.154                       discretedutycycle01/output_RNO[8]:Y (f)
+               +     1.580          net: discretedutycycle01/output_RNO[8]
+  18.734                       discretedutycycle01/output[8]:D (f)
+                                    
+  18.734                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  10.000                       clock_master/counter[0]:Q
+               +     0.000          Clock source
+  10.000                       clock_master/counter[0]:Q (r)
+               +     2.856          Clock generation
+  12.856
+               +     1.218          net: clock_master/counter_i[0]
+  14.074                       clock_master/counter_RNID9O8[0]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  15.271                       clock_master/counter_RNID9O8[0]:Y (r)
+               +     0.692          net: Clock01
+  15.963                       discretedutycycle01/output[8]:CLK (r)
+               -     0.757          Library setup time: ADLIB:DFN1
+  15.206                       discretedutycycle01/output[8]:D
+                                    
+  15.206                       data required time
+
+
+END SET Register to Register
+
+----------------------------------------------------
+
+SET External Setup
+
+Path 1
+  From:                        SerialLoad
+  To:                          firmware/parallelholdreg[0]:D
+  Delay (ns):                  19.831
+  Slack (ns):
+  Arrival (ns):                19.831
+  Required (ns):
+  Setup (ns):                  0.757
+  External Setup (ns):         14.545
+
+Path 2
+  From:                        LogicReset
+  To:                          firmware/parallelholdreg[0]:D
+  Delay (ns):                  19.460
+  Slack (ns):
+  Arrival (ns):                19.460
+  Required (ns):
+  Setup (ns):                  0.757
+  External Setup (ns):         14.174
+
+Path 3
+  From:                        SerialLoad
+  To:                          firmware/parallelholdreg[4]:D
+  Delay (ns):                  18.913
+  Slack (ns):
+  Arrival (ns):                18.913
+  Required (ns):
+  Setup (ns):                  0.757
+  External Setup (ns):         13.627
+
+Path 4
+  From:                        SerialLoad
+  To:                          firmware/parallelholdreg[2]:D
+  Delay (ns):                  18.626
+  Slack (ns):
+  Arrival (ns):                18.626
+  Required (ns):
+  Setup (ns):                  0.757
+  External Setup (ns):         13.340
+
+Path 5
+  From:                        SerialLoad
+  To:                          firmware/parallelholdreg[2]:E
+  Delay (ns):                  18.837
+  Slack (ns):
+  Arrival (ns):                18.837
+  Required (ns):
+  Setup (ns):                  0.534
+  External Setup (ns):         13.328
+
+
+Expanded Path 1
+  From: SerialLoad
+  To: firmware/parallelholdreg[0]:D
+  data required time                             N/C
+  data arrival time                          -   19.831
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        SerialLoad (f)
+               +     0.000          net: SerialLoad
+  0.000                        SerialLoad_pad/U0/U0:PAD (f)
+               +     1.075          cell: ADLIB:IOPAD_IN
+  1.075                        SerialLoad_pad/U0/U0:Y (f)
+               +     0.000          net: SerialLoad_pad/U0/NET1
+  1.075                        SerialLoad_pad/U0/U1:YIN (f)
+               +     0.184          cell: ADLIB:IOIN_IB
+  1.259                        SerialLoad_pad/U0/U1:Y (f)
+               +     2.787          net: SerialLoad_pad
+  4.046                        SerialLoad_pad_RNIK82F:A (f)
+               +     1.294          cell: ADLIB:CLKINT
+  5.340                        SerialLoad_pad_RNIK82F:Y (f)
+               +     0.708          net: SerialLoad_c
+  6.048                        ioBank60reader/cellindex_1_sqmuxa_1_1:A (f)
+               +     0.598          cell: ADLIB:NOR2
+  6.646                        ioBank60reader/cellindex_1_sqmuxa_1_1:Y (r)
+               +     5.780          net: ioBank60reader_cellindex_1_sqmuxa_1_1
+  12.426                       firmware/un1_reset_0_o2_0:A (r)
+               +     0.765          cell: ADLIB:OR2A
+  13.191                       firmware/un1_reset_0_o2_0:Y (f)
+               +     0.244          net: firmware/un1_reset_0_o2_0
+  13.435                       firmware/un1_reset_0_o2_3:A (f)
+               +     0.671          cell: ADLIB:OR3
+  14.106                       firmware/un1_reset_0_o2_3:Y (f)
+               +     2.160          net: firmware/un1_reset_0_o2_3
+  16.266                       firmware/parallelholdreg_RNO[0]:C (f)
+               +     1.055          cell: ADLIB:OR3B
+  17.321                       firmware/parallelholdreg_RNO[0]:Y (f)
+               +     2.510          net: firmware/N_58
+  19.831                       firmware/parallelholdreg[0]:D (f)
+                                    
+  19.831                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          clock_master/counter[0]:Q
+               +     0.000          Clock source
+  N/C                          clock_master/counter[0]:Q (r)
+               +     2.856          Clock generation
+  N/C
+               +     1.218          net: clock_master/counter_i[0]
+  N/C                          clock_master/counter_RNID9O8[0]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  N/C                          clock_master/counter_RNID9O8[0]:Y (r)
+               +     0.772          net: Clock01
+  N/C                          firmware/parallelholdreg[0]:CLK (r)
+               -     0.757          Library setup time: ADLIB:DFN1E1
+  N/C                          firmware/parallelholdreg[0]:D
+
+
+END SET External Setup
+
+----------------------------------------------------
+
+SET Clock to Output
+
+Path 1
+  From:                        bitcontrol01latch/output[7]:CLK
+  To:                          EncLgtControl
+  Delay (ns):                  10.247
+  Slack (ns):
+  Arrival (ns):                16.211
+  Required (ns):
+  Clock to Out (ns):           16.211
+
+Path 2
+  From:                        pwmdisable01latch/output[7]:CLK
+  To:                          EncLgtControl
+  Delay (ns):                  9.864
+  Slack (ns):
+  Arrival (ns):                15.862
+  Required (ns):
+  Clock to Out (ns):           15.862
+
+Path 3
+  From:                        ioBank69reader/dataout:CLK
+  To:                          SerialOut
+  Delay (ns):                  9.525
+  Slack (ns):
+  Arrival (ns):                15.568
+  Required (ns):
+  Clock to Out (ns):           15.568
+
+Path 4
+  From:                        firmware/dataout:CLK
+  To:                          SerialOut
+  Delay (ns):                  9.497
+  Slack (ns):
+  Arrival (ns):                15.540
+  Required (ns):
+  Clock to Out (ns):           15.540
+
+Path 5
+  From:                        A2D00reader/dataout:CLK
+  To:                          SerialOut
+  Delay (ns):                  9.463
+  Slack (ns):
+  Arrival (ns):                15.506
+  Required (ns):
+  Clock to Out (ns):           15.506
+
+
+Expanded Path 1
+  From: bitcontrol01latch/output[7]:CLK
+  To: EncLgtControl
+  data required time                             N/C
+  data arrival time                          -   16.211
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        clock_master/counter[0]:Q
+               +     0.000          Clock source
+  0.000                        clock_master/counter[0]:Q (r)
+               +     2.856          Clock generation
+  2.856
+               +     1.218          net: clock_master/counter_i[0]
+  4.074                        clock_master/counter_RNID9O8[0]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  5.271                        clock_master/counter_RNID9O8[0]:Y (r)
+               +     0.693          net: Clock01
+  5.964                        bitcontrol01latch/output[7]:CLK (r)
+               +     0.886          cell: ADLIB:DFN1
+  6.850                        bitcontrol01latch/output[7]:Q (f)
+               +     2.108          net: bitcontrol01[7]
+  8.958                        pwmdisable01latch/output_RNID03R[7]:C (f)
+               +     0.605          cell: ADLIB:OA1
+  9.563                        pwmdisable01latch/output_RNID03R[7]:Y (f)
+               +     2.245          net: EncLgtControl_c
+  11.808                       EncLgtControl_pad/U0/U1:D (f)
+               +     0.885          cell: ADLIB:IOTRI_OB_EB
+  12.693                       EncLgtControl_pad/U0/U1:DOUT (f)
+               +     0.000          net: EncLgtControl_pad/U0/NET1
+  12.693                       EncLgtControl_pad/U0/U0:D (f)
+               +     3.518          cell: ADLIB:IOPAD_TRI
+  16.211                       EncLgtControl_pad/U0/U0:PAD (f)
+               +     0.000          net: EncLgtControl
+  16.211                       EncLgtControl (f)
+                                    
+  16.211                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          clock_master/counter[0]:Q
+               +     0.000          Clock source
+  N/C                          clock_master/counter[0]:Q (r)
+               +     2.856          Clock generation
+  N/C
+                                    
+  N/C                          EncLgtControl (f)
+
+
+END SET Clock to Output
+
+----------------------------------------------------
+
+SET Register to Asynchronous
+
+No Path
+
+END SET Register to Asynchronous
+
+----------------------------------------------------
+
+SET External Recovery
+
+No Path
+
+END SET External Recovery
+
+----------------------------------------------------
+
+SET Asynchronous to Register
+
+No Path
+
+END SET Asynchronous to Register
+
+----------------------------------------------------
+
+Clock Domain clock_master/counter[1]:Q
+
+SET Register to Register
+
+Path 1
+  From:                        Watch_Dog_Reset/timercount[5]:CLK
+  To:                          Watch_Dog_Reset/timercount[4]:E
+  Delay (ns):                  8.743
+  Slack (ns):                  10.190
+  Arrival (ns):                14.763
+  Required (ns):               24.953
+  Setup (ns):                  0.649
+  Minimum Period (ns):         9.810
+
+Path 2
+  From:                        Watch_Dog_Reset/timercount[5]:CLK
+  To:                          Watch_Dog_Reset/timercount[3]:E
+  Delay (ns):                  8.571
+  Slack (ns):                  10.362
+  Arrival (ns):                14.591
+  Required (ns):               24.953
+  Setup (ns):                  0.649
+  Minimum Period (ns):         9.638
+
+Path 3
+  From:                        Watch_Dog_Reset/timercount[5]:CLK
+  To:                          Watch_Dog_Reset/timerexpired:D
+  Delay (ns):                  8.321
+  Slack (ns):                  10.498
+  Arrival (ns):                14.341
+  Required (ns):               24.839
+  Setup (ns):                  0.784
+  Minimum Period (ns):         9.502
+
+Path 4
+  From:                        Watch_Dog_Reset/timercount[3]:CLK
+  To:                          Watch_Dog_Reset/timercount[4]:E
+  Delay (ns):                  8.795
+  Slack (ns):                  10.556
+  Arrival (ns):                14.397
+  Required (ns):               24.953
+  Setup (ns):                  0.649
+  Minimum Period (ns):         9.444
+
+Path 5
+  From:                        Watch_Dog_Reset/timercount[3]:CLK
+  To:                          Watch_Dog_Reset/timercount[3]:E
+  Delay (ns):                  8.623
+  Slack (ns):                  10.728
+  Arrival (ns):                14.225
+  Required (ns):               24.953
+  Setup (ns):                  0.649
+  Minimum Period (ns):         9.272
+
+
+Expanded Path 1
+  From: Watch_Dog_Reset/timercount[5]:CLK
+  To: Watch_Dog_Reset/timercount[4]:E
+  data required time                             24.953
+  data arrival time                          -   14.763
+  slack                                          10.190
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        clock_master/counter[1]:Q
+               +     0.000          Clock source
+  0.000                        clock_master/counter[1]:Q (r)
+               +     2.660          Clock generation
+  2.660
+               +     3.360          net: counter[1]
+  6.020                        Watch_Dog_Reset/timercount[5]:CLK (r)
+               +     0.797          cell: ADLIB:DFN1E0
+  6.817                        Watch_Dog_Reset/timercount[5]:Q (f)
+               +     1.165          net: Watch_Dog_Reset/timercount[5]
+  7.982                        Watch_Dog_Reset/timercount_RNICL2S[3]:A (f)
+               +     0.930          cell: ADLIB:NOR2
+  8.912                        Watch_Dog_Reset/timercount_RNICL2S[3]:Y (r)
+               +     0.257          net: Watch_Dog_Reset/m40_e_3
+  9.169                        Watch_Dog_Reset/timercount_RNITF5O1[6]:A (r)
+               +     0.945          cell: ADLIB:NOR3A
+  10.114                       Watch_Dog_Reset/timercount_RNITF5O1[6]:Y (r)
+               +     0.257          net: Watch_Dog_Reset/m40_e_6
+  10.371                       Watch_Dog_Reset/timercount_RNIIOJD4[1]:C (r)
+               +     0.946          cell: ADLIB:NOR3C
+  11.317                       Watch_Dog_Reset/timercount_RNIIOJD4[1]:Y (r)
+               +     0.244          net: Watch_Dog_Reset/N_63
+  11.561                       Watch_Dog_Reset/timercount_RNI7ESA5[10]:S (r)
+               +     0.500          cell: ADLIB:MX2C
+  12.061                       Watch_Dog_Reset/timercount_RNI7ESA5[10]:Y (f)
+               +     0.244          net: Watch_Dog_Reset/N_51_mux
+  12.305                       Watch_Dog_Reset/timercount_RNIL7AM5[10]:A (f)
+               +     0.699          cell: ADLIB:NOR2
+  13.004                       Watch_Dog_Reset/timercount_RNIL7AM5[10]:Y (r)
+               +     1.759          net: Watch_Dog_Reset/timercount_0_sqmuxa
+  14.763                       Watch_Dog_Reset/timercount[4]:E (r)
+                                    
+  14.763                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  20.000                       clock_master/counter[1]:Q
+               +     0.000          Clock source
+  20.000                       clock_master/counter[1]:Q (r)
+               +     2.660          Clock generation
+  22.660
+               +     2.942          net: counter[1]
+  25.602                       Watch_Dog_Reset/timercount[4]:CLK (r)
+               -     0.649          Library setup time: ADLIB:DFN1E0
+  24.953                       Watch_Dog_Reset/timercount[4]:E
+                                    
+  24.953                       data required time
+
+
+END SET Register to Register
+
+----------------------------------------------------
+
+SET External Setup
+
+Path 1
+  From:                        ResetIn
+  To:                          Watch_Dog_Reset/timercount[1]:D
+  Delay (ns):                  7.683
+  Slack (ns):
+  Arrival (ns):                7.683
+  Required (ns):
+  Setup (ns):                  0.784
+  External Setup (ns):         2.842
+
+Path 2
+  From:                        ResetIn
+  To:                          Watch_Dog_Reset/timercount[4]:E
+  Delay (ns):                  7.635
+  Slack (ns):
+  Arrival (ns):                7.635
+  Required (ns):
+  Setup (ns):                  0.649
+  External Setup (ns):         2.682
+
+Path 3
+  From:                        ResetIn
+  To:                          Watch_Dog_Reset/timercount[3]:E
+  Delay (ns):                  7.463
+  Slack (ns):
+  Arrival (ns):                7.463
+  Required (ns):
+  Setup (ns):                  0.649
+  External Setup (ns):         2.510
+
+Path 4
+  From:                        ResetIn
+  To:                          Watch_Dog_Reset/timerexpired:D
+  Delay (ns):                  7.213
+  Slack (ns):
+  Arrival (ns):                7.213
+  Required (ns):
+  Setup (ns):                  0.784
+  External Setup (ns):         2.374
+
+Path 5
+  From:                        ResetIn
+  To:                          Watch_Dog_Reset/timercount[2]:D
+  Delay (ns):                  7.312
+  Slack (ns):
+  Arrival (ns):                7.312
+  Required (ns):
+  Setup (ns):                  0.784
+  External Setup (ns):         2.076
+
+
+Expanded Path 1
+  From: ResetIn
+  To: Watch_Dog_Reset/timercount[1]:D
+  data required time                             N/C
+  data arrival time                          -   7.683
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        ResetIn (f)
+               +     0.000          net: ResetIn
+  0.000                        ResetIn_pad/U0/U0:PAD (f)
+               +     0.578          cell: ADLIB:IOPAD_IN
+  0.578                        ResetIn_pad/U0/U0:Y (f)
+               +     0.000          net: ResetIn_pad/U0/NET1
+  0.578                        ResetIn_pad/U0/U1:YIN (f)
+               +     0.184          cell: ADLIB:IOIN_IB
+  0.762                        ResetIn_pad/U0/U1:Y (f)
+               +     5.965          net: ResetIn_c
+  6.727                        Watch_Dog_Reset/timercount_RNO[1]:C (f)
+               +     0.699          cell: ADLIB:XA1B
+  7.426                        Watch_Dog_Reset/timercount_RNO[1]:Y (r)
+               +     0.257          net: Watch_Dog_Reset/timercount_n1
+  7.683                        Watch_Dog_Reset/timercount[1]:D (r)
+                                    
+  7.683                        data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          clock_master/counter[1]:Q
+               +     0.000          Clock source
+  N/C                          clock_master/counter[1]:Q (r)
+               +     2.660          Clock generation
+  N/C
+               +     2.965          net: counter[1]
+  N/C                          Watch_Dog_Reset/timercount[1]:CLK (r)
+               -     0.784          Library setup time: ADLIB:DFN1E0
+  N/C                          Watch_Dog_Reset/timercount[1]:D
+
+
+END SET External Setup
+
+----------------------------------------------------
+
+SET Clock to Output
+
+Path 1
+  From:                        Watch_Dog_Reset/timerexpired:CLK
+  To:                          uCReset
+  Delay (ns):                  8.165
+  Slack (ns):
+  Arrival (ns):                13.788
+  Required (ns):
+  Clock to Out (ns):           13.788
+
+
+Expanded Path 1
+  From: Watch_Dog_Reset/timerexpired:CLK
+  To: uCReset
+  data required time                             N/C
+  data arrival time                          -   13.788
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        clock_master/counter[1]:Q
+               +     0.000          Clock source
+  0.000                        clock_master/counter[1]:Q (r)
+               +     2.660          Clock generation
+  2.660
+               +     2.963          net: counter[1]
+  5.623                        Watch_Dog_Reset/timerexpired:CLK (r)
+               +     0.797          cell: ADLIB:DFN1
+  6.420                        Watch_Dog_Reset/timerexpired:Q (f)
+               +     2.934          net: uCReset_c
+  9.354                        uCReset_pad/U0/U1:D (f)
+               +     0.916          cell: ADLIB:IOTRI_OB_EB
+  10.270                       uCReset_pad/U0/U1:DOUT (f)
+               +     0.000          net: uCReset_pad/U0/NET1
+  10.270                       uCReset_pad/U0/U0:D (f)
+               +     3.518          cell: ADLIB:IOPAD_TRI
+  13.788                       uCReset_pad/U0/U0:PAD (f)
+               +     0.000          net: uCReset
+  13.788                       uCReset (f)
+                                    
+  13.788                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          clock_master/counter[1]:Q
+               +     0.000          Clock source
+  N/C                          clock_master/counter[1]:Q (r)
+               +     2.660          Clock generation
+  N/C
+                                    
+  N/C                          uCReset (f)
+
+
+END SET Clock to Output
+
+----------------------------------------------------
+
+SET Register to Asynchronous
+
+No Path
+
+END SET Register to Asynchronous
+
+----------------------------------------------------
+
+SET External Recovery
+
+No Path
+
+END SET External Recovery
+
+----------------------------------------------------
+
+SET Asynchronous to Register
+
+No Path
+
+END SET Asynchronous to Register
+
+----------------------------------------------------
+
+Clock Domain clock_master/counter[2]:Q
+
+SET Register to Register
+
+Path 1
+  From:                        iobank69debounce/DebounceTimer[1]:CLK
+  To:                          iobank69debounce/DebounceTimer[8]:D
+  Delay (ns):                  9.886
+  Slack (ns):                  29.253
+  Arrival (ns):                15.329
+  Required (ns):               44.582
+  Setup (ns):                  0.808
+  Minimum Period (ns):         10.747
+
+Path 2
+  From:                        iobank69debounce/DebounceTimer[0]:CLK
+  To:                          iobank69debounce/DebounceTimer[8]:D
+  Delay (ns):                  9.720
+  Slack (ns):                  29.419
+  Arrival (ns):                15.163
+  Required (ns):               44.582
+  Setup (ns):                  0.808
+  Minimum Period (ns):         10.581
+
+Path 3
+  From:                        iobank64debounce/DebounceTimer[1]:CLK
+  To:                          iobank64debounce/DebounceTimer[8]:D
+  Delay (ns):                  8.500
+  Slack (ns):                  30.631
+  Arrival (ns):                14.073
+  Required (ns):               44.704
+  Setup (ns):                  0.808
+  Minimum Period (ns):         9.369
+
+Path 4
+  From:                        iobank6Adebounce/Changing:CLK
+  To:                          iobank6Adebounce/DebounceTimer[0]:D
+  Delay (ns):                  8.492
+  Slack (ns):                  30.684
+  Arrival (ns):                13.944
+  Required (ns):               44.628
+  Setup (ns):                  0.808
+  Minimum Period (ns):         9.316
+
+Path 5
+  From:                        iobank64debounce/DebounceTimer[0]:CLK
+  To:                          iobank64debounce/DebounceTimer[8]:D
+  Delay (ns):                  8.330
+  Slack (ns):                  30.801
+  Arrival (ns):                13.903
+  Required (ns):               44.704
+  Setup (ns):                  0.808
+  Minimum Period (ns):         9.199
+
+
+Expanded Path 1
+  From: iobank69debounce/DebounceTimer[1]:CLK
+  To: iobank69debounce/DebounceTimer[8]:D
+  data required time                             44.582
+  data arrival time                          -   15.329
+  slack                                          29.253
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        clock_master/counter[2]:Q
+               +     0.000          Clock source
+  0.000                        clock_master/counter[2]:Q (r)
+               +     2.434          Clock generation
+  2.434
+               +     1.154          net: clock_master/counter_i[2]
+  3.588                        clock_master/counter_RNIFBO8[2]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  4.785                        clock_master/counter_RNIFBO8[2]:Y (r)
+               +     0.658          net: Clock03
+  5.443                        iobank69debounce/DebounceTimer[1]:CLK (r)
+               +     0.663          cell: ADLIB:DFN1E1
+  6.106                        iobank69debounce/DebounceTimer[1]:Q (r)
+               +     0.308          net: iobank69debounce/DebounceTimer[1]
+  6.414                        iobank69debounce/DebounceTimer_RNI9FFS[1]:B (r)
+               +     0.752          cell: ADLIB:NOR2B
+  7.166                        iobank69debounce/DebounceTimer_RNI9FFS[1]:Y (r)
+               +     1.413          net: iobank69debounce/DebounceTimer_c1
+  8.579                        iobank69debounce/DebounceTimer_RNIM2VO1[3]:C (r)
+               +     1.321          cell: ADLIB:NOR3C
+  9.900                        iobank69debounce/DebounceTimer_RNIM2VO1[3]:Y (r)
+               +     1.135          net: iobank69debounce/DebounceTimer_c3
+  11.035                       iobank69debounce/DebounceTimer_RNIHNM33[6]:C (r)
+               +     1.092          cell: ADLIB:NOR3C
+  12.127                       iobank69debounce/DebounceTimer_RNIHNM33[6]:Y (r)
+               +     0.381          net: iobank69debounce/DebounceTimer_c6
+  12.508                       iobank69debounce/DebounceTimer_RNO_0[8]:C (r)
+               +     0.967          cell: ADLIB:NOR3C
+  13.475                       iobank69debounce/DebounceTimer_RNO_0[8]:Y (r)
+               +     0.283          net: iobank69debounce/N_48
+  13.758                       iobank69debounce/DebounceTimer_RNO[8]:B (r)
+               +     0.652          cell: ADLIB:MX2A
+  14.410                       iobank69debounce/DebounceTimer_RNO[8]:Y (r)
+               +     0.919          net: iobank69debounce/DebounceTimer_RNO_6[8]
+  15.329                       iobank69debounce/DebounceTimer[8]:D (r)
+                                    
+  15.329                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  40.000                       clock_master/counter[2]:Q
+               +     0.000          Clock source
+  40.000                       clock_master/counter[2]:Q (r)
+               +     2.434          Clock generation
+  42.434
+               +     1.154          net: clock_master/counter_i[2]
+  43.588                       clock_master/counter_RNIFBO8[2]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  44.785                       clock_master/counter_RNIFBO8[2]:Y (r)
+               +     0.605          net: Clock03
+  45.390                       iobank69debounce/DebounceTimer[8]:CLK (r)
+               -     0.808          Library setup time: ADLIB:DFN1
+  44.582                       iobank69debounce/DebounceTimer[8]:D
+                                    
+  44.582                       data required time
+
+
+END SET Register to Register
+
+----------------------------------------------------
+
+SET External Setup
+
+Path 1
+  From:                        LogicReset
+  To:                          iobank6Adebounce/DebounceTimer[0]:D
+  Delay (ns):                  10.560
+  Slack (ns):
+  Arrival (ns):                10.560
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         5.932
+
+Path 2
+  From:                        LogicReset
+  To:                          iobank6Adebounce/DebounceTimer[2]:D
+  Delay (ns):                  10.361
+  Slack (ns):
+  Arrival (ns):                10.361
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         5.733
+
+Path 3
+  From:                        LogicReset
+  To:                          iobank62debounce/DebounceTimer[1]:D
+  Delay (ns):                  10.324
+  Slack (ns):
+  Arrival (ns):                10.324
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         5.607
+
+Path 4
+  From:                        LogicReset
+  To:                          iobank62debounce/DebounceTimer[5]:D
+  Delay (ns):                  10.324
+  Slack (ns):
+  Arrival (ns):                10.324
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         5.607
+
+Path 5
+  From:                        LogicReset
+  To:                          iobank64debounce/DebounceTimer[8]:D
+  Delay (ns):                  10.281
+  Slack (ns):
+  Arrival (ns):                10.281
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         5.577
+
+
+Expanded Path 1
+  From: LogicReset
+  To: iobank6Adebounce/DebounceTimer[0]:D
+  data required time                             N/C
+  data arrival time                          -   10.560
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        LogicReset (f)
+               +     0.000          net: LogicReset
+  0.000                        LogicReset_pad/U0/U0:PAD (f)
+               +     0.578          cell: ADLIB:IOPAD_IN
+  0.578                        LogicReset_pad/U0/U0:Y (f)
+               +     0.000          net: LogicReset_pad/U0/NET1
+  0.578                        LogicReset_pad/U0/U1:YIN (f)
+               +     0.184          cell: ADLIB:IOIN_IB
+  0.762                        LogicReset_pad/U0/U1:Y (f)
+               +     2.677          net: LogicReset_pad
+  3.439                        LogicReset_pad_RNI5AOB:A (f)
+               +     1.294          cell: ADLIB:CLKINT
+  4.733                        LogicReset_pad_RNI5AOB:Y (f)
+               +     0.771          net: LogicReset_c
+  5.504                        iobank6Adebounce/Changing_RNI20FD:B (f)
+               +     0.809          cell: ADLIB:NOR2
+  6.313                        iobank6Adebounce/Changing_RNI20FD:Y (r)
+               +     3.327          net: iobank6Adebounce/un1_previousposition7
+  9.640                        iobank6Adebounce/DebounceTimer_RNO[0]:A (r)
+               +     0.692          cell: ADLIB:NOR2A
+  10.332                       iobank6Adebounce/DebounceTimer_RNO[0]:Y (r)
+               +     0.228          net: iobank6Adebounce/N_67
+  10.560                       iobank6Adebounce/DebounceTimer[0]:D (r)
+                                    
+  10.560                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          clock_master/counter[2]:Q
+               +     0.000          Clock source
+  N/C                          clock_master/counter[2]:Q (r)
+               +     2.434          Clock generation
+  N/C
+               +     1.154          net: clock_master/counter_i[2]
+  N/C                          clock_master/counter_RNIFBO8[2]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  N/C                          clock_master/counter_RNIFBO8[2]:Y (r)
+               +     0.651          net: Clock03
+  N/C                          iobank6Adebounce/DebounceTimer[0]:CLK (r)
+               -     0.808          Library setup time: ADLIB:DFN1E1
+  N/C                          iobank6Adebounce/DebounceTimer[0]:D
+
+
+END SET External Setup
+
+----------------------------------------------------
+
+SET Clock to Output
+
+Path 1
+  From:                        matrix_read04/ctrl[4]:CLK
+  To:                          inputs67_ctrl[4]
+  Delay (ns):                  7.067
+  Slack (ns):
+  Arrival (ns):                12.487
+  Required (ns):
+  Clock to Out (ns):           12.487
+
+Path 2
+  From:                        matrix_read04/ctrl[2]:CLK
+  To:                          inputs67_ctrl[2]
+  Delay (ns):                  6.635
+  Slack (ns):
+  Arrival (ns):                12.033
+  Required (ns):
+  Clock to Out (ns):           12.033
+
+Path 3
+  From:                        matrix_read04/ctrl[3]:CLK
+  To:                          inputs67_ctrl[3]
+  Delay (ns):                  6.316
+  Slack (ns):
+  Arrival (ns):                11.736
+  Required (ns):
+  Clock to Out (ns):           11.736
+
+Path 4
+  From:                        matrix_read03/ctrl[3]:CLK
+  To:                          inputs62_ctrl[3]
+  Delay (ns):                  5.865
+  Slack (ns):
+  Arrival (ns):                11.341
+  Required (ns):
+  Clock to Out (ns):           11.341
+
+Path 5
+  From:                        matrix_read04/ctrl[0]:CLK
+  To:                          inputs67_ctrl[0]
+  Delay (ns):                  5.921
+  Slack (ns):
+  Arrival (ns):                11.341
+  Required (ns):
+  Clock to Out (ns):           11.341
+
+
+Expanded Path 1
+  From: matrix_read04/ctrl[4]:CLK
+  To: inputs67_ctrl[4]
+  data required time                             N/C
+  data arrival time                          -   12.487
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        clock_master/counter[2]:Q
+               +     0.000          Clock source
+  0.000                        clock_master/counter[2]:Q (r)
+               +     2.434          Clock generation
+  2.434
+               +     1.154          net: clock_master/counter_i[2]
+  3.588                        clock_master/counter_RNIFBO8[2]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  4.785                        clock_master/counter_RNIFBO8[2]:Y (r)
+               +     0.635          net: Clock03
+  5.420                        matrix_read04/ctrl[4]:CLK (r)
+               +     0.886          cell: ADLIB:DFN1
+  6.306                        matrix_read04/ctrl[4]:Q (f)
+               +     3.110          net: inputs67_ctrl_c[4]
+  9.416                        inputs67_ctrl_pad[4]/U0/U1:D (f)
+               +     0.916          cell: ADLIB:IOTRI_OB_EB
+  10.332                       inputs67_ctrl_pad[4]/U0/U1:DOUT (f)
+               +     0.000          net: inputs67_ctrl_pad[4]/U0/NET1
+  10.332                       inputs67_ctrl_pad[4]/U0/U0:D (f)
+               +     2.155          cell: ADLIB:IOPAD_TRI
+  12.487                       inputs67_ctrl_pad[4]/U0/U0:PAD (f)
+               +     0.000          net: inputs67_ctrl[4]
+  12.487                       inputs67_ctrl[4] (f)
+                                    
+  12.487                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          clock_master/counter[2]:Q
+               +     0.000          Clock source
+  N/C                          clock_master/counter[2]:Q (r)
+               +     2.434          Clock generation
+  N/C
+                                    
+  N/C                          inputs67_ctrl[4] (f)
+
+
+END SET Clock to Output
+
+----------------------------------------------------
+
+SET Register to Asynchronous
+
+No Path
+
+END SET Register to Asynchronous
+
+----------------------------------------------------
+
+SET External Recovery
+
+No Path
+
+END SET External Recovery
+
+----------------------------------------------------
+
+SET Asynchronous to Register
+
+No Path
+
+END SET Asynchronous to Register
+
+----------------------------------------------------
+
+Clock Domain clock_master/counter[7]:Q
+
+SET Register to Register
+
+Path 1
+  From:                        A2DRead/DataRegU1Ch1a[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1[15]:D
+  Delay (ns):                  31.543
+  Slack (ns):                  287.658
+  Arrival (ns):                38.431
+  Required (ns):               326.089
+  Setup (ns):                  0.808
+  Minimum Period (ns):         32.342
+
+Path 2
+  From:                        A2DRead/DataRegU1Ch0a[3]:CLK
+  To:                          A2DRead/DataRegU1Ch0[14]:D
+  Delay (ns):                  31.329
+  Slack (ns):                  287.884
+  Arrival (ns):                38.165
+  Required (ns):               326.049
+  Setup (ns):                  0.757
+  Minimum Period (ns):         32.116
+
+Path 3
+  From:                        A2DRead/DataRegU1Ch1b[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1[15]:D
+  Delay (ns):                  31.085
+  Slack (ns):                  288.116
+  Arrival (ns):                37.973
+  Required (ns):               326.089
+  Setup (ns):                  0.808
+  Minimum Period (ns):         31.884
+
+Path 4
+  From:                        A2DRead/DataRegU1Ch1p[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1[15]:D
+  Delay (ns):                  30.797
+  Slack (ns):                  288.439
+  Arrival (ns):                37.650
+  Required (ns):               326.089
+  Setup (ns):                  0.808
+  Minimum Period (ns):         31.561
+
+Path 5
+  From:                        A2DRead/DataRegU1Ch1d[5]:CLK
+  To:                          A2DRead/DataRegU1Ch1[15]:D
+  Delay (ns):                  30.762
+  Slack (ns):                  288.447
+  Arrival (ns):                37.642
+  Required (ns):               326.089
+  Setup (ns):                  0.808
+  Minimum Period (ns):         31.553
+
+
+Expanded Path 1
+  From: A2DRead/DataRegU1Ch1a[5]:CLK
+  To: A2DRead/DataRegU1Ch1[15]:D
+  data required time                             326.089
+  data arrival time                          -   38.431
+  slack                                          287.658
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        clock_master/counter[7]:Q
+               +     0.000          Clock source
+  0.000                        clock_master/counter[7]:Q (r)
+               +     3.593          Clock generation
+  3.593
+               +     1.122          net: clock_master/counter_i[7]
+  4.715                        clock_master/counter_RNIKGO8[7]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  5.912                        clock_master/counter_RNIKGO8[7]:Y (r)
+               +     0.976          net: Clock04
+  6.888                        A2DRead/DataRegU1Ch1a[5]:CLK (r)
+               +     0.663          cell: ADLIB:DFN1E1
+  7.551                        A2DRead/DataRegU1Ch1a[5]:Q (r)
+               +     1.433          net: A2DRead/DataRegU1Ch1a[5]
+  8.984                        A2DRead/DataRegU1Ch1p_RNIBOI4_0[5]:B (r)
+               +     1.474          cell: ADLIB:MAJ3
+  10.458                       A2DRead/DataRegU1Ch1p_RNIBOI4_0[5]:Y (r)
+               +     0.340          net: A2DRead/N_1450
+  10.798                       A2DRead/DataRegU1Ch1f_RNIUOVN_0[6]:B (r)
+               +     1.355          cell: ADLIB:MAJ3
+  12.153                       A2DRead/DataRegU1Ch1f_RNIUOVN_0[6]:Y (r)
+               +     2.052          net: A2DRead/N_1486
+  14.205                       A2DRead/DataRegU1Ch1j_RNIJF0M2_0[7]:A (r)
+               +     1.546          cell: ADLIB:OA1
+  15.751                       A2DRead/DataRegU1Ch1j_RNIJF0M2_0[7]:Y (r)
+               +     0.328          net: A2DRead/un60_dataregu1ch1_408_0
+  16.079                       A2DRead/DataRegU1Ch1f_RNI7M284[6]:A (r)
+               +     0.467          cell: ADLIB:OR2
+  16.546                       A2DRead/DataRegU1Ch1f_RNI7M284[6]:Y (r)
+               +     0.300          net: A2DRead/N_1520
+  16.846                       A2DRead/DataRegU1Ch1o_RNIG68J8[7]:C (r)
+               +     1.617          cell: ADLIB:XOR3
+  18.463                       A2DRead/DataRegU1Ch1o_RNIG68J8[7]:Y (r)
+               +     0.342          net: A2DRead/N_1551
+  18.805                       A2DRead/DataRegU1Ch1f_RNIK7CCG[6]:C (r)
+               +     0.938          cell: ADLIB:AO1
+  19.743                       A2DRead/DataRegU1Ch1f_RNIK7CCG[6]:Y (r)
+               +     0.257          net: A2DRead/un60_dataregu1ch1_498_0_tz_out
+  20.000                       A2DRead/DataRegU1Ch1f_RNIVJP941[6]:B (r)
+               +     1.220          cell: ADLIB:OA1
+  21.220                       A2DRead/DataRegU1Ch1f_RNIVJP941[6]:Y (r)
+               +     0.257          net: A2DRead/un60_dataregu1ch1_498_0
+  21.477                       A2DRead/DataRegU1Ch1f_RNIT6APP1[6]:C (r)
+               +     0.924          cell: ADLIB:AO1
+  22.401                       A2DRead/DataRegU1Ch1f_RNIT6APP1[6]:Y (r)
+               +     0.342          net: A2DRead/N_1556
+  22.743                       A2DRead/DataRegU1Ch1f_RNIKKTT83_0[8]:C (r)
+               +     0.818          cell: ADLIB:XOR3
+  23.561                       A2DRead/DataRegU1Ch1f_RNIKKTT83_0[8]:Y (r)
+               +     1.128          net: A2DRead/N_1585
+  24.689                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I4_P0N_s:C (r)
+               +     0.970          cell: ADLIB:AO1
+  25.659                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I4_P0N_s:Y (r)
+               +     0.257          net: A2DRead/ADD_11x11_fast_I4_P0N_out
+  25.916                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I4_P0N:C (r)
+               +     0.924          cell: ADLIB:AO1
+  26.840                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I4_P0N:Y (r)
+               +     1.070          net: A2DRead/N166_0
+  27.910                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I22_Y:A (r)
+               +     0.652          cell: ADLIB:NOR2B
+  28.562                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I22_Y:Y (r)
+               +     0.228          net: A2DRead/N199
+  28.790                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I43_Y:B (r)
+               +     0.870          cell: ADLIB:AO1
+  29.660                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I43_Y:Y (r)
+               +     0.924          net: A2DRead/N223_0
+  30.584                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I55_un1_Y:B (r)
+               +     0.567          cell: ADLIB:NOR2B
+  31.151                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I55_un1_Y:Y (r)
+               +     0.225          net: A2DRead/I55_un1_Y
+  31.376                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I70_Y_2:C (r)
+               +     0.801          cell: ADLIB:OR3
+  32.177                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I70_Y_2:Y (r)
+               +     0.831          net: A2DRead/ADD_11x11_fast_I70_Y_2_0
+  33.008                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I70_Y:C (r)
+               +     1.355          cell: ADLIB:AO1
+  34.363                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I70_Y:Y (r)
+               +     1.236          net: A2DRead/N269
+  35.599                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I91_Y:C (r)
+               +     1.404          cell: ADLIB:XOR3
+  37.003                       A2DRead/un60_dataregu1ch1_824_ADD_11x11_fast_I91_Y:Y (f)
+               +     1.428          net: A2DRead/un60_dataregu1ch1[14]
+  38.431                       A2DRead/DataRegU1Ch1[15]:D (f)
+                                    
+  38.431                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  320.000                      clock_master/counter[7]:Q
+               +     0.000          Clock source
+  320.000                      clock_master/counter[7]:Q (r)
+               +     3.593          Clock generation
+  323.593
+               +     1.122          net: clock_master/counter_i[7]
+  324.715                      clock_master/counter_RNIKGO8[7]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  325.912                      clock_master/counter_RNIKGO8[7]:Y (r)
+               +     0.985          net: Clock04
+  326.897                      A2DRead/DataRegU1Ch1[15]:CLK (r)
+               -     0.808          Library setup time: ADLIB:DFN1E1
+  326.089                      A2DRead/DataRegU1Ch1[15]:D
+                                    
+  326.089                      data required time
+
+
+END SET Register to Register
+
+----------------------------------------------------
+
+SET External Setup
+
+Path 1
+  From:                        LogicReset
+  To:                          heart_beat/counter[18]:D
+  Delay (ns):                  24.287
+  Slack (ns):
+  Arrival (ns):                24.287
+  Required (ns):
+  Setup (ns):                  0.757
+  External Setup (ns):         18.447
+
+Path 2
+  From:                        LogicReset
+  To:                          heart_beat/counter[17]:D
+  Delay (ns):                  23.956
+  Slack (ns):
+  Arrival (ns):                23.956
+  Required (ns):
+  Setup (ns):                  0.757
+  External Setup (ns):         18.116
+
+Path 3
+  From:                        LogicReset
+  To:                          heart_beat/counter[15]:D
+  Delay (ns):                  23.031
+  Slack (ns):
+  Arrival (ns):                23.031
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         17.242
+
+Path 4
+  From:                        LogicReset
+  To:                          heart_beat/counter[16]:D
+  Delay (ns):                  22.855
+  Slack (ns):
+  Arrival (ns):                22.855
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         17.066
+
+Path 5
+  From:                        LogicReset
+  To:                          heart_beat/counter[14]:D
+  Delay (ns):                  22.328
+  Slack (ns):
+  Arrival (ns):                22.328
+  Required (ns):
+  Setup (ns):                  0.808
+  External Setup (ns):         16.572
+
+
+Expanded Path 1
+  From: LogicReset
+  To: heart_beat/counter[18]:D
+  data required time                             N/C
+  data arrival time                          -   24.287
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        LogicReset (f)
+               +     0.000          net: LogicReset
+  0.000                        LogicReset_pad/U0/U0:PAD (f)
+               +     0.578          cell: ADLIB:IOPAD_IN
+  0.578                        LogicReset_pad/U0/U0:Y (f)
+               +     0.000          net: LogicReset_pad/U0/NET1
+  0.578                        LogicReset_pad/U0/U1:YIN (f)
+               +     0.184          cell: ADLIB:IOIN_IB
+  0.762                        LogicReset_pad/U0/U1:Y (f)
+               +     2.677          net: LogicReset_pad
+  3.439                        LogicReset_pad_RNI5AOB:A (f)
+               +     1.294          cell: ADLIB:CLKINT
+  4.733                        LogicReset_pad_RNI5AOB:Y (f)
+               +     0.735          net: LogicReset_c
+  5.468                        A2DRead/m16:B (f)
+               +     0.471          cell: ADLIB:NOR2A
+  5.939                        A2DRead/m16:Y (r)
+               +     1.434          net: A2DRead_AdClock_0_sqmuxa
+  7.373                        heart_beat/un1_counter_1_m1:B (r)
+               +     0.827          cell: ADLIB:NOR2B
+  8.200                        heart_beat/un1_counter_1_m1:Y (r)
+               +     0.300          net: heart_beat/N_2_i
+  8.500                        heart_beat/un1_counter_1_m2:B (r)
+               +     0.749          cell: ADLIB:NOR2B
+  9.249                        heart_beat/un1_counter_1_m2:Y (r)
+               +     1.029          net: heart_beat/N_3_i
+  10.278                       heart_beat/un1_counter_1_m5:B (r)
+               +     1.244          cell: ADLIB:MX2C
+  11.522                       heart_beat/un1_counter_1_m5:Y (f)
+               +     0.343          net: heart_beat/i3_mux
+  11.865                       heart_beat/un1_counter_1_m8:B (f)
+               +     1.343          cell: ADLIB:AO13
+  13.208                       heart_beat/un1_counter_1_m8:Y (f)
+               +     0.910          net: heart_beat/i5_mux
+  14.118                       heart_beat/un1_counter_1_m10:C (f)
+               +     0.747          cell: ADLIB:NOR3B
+  14.865                       heart_beat/un1_counter_1_m10:Y (r)
+               +     0.428          net: heart_beat/N_11_i
+  15.293                       heart_beat/un1_counter_1_m12:B (r)
+               +     0.872          cell: ADLIB:NOR3C
+  16.165                       heart_beat/un1_counter_1_m12:Y (r)
+               +     0.428          net: heart_beat/N_13_i
+  16.593                       heart_beat/un1_counter_1_m14:B (r)
+               +     0.872          cell: ADLIB:NOR3C
+  17.465                       heart_beat/un1_counter_1_m14:Y (r)
+               +     1.088          net: heart_beat/N_15_i
+  18.553                       heart_beat/un1_counter_1_m16:B (r)
+               +     0.902          cell: ADLIB:NOR3C
+  19.455                       heart_beat/un1_counter_1_m16:Y (r)
+               +     0.265          net: heart_beat/N_17_i
+  19.720                       heart_beat/un1_counter_1_m18:B (r)
+               +     0.832          cell: ADLIB:NOR3C
+  20.552                       heart_beat/un1_counter_1_m18:Y (r)
+               +     0.344          net: heart_beat/N_19_i
+  20.896                       heart_beat/un1_counter_1_m20:B (r)
+               +     0.851          cell: ADLIB:NOR3C
+  21.747                       heart_beat/un1_counter_1_m20:Y (r)
+               +     0.329          net: heart_beat/N_21_i
+  22.076                       heart_beat/un1_counter_1_m21:A (r)
+               +     0.615          cell: ADLIB:NOR2B
+  22.691                       heart_beat/un1_counter_1_m21:Y (r)
+               +     0.297          net: heart_beat/N_22_i
+  22.988                       heart_beat/un1_counter_1_ADD_19x19_fast_I121_Y:B (r)
+               +     1.042          cell: ADLIB:AX1C
+  24.030                       heart_beat/un1_counter_1_ADD_19x19_fast_I121_Y:Y (r)
+               +     0.257          net: heart_beat/ADD_19x19_fast_I121_Y
+  24.287                       heart_beat/counter[18]:D (r)
+                                    
+  24.287                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          clock_master/counter[7]:Q
+               +     0.000          Clock source
+  N/C                          clock_master/counter[7]:Q (r)
+               +     3.593          Clock generation
+  N/C
+               +     1.122          net: clock_master/counter_i[7]
+  N/C                          clock_master/counter_RNIKGO8[7]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  N/C                          clock_master/counter_RNIKGO8[7]:Y (r)
+               +     0.685          net: Clock04
+  N/C                          heart_beat/counter[18]:CLK (r)
+               -     0.757          Library setup time: ADLIB:DFN1
+  N/C                          heart_beat/counter[18]:D
+
+
+END SET External Setup
+
+----------------------------------------------------
+
+SET Clock to Output
+
+Path 1
+  From:                        snkpout01/PWMOut:CLK
+  To:                          EncLgtControl
+  Delay (ns):                  11.330
+  Slack (ns):
+  Arrival (ns):                17.899
+  Required (ns):
+  Clock to Out (ns):           17.899
+
+Path 2
+  From:                        snkpout01/PWMOut:CLK
+  To:                          AN2DimControl
+  Delay (ns):                  10.710
+  Slack (ns):
+  Arrival (ns):                17.279
+  Required (ns):
+  Clock to Out (ns):           17.279
+
+Path 3
+  From:                        snkpout01/PWMOut:CLK
+  To:                          AN5NRMControl
+  Delay (ns):                  9.972
+  Slack (ns):
+  Arrival (ns):                16.541
+  Required (ns):
+  Clock to Out (ns):           16.541
+
+Path 4
+  From:                        snkpout01/PWMOut:CLK
+  To:                          AN4NRMControl
+  Delay (ns):                  9.741
+  Slack (ns):
+  Arrival (ns):                16.310
+  Required (ns):
+  Clock to Out (ns):           16.310
+
+Path 5
+  From:                        snkpout01/PWMOut:CLK
+  To:                          AN6PTTControl
+  Delay (ns):                  9.577
+  Slack (ns):
+  Arrival (ns):                16.146
+  Required (ns):
+  Clock to Out (ns):           16.146
+
+
+Expanded Path 1
+  From: snkpout01/PWMOut:CLK
+  To: EncLgtControl
+  data required time                             N/C
+  data arrival time                          -   17.899
+  slack                                          N/C
+  ________________________________________________________
+  Data arrival time calculation
+  0.000                        clock_master/counter[7]:Q
+               +     0.000          Clock source
+  0.000                        clock_master/counter[7]:Q (r)
+               +     3.593          Clock generation
+  3.593
+               +     1.122          net: clock_master/counter_i[7]
+  4.715                        clock_master/counter_RNIKGO8[7]:A (r)
+               +     1.197          cell: ADLIB:CLKINT
+  5.912                        clock_master/counter_RNIKGO8[7]:Y (r)
+               +     0.657          net: Clock04
+  6.569                        snkpout01/PWMOut:CLK (r)
+               +     0.663          cell: ADLIB:DFN1
+  7.232                        snkpout01/PWMOut:Q (r)
+               +     2.324          net: PnlLgtControl_c
+  9.556                        pwmdisable01latch/output_RNID03R[7]:A (r)
+               +     1.654          cell: ADLIB:OA1
+  11.210                       pwmdisable01latch/output_RNID03R[7]:Y (r)
+               +     2.389          net: EncLgtControl_c
+  13.599                       EncLgtControl_pad/U0/U1:D (r)
+               +     0.885          cell: ADLIB:IOTRI_OB_EB
+  14.484                       EncLgtControl_pad/U0/U1:DOUT (r)
+               +     0.000          net: EncLgtControl_pad/U0/NET1
+  14.484                       EncLgtControl_pad/U0/U0:D (r)
+               +     3.415          cell: ADLIB:IOPAD_TRI
+  17.899                       EncLgtControl_pad/U0/U0:PAD (r)
+               +     0.000          net: EncLgtControl
+  17.899                       EncLgtControl (r)
+                                    
+  17.899                       data arrival time
+  ________________________________________________________
+  Data required time calculation
+  N/C                          clock_master/counter[7]:Q
+               +     0.000          Clock source
+  N/C                          clock_master/counter[7]:Q (r)
+               +     3.593          Clock generation
+  N/C
+                                    
+  N/C                          EncLgtControl (r)
+
+
+END SET Clock to Output
+
+----------------------------------------------------
+
+SET Register to Asynchronous
+
+No Path
+
+END SET Register to Asynchronous
+
+----------------------------------------------------
+
+SET External Recovery
+
+No Path
+
+END SET External Recovery
+
+----------------------------------------------------
+
+SET Asynchronous to Register
+
+No Path
+
+END SET Asynchronous to Register
+
+----------------------------------------------------
+
+Path set Pin to Pin
+
+SET Input to Output
+
+No Path
+
+END SET Input to Output
+
+----------------------------------------------------
+
+Path set User Sets
+

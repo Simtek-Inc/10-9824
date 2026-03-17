@@ -1,0 +1,7 @@
+@W: MT420 |Found inferred clock mainprogram|XCLK with period 10.00ns. Please declare a user-defined clock on object "p:XCLK"
+@W: MT420 |Found inferred clock mainprogram|SerialClock with period 10.00ns. Please declare a user-defined clock on object "p:SerialClock"
+@W: MT420 |Found inferred clock ClockMaster|counter_inferred_clock[1] with period 10.00ns. Please declare a user-defined clock on object "n:clock_master.counter[1]"
+@W: MT420 |Found inferred clock ClockMaster|counter_inferred_clock[0] with period 10.00ns. Please declare a user-defined clock on object "n:clock_master.counter[0]"
+@W: MT420 |Found inferred clock ClockMaster|counter_inferred_clock[2] with period 10.00ns. Please declare a user-defined clock on object "n:clock_master.counter[2]"
+@W: MT420 |Found inferred clock ClockMaster|counter_inferred_clock[3] with period 10.00ns. Please declare a user-defined clock on object "n:clock_master.counter[3]"
+@W: MT420 |Found inferred clock divider|counter_inferred_clock[0] with period 10.00ns. Please declare a user-defined clock on object "n:clockdivider.counter[0]"

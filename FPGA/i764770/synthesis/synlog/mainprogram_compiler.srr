@@ -1,0 +1,89 @@
+Synopsys HDL Compiler, version comp2016q4p1, Build 512R, built Oct 26 2017
+@N|Running in 64-bit mode
+Copyright (C) 1994-2016 Synopsys, Inc. All rights reserved. This Synopsys software and all associated documentation are proprietary to Synopsys, Inc. and may only be used pursuant to the terms and conditions of a written license agreement with Synopsys, Inc. All other use, reproduction, modification, or distribution of the Synopsys software or the associated documentation is strictly prohibited.
+
+Synopsys VHDL Compiler, version comp2016q4p1, Build 512R, built Oct 26 2017
+@N|Running in 64-bit mode
+Copyright (C) 1994-2016 Synopsys, Inc. All rights reserved. This Synopsys software and all associated documentation are proprietary to Synopsys, Inc. and may only be used pursuant to the terms and conditions of a written license agreement with Synopsys, Inc. All other use, reproduction, modification, or distribution of the Synopsys software or the associated documentation is strictly prohibited.
+
+@N: CD720 :"C:\Microsemi\Libero_SoC_v11.9\SynplifyPro\lib\vhd2008\std.vhd":146:18:146:21|Setting time resolution to ps
+@N:"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":7:7:7:17|Top entity is set to mainprogram.
+File C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd changed - recompiling
+VHDL syntax check successful!
+File C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd changed - recompiling
+@N: CD231 :"C:\Microsemi\Libero_SoC_v11.9\SynplifyPro\lib\vhd2008\std1164.vhd":890:16:890:17|Using onehot encoding for type mvl9plus. For example, enumeration 'U' is mapped to "1000000000".
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":7:7:7:17|Synthesizing work.mainprogram.behavioral.
+@W: CD729 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":429:8:429:19|Component declaration has 3 generics but entity declares only 2 generics
+@W: CD638 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":346:7:346:12|Signal pout01 is undriven. Either assign the signal a value or remove the signal declaration.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\PWMs1.vhd":7:7:7:11|Synthesizing work.pwms1.behavioral.
+Post processing for work.pwms1.behavioral
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\piso.vhd":22:7:22:10|Synthesizing work.piso.architecture_piso.
+Post processing for work.piso.architecture_piso
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\piso.vhd":22:7:22:10|Synthesizing work.piso.architecture_piso.
+Post processing for work.piso.architecture_piso
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\piso.vhd":22:7:22:10|Synthesizing work.piso.architecture_piso.
+Post processing for work.piso.architecture_piso
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\piso.vhd":22:7:22:10|Synthesizing work.piso.architecture_piso.
+Post processing for work.piso.architecture_piso
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\revsion.vhd":22:7:22:14|Synthesizing work.revision.architecture_revision.
+Post processing for work.revision.architecture_revision
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+Post processing for work.sipo.architecture_sipo
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+Post processing for work.sipo.architecture_sipo
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+Post processing for work.sipo.architecture_sipo
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+Post processing for work.sipo.architecture_sipo
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+Post processing for work.sipo.architecture_sipo
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\IODebounce.vhd":23:7:23:16|Synthesizing work.iodebounce.logic.
+Post processing for work.iodebounce.logic
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\IODebounce.vhd":23:7:23:16|Synthesizing work.iodebounce.logic.
+Post processing for work.iodebounce.logic
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":24:7:24:12|Synthesizing work.max144.behavioral.
+@W: CD434 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":83:18:83:22|Signal reset in the sensitivity list is not used in the process. Make sure all variables in the sensitivity list are referenced in the process.
+Post processing for work.max144.behavioral
+@W: CL271 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":85:3:85:4|Pruning unused bits 4 to 1 of DataRegU1Ch1_5(16 downto 1). If this is not the intended behavior, drive the inputs with valid values, or inputs from the top level.
+@W: CL271 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":85:3:85:4|Pruning unused bits 4 to 1 of DataRegU1Ch0_5(16 downto 1). If this is not the intended behavior, drive the inputs with valid values, or inputs from the top level.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\WatchDog.vhd":21:7:21:14|Synthesizing work.watchdog.architecture_watchdog.
+Post processing for work.watchdog.architecture_watchdog
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\ClockMaster.vhd":23:7:23:17|Synthesizing work.clockmaster.behavioral.
+Post processing for work.clockmaster.behavioral
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\divider.vhd":23:7:23:13|Synthesizing work.divider.behavioral.
+Post processing for work.divider.behavioral
+@W: CL260 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\divider.vhd":38:3:38:4|Pruning register bit 1 of counter(1 downto 0). If this is not the intended behavior, drive the input with valid values, or an input from the top level.
+Post processing for work.mainprogram.behavioral
+@W: CL240 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":23:12:23:18|Signal HrtBeat is floating; a simulation mismatch is possible.
+@N: CL159 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":33:7:33:11|Input Reset is unused.
+@W: CL279 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\revsion.vhd":73:2:73:3|Pruning register bits 5 to 4 of parallelholdreg(7 downto 0). If this is not the intended behavior, drive the inputs with valid values, or inputs from the top level.
+
+At c_vhdl Exit (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 79MB peak: 81MB)
+
+Process took 0h:00m:01s realtime, 0h:00m:01s cputime
+
+Process completed successfully.
+# Mon Mar 16 14:48:18 2026
+
+###########################################################]
+Synopsys Netlist Linker, version comp2016q4p1, Build 512R, built Oct 26 2017
+@N|Running in 64-bit mode
+
+At syn_nfilter Exit (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 68MB peak: 69MB)
+
+Process took 0h:00m:01s realtime, 0h:00m:01s cputime
+
+Process completed successfully.
+# Mon Mar 16 14:48:18 2026
+
+###########################################################]
+@END
+
+At c_hdl Exit (Real Time elapsed 0h:00m:00s; CPU Time elapsed 0h:00m:00s; Memory used current: 3MB peak: 4MB)
+
+Process took 0h:00m:01s realtime, 0h:00m:01s cputime
+
+Process completed successfully.
+# Mon Mar 16 14:48:18 2026
+
+###########################################################]

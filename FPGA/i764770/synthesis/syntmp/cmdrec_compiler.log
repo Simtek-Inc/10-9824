@@ -1,0 +1,17 @@
+C:\Microsemi\Libero_SoC_v11.9\SynplifyPro\bin64\c_hdl.exe  -osyn  C:\_swork\10-\9800\9824\FPGA\i764841\synthesis\synwork\mainprogram_comp.srs  -top  work.mainprogram  -hdllog  C:\_swork\10-\9800\9824\FPGA\i764841\synthesis\synlog\mainprogram_compiler.srr  -encrypt  -mp  4  -verification_mode 0  -vhdl  -prodtype  synplify_pro  -nram -fixsmult -divnmod  -encrypt  -pro  -dmgen  C:\_swork\10-\9800\9824\FPGA\i764841\synthesis\dm  -lite -ui -fid2 -ram -sharing on -ll 2000 -autosm  -vhdl2008  -ignore_undefined_lib  -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\PWMs1.vhd -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\WatchDog.vhd -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\ClockMaster.vhd -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\divider.vhd -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\IODebounce.vhd -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\piso.vhd -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\revsion.vhd -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd -lib work C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd 
+relcom:..\..\..\..\..\..\..\..\Microsemi\Libero_SoC_v11.9\SynplifyPro\bin64\c_hdl.exe -osyn ..\synwork\mainprogram_comp.srs -top work.mainprogram -hdllog ..\synlog\mainprogram_compiler.srr -encrypt -mp 4 -verification_mode 0 -vhdl -prodtype synplify_pro -nram -fixsmult -divnmod -encrypt -pro -dmgen ..\dm -lite -ui -fid2 -ram -sharing on -ll 2000 -autosm -vhdl2008 -ignore_undefined_lib -lib work ..\..\hdl\Max144.vhd -lib work ..\..\hdl\PWMs1.vhd -lib work ..\..\hdl\WatchDog.vhd -lib work ..\..\hdl\ClockMaster.vhd -lib work ..\..\hdl\divider.vhd -lib work ..\..\hdl\IODebounce.vhd -lib work ..\..\hdl\piso.vhd -lib work ..\..\hdl\revsion.vhd -lib work ..\..\hdl\sipo.vhd -lib work ..\..\hdl\mainprogram.vhd
+rc:0 success:1 runtime:2
+file:..\synwork\mainprogram_comp.srs|io:o|time:1773690498|size:40876|exec:0|csum:
+file:..\synlog\mainprogram_compiler.srr|io:o|time:1773690498|size:7392|exec:0|csum:
+file:..\..\hdl\Max144.vhd|io:i|time:1773415379|size:21285|exec:0|csum:1E968DAEFE2E805C1B284B8CD33B6338
+file:..\..\hdl\PWMs1.vhd|io:i|time:1773415379|size:1456|exec:0|csum:EB87D073CF15E997611A1C444DFE3707
+file:..\..\hdl\WatchDog.vhd|io:i|time:1773415379|size:1444|exec:0|csum:27C349F57664AD7BAE1C0E0FF566498F
+file:..\..\hdl\ClockMaster.vhd|io:i|time:1773415379|size:1732|exec:0|csum:0EAF5A3BFBFCD9E6E84ADC017262176A
+file:..\..\hdl\divider.vhd|io:i|time:1773415379|size:992|exec:0|csum:A3228AFB18F2312BE1557CBF93600D0B
+file:..\..\hdl\IODebounce.vhd|io:i|time:1773415379|size:2515|exec:0|csum:F4E1E9A3155AF187D721C77581AEEFB9
+file:..\..\hdl\piso.vhd|io:i|time:1773415379|size:2843|exec:0|csum:1392DDE72483CDB7C33A66B5E9ECB33F
+file:..\..\hdl\revsion.vhd|io:i|time:1773415379|size:3665|exec:0|csum:68929C528E08FAF2991B9F914D5BFFC0
+file:..\..\hdl\sipo.vhd|io:i|time:1773415379|size:3048|exec:0|csum:ED9BA606DD6C0447712877E5DC861EAD
+file:..\..\hdl\mainprogram.vhd|io:i|time:1773690486|size:27329|exec:0|csum:973C76643EA0F15DEA5755E207C650E7
+file:..\..\..\..\..\..\..\..\Microsemi\Libero_SoC_v11.9\SynplifyPro\bin\c_hdl.exe|io:i|time:1509044116|size:1338368|exec:1|csum:4BE9471CC8F1F34D3F79DD6F3C07C7F5
+file:..\..\..\..\..\..\..\..\Microsemi\Libero_SoC_v11.9\SynplifyPro\bin64\c_hdl.exe|io:i|time:1509044324|size:1754112|exec:1|csum:0724D6BF71D325162DC071CC1383571C

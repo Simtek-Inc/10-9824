@@ -1,0 +1,26 @@
+@N|Running in 64-bit mode
+@N|Running in 64-bit mode
+@N: CD720 :"C:\Microsemi\Libero_SoC_v11.9\SynplifyPro\lib\vhd2008\std.vhd":146:18:146:21|Setting time resolution to ps
+@N:"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":7:7:7:17|Top entity is set to mainprogram.
+@N: CD231 :"C:\Microsemi\Libero_SoC_v11.9\SynplifyPro\lib\vhd2008\std1164.vhd":890:16:890:17|Using onehot encoding for type mvl9plus. For example, enumeration 'U' is mapped to "1000000000".
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\mainprogram.vhd":7:7:7:17|Synthesizing work.mainprogram.behavioral.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\PWMs1.vhd":7:7:7:11|Synthesizing work.pwms1.behavioral.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\piso.vhd":22:7:22:10|Synthesizing work.piso.architecture_piso.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\piso.vhd":22:7:22:10|Synthesizing work.piso.architecture_piso.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\piso.vhd":22:7:22:10|Synthesizing work.piso.architecture_piso.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\piso.vhd":22:7:22:10|Synthesizing work.piso.architecture_piso.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\revsion.vhd":22:7:22:14|Synthesizing work.revision.architecture_revision.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\sipo.vhd":23:7:23:10|Synthesizing work.sipo.architecture_sipo.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\IODebounce.vhd":23:7:23:16|Synthesizing work.iodebounce.logic.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\IODebounce.vhd":23:7:23:16|Synthesizing work.iodebounce.logic.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":24:7:24:12|Synthesizing work.max144.behavioral.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\WatchDog.vhd":21:7:21:14|Synthesizing work.watchdog.architecture_watchdog.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\ClockMaster.vhd":23:7:23:17|Synthesizing work.clockmaster.behavioral.
+@N: CD630 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\divider.vhd":23:7:23:13|Synthesizing work.divider.behavioral.
+@N: CL159 :"C:\_swork\10-\9800\9824\FPGA\i764841\hdl\Max144.vhd":33:7:33:11|Input Reset is unused.
+@N|Running in 64-bit mode
+

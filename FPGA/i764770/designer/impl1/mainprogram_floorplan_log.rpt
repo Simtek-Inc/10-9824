@@ -1,0 +1,549 @@
+Microsemi Libero Software
+Version: 11.7.1.14
+Release: v11.7 SP1.1
+
+'IDE_DESIGNERVIEW_ROOTDIR' set to
+'C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer'
+Info: The design mainprogram.adb was last modified by software version 11.7.1.14.
+Opened an existing Libero design mainprogram.adb.
+
+The Execute Script command succeeded ( 00:00:33 )
+Design saved to file
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+Wrote pin report to file:
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram_report_pin_byname.txt
+
+The Report command succeeded ( 00:00:01 )
+Wrote pin report to file:
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram_report_pin_bynumber.txt
+
+The Report command succeeded ( 00:00:01 )
+
+The Execute Script command succeeded ( 00:00:02 )
+Check design state: COMPILE
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '0'
+Design saved to file
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 0
+----- Evaluating Initial State -------
+Wrote to the file:
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram_layout.log
+
+The Export command succeeded ( 00:00:02 )
+----- Iteration 1 of 5 -----
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 0
+Variable DEFAULT_PLACE_SEED_VARIABLE_VALUE = 0
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 0
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '1'
+Info: Multi-Pass: Seed:   0
+***** Layout Variables *********************************************
+
+Mode: TIMING_DRIVEN
+Power-driven Layout: OFF
+Incremental Placement: ON
+Incremental Route: OFF
+
+
+Info: I/O Bank Assigner detected (4) out of (4) I/O Bank(s) with locked I/O technologies.
+Info: I/O Bank Assigner is running in incremental mode. All pre-assigned I/O Bank technologies
+      will not be changed.
+Info: All I/O Banks have locked technologies. Skipping I/O Bank Assigner.
+
+Planning global net placement...
+
+
+
+Global net placement completed successfully.
+
+                        o - o - o - o - o - o
+
+Timing-driven Placer Started: Thu Jul 27 09:13:47 2017
+
+Placer Finished: Thu Jul 27 09:14:29 2017
+Total Placer CPU Time:     00:00:42
+
+                        o - o - o - o - o - o
+
+
+Timing-driven Router 
+Design: mainprogram                     Started: Thu Jul 27 09:14:34 2017
+
+ 
+Iterative improvement...
+
+Timing-driven Router completed successfully.
+
+Design: mainprogram                     
+Finished: Thu Jul 27 09:14:55 2017
+Total CPU Time:     00:00:20            Total Elapsed Time: 00:00:21
+Total Memory Usage: 200.4 Mbytes
+                        o - o - o - o - o - o
+
+Loading the Timing data for the design.
+Finished loading the Timing data.
+TIMER: Max delay timing requirements have NOT been met.
+TIMER: Min delay timing requirements have been met.
+
+The Layout command succeeded ( 00:01:18 )
+Variable IS_POWER_GUI_SUPPORTED = 1
+Wrote timer report to file: mainprogram_timing_r1_s1.rpt
+
+The Report command succeeded ( 00:00:00 )
+Wrote timing_violations report to file: mainprogram_timing_violations_max_r1_s1.rpt
+
+The Report command succeeded ( 00:00:02 )
+Wrote timing_violations report to file: mainprogram_timing_violations_min_r1_s1.rpt
+
+The Report command succeeded ( 00:00:01 )
+  - Reading netlist
+  - Initializing power engine...
+  - Restoring saved options...
+  - Power analysis done!
+Wrote power report to file: mainprogram_power_r1_s1.rpt
+
+The Report command succeeded ( 00:00:02 )
+Info: Multi-Pass: Iteration 1, Seed Index 1, Clock = clock_master/counter[7]:Q, Freq = 33.110
+Design saved to file
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+Warning: Overwriting the existing file:
+         C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/desi\
+         gner/impl1/mainprogram_layout.log.
+Wrote to the file:
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram_layout.log
+
+The Export command succeeded ( 00:00:02 )
+----- Iteration 2 of 5 -----
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 1
+Variable DEFAULT_PLACE_SEED_VARIABLE_VALUE = 0
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 1
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '2'
+Info: Multi-Pass: Seed:   86662958
+Info: Commit the changes made in SmartPower ?
+      Changes not commited will be lost. [YES]
+***** Layout Variables *********************************************
+
+Mode: TIMING_DRIVEN
+Power-driven Layout: OFF
+Incremental Placement: ON
+Incremental Route: OFF
+
+
+Info: I/O Bank Assigner detected (4) out of (4) I/O Bank(s) with locked I/O technologies.
+Info: I/O Bank Assigner is running in incremental mode. All pre-assigned I/O Bank technologies
+      will not be changed.
+Info: All I/O Banks have locked technologies. Skipping I/O Bank Assigner.
+
+Planning global net placement...
+
+
+
+Global net placement completed successfully.
+
+                        o - o - o - o - o - o
+
+Timing-driven Placer Started: Thu Jul 27 09:15:15 2017
+
+Placer Finished: Thu Jul 27 09:15:56 2017
+Total Placer CPU Time:     00:00:41
+
+                        o - o - o - o - o - o
+
+
+Timing-driven Router 
+Design: mainprogram                     Started: Thu Jul 27 09:16:00 2017
+
+ 
+Iterative improvement...
+
+Timing-driven Router completed successfully.
+
+Design: mainprogram                     
+Finished: Thu Jul 27 09:16:22 2017
+Total CPU Time:     00:00:21            Total Elapsed Time: 00:00:22
+Total Memory Usage: 200.4 Mbytes
+                        o - o - o - o - o - o
+
+Loading the Timing data for the design.
+Finished loading the Timing data.
+TIMER: Max delay timing requirements have NOT been met.
+TIMER: Min delay timing requirements have been met.
+
+The Layout command succeeded ( 00:01:18 )
+Variable IS_POWER_GUI_SUPPORTED = 1
+Wrote timer report to file: mainprogram_timing_r1_s2.rpt
+
+The Report command succeeded ( 00:00:00 )
+Wrote timing_violations report to file: mainprogram_timing_violations_max_r1_s2.rpt
+
+The Report command succeeded ( 00:00:02 )
+Wrote timing_violations report to file: mainprogram_timing_violations_min_r1_s2.rpt
+
+The Report command succeeded ( 00:00:01 )
+  - Reading netlist
+  - Initializing power engine...
+  - Restoring saved options...
+  - Power analysis done!
+Wrote power report to file: mainprogram_power_r1_s2.rpt
+
+The Report command succeeded ( 00:00:02 )
+Info: Multi-Pass: Iteration 2, Seed Index 2, Clock = clock_master/counter[7]:Q, Freq = 30.235,
+Range 30.235 - 33.110
+Info: Commit the changes made in SmartPower ?
+      Changes not commited will be lost. [YES]
+Design closed.
+
+Info: The design
+      C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designe\
+      r\impl1\mainprogram.adb was last modified by software version 11.7.1.14.
+Opened an existing Libero design
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '2'
+Design saved to file
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+Warning: Overwriting the existing file:
+         C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/desi\
+         gner/impl1/mainprogram_layout.log.
+Wrote to the file:
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram_layout.log
+
+The Export command succeeded ( 00:00:02 )
+----- Iteration 3 of 5 -----
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 2
+Variable DEFAULT_PLACE_SEED_VARIABLE_VALUE = 0
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 2
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '3'
+Info: Multi-Pass: Seed:   8988747
+***** Layout Variables *********************************************
+
+Mode: TIMING_DRIVEN
+Power-driven Layout: OFF
+Incremental Placement: ON
+Incremental Route: OFF
+
+
+Info: I/O Bank Assigner detected (4) out of (4) I/O Bank(s) with locked I/O technologies.
+Info: I/O Bank Assigner is running in incremental mode. All pre-assigned I/O Bank technologies
+      will not be changed.
+Info: All I/O Banks have locked technologies. Skipping I/O Bank Assigner.
+
+Planning global net placement...
+
+
+
+Global net placement completed successfully.
+
+                        o - o - o - o - o - o
+
+Timing-driven Placer Started: Thu Jul 27 09:16:47 2017
+
+Placer Finished: Thu Jul 27 09:17:28 2017
+Total Placer CPU Time:     00:00:41
+
+                        o - o - o - o - o - o
+
+
+Timing-driven Router 
+Design: mainprogram                     Started: Thu Jul 27 09:17:34 2017
+
+ 
+Iterative improvement...
+
+Timing-driven Router completed successfully.
+
+Design: mainprogram                     
+Finished: Thu Jul 27 09:17:58 2017
+Total CPU Time:     00:00:23            Total Elapsed Time: 00:00:24
+Total Memory Usage: 200.6 Mbytes
+                        o - o - o - o - o - o
+
+Loading the Timing data for the design.
+Finished loading the Timing data.
+TIMER: Max delay timing requirements have NOT been met.
+TIMER: Min delay timing requirements have been met.
+
+The Layout command succeeded ( 00:01:22 )
+Variable IS_POWER_GUI_SUPPORTED = 1
+Wrote timer report to file: mainprogram_timing_r1_s3.rpt
+
+The Report command succeeded ( 00:00:00 )
+Wrote timing_violations report to file: mainprogram_timing_violations_max_r1_s3.rpt
+
+The Report command succeeded ( 00:00:02 )
+Wrote timing_violations report to file: mainprogram_timing_violations_min_r1_s3.rpt
+
+The Report command succeeded ( 00:00:01 )
+  - Reading netlist
+  - Initializing power engine...
+  - Restoring saved options...
+  - Power analysis done!
+Wrote power report to file: mainprogram_power_r1_s3.rpt
+
+The Report command succeeded ( 00:00:02 )
+Info: Multi-Pass: Iteration 3, Seed Index 3, Clock = clock_master/counter[7]:Q, Freq = 33.096,
+Range 30.235 - 33.110
+Info: Commit the changes made in SmartPower ?
+      Changes not commited will be lost. [YES]
+Design closed.
+
+Info: The design
+      C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designe\
+      r\impl1\mainprogram.adb was last modified by software version 11.7.1.14.
+Opened an existing Libero design
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '3'
+Design saved to file
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+Warning: Overwriting the existing file:
+         C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/desi\
+         gner/impl1/mainprogram_layout.log.
+Wrote to the file:
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram_layout.log
+
+The Export command succeeded ( 00:00:02 )
+----- Iteration 4 of 5 -----
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 3
+Variable DEFAULT_PLACE_SEED_VARIABLE_VALUE = 0
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 3
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '4'
+Info: Multi-Pass: Seed:   51071856
+***** Layout Variables *********************************************
+
+Mode: TIMING_DRIVEN
+Power-driven Layout: OFF
+Incremental Placement: ON
+Incremental Route: OFF
+
+
+Info: I/O Bank Assigner detected (4) out of (4) I/O Bank(s) with locked I/O technologies.
+Info: I/O Bank Assigner is running in incremental mode. All pre-assigned I/O Bank technologies
+      will not be changed.
+Info: All I/O Banks have locked technologies. Skipping I/O Bank Assigner.
+
+Planning global net placement...
+
+
+
+Global net placement completed successfully.
+
+                        o - o - o - o - o - o
+
+Timing-driven Placer Started: Thu Jul 27 09:18:24 2017
+
+Placer Finished: Thu Jul 27 09:19:05 2017
+Total Placer CPU Time:     00:00:41
+
+                        o - o - o - o - o - o
+
+
+Timing-driven Router 
+Design: mainprogram                     Started: Thu Jul 27 09:19:11 2017
+
+ 
+Iterative improvement...
+
+Timing-driven Router completed successfully.
+
+Design: mainprogram                     
+Finished: Thu Jul 27 09:19:32 2017
+Total CPU Time:     00:00:20            Total Elapsed Time: 00:00:21
+Total Memory Usage: 200.5 Mbytes
+                        o - o - o - o - o - o
+
+Loading the Timing data for the design.
+Finished loading the Timing data.
+TIMER: Max delay timing requirements have NOT been met.
+TIMER: Min delay timing requirements have been met.
+
+The Layout command succeeded ( 00:01:20 )
+Variable IS_POWER_GUI_SUPPORTED = 1
+Wrote timer report to file: mainprogram_timing_r1_s4.rpt
+
+The Report command succeeded ( 00:00:00 )
+Wrote timing_violations report to file: mainprogram_timing_violations_max_r1_s4.rpt
+
+The Report command succeeded ( 00:00:02 )
+Wrote timing_violations report to file: mainprogram_timing_violations_min_r1_s4.rpt
+
+The Report command succeeded ( 00:00:01 )
+  - Reading netlist
+  - Initializing power engine...
+  - Restoring saved options...
+  - Power analysis done!
+Wrote power report to file: mainprogram_power_r1_s4.rpt
+
+The Report command succeeded ( 00:00:02 )
+Info: Multi-Pass: Iteration 4, Seed Index 4, Clock = clock_master/counter[7]:Q, Freq = 30.920,
+Range 30.235 - 33.110
+Info: Commit the changes made in SmartPower ?
+      Changes not commited will be lost. [YES]
+Design closed.
+
+Info: The design
+      C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designe\
+      r\impl1\mainprogram.adb was last modified by software version 11.7.1.14.
+Opened an existing Libero design
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '4'
+Design saved to file
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+Warning: Overwriting the existing file:
+         C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/desi\
+         gner/impl1/mainprogram_layout.log.
+Wrote to the file:
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram_layout.log
+
+The Export command succeeded ( 00:00:02 )
+----- Iteration 5 of 5 -----
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 4
+Variable DEFAULT_PLACE_SEED_VARIABLE_VALUE = 0
+Variable MULTIPASS_LAYOUT_SEED_INDEX = 4
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '5'
+Info: Multi-Pass: Seed:   78381505
+***** Layout Variables *********************************************
+
+Mode: TIMING_DRIVEN
+Power-driven Layout: OFF
+Incremental Placement: ON
+Incremental Route: OFF
+
+
+Info: I/O Bank Assigner detected (4) out of (4) I/O Bank(s) with locked I/O technologies.
+Info: I/O Bank Assigner is running in incremental mode. All pre-assigned I/O Bank technologies
+      will not be changed.
+Info: All I/O Banks have locked technologies. Skipping I/O Bank Assigner.
+
+Planning global net placement...
+
+
+
+Global net placement completed successfully.
+
+                        o - o - o - o - o - o
+
+Timing-driven Placer Started: Thu Jul 27 09:19:59 2017
+
+Placer Finished: Thu Jul 27 09:20:40 2017
+Total Placer CPU Time:     00:00:41
+
+                        o - o - o - o - o - o
+
+
+Timing-driven Router 
+Design: mainprogram                     Started: Thu Jul 27 09:20:46 2017
+
+ 
+Iterative improvement...
+
+Timing-driven Router completed successfully.
+
+Design: mainprogram                     
+Finished: Thu Jul 27 09:21:08 2017
+Total CPU Time:     00:00:22            Total Elapsed Time: 00:00:22
+Total Memory Usage: 200.5 Mbytes
+                        o - o - o - o - o - o
+
+Loading the Timing data for the design.
+Finished loading the Timing data.
+TIMER: Max delay timing requirements have NOT been met.
+TIMER: Min delay timing requirements have been met.
+
+The Layout command succeeded ( 00:01:21 )
+Variable IS_POWER_GUI_SUPPORTED = 1
+Wrote timer report to file: mainprogram_timing_r1_s5.rpt
+
+The Report command succeeded ( 00:00:00 )
+Wrote timing_violations report to file: mainprogram_timing_violations_max_r1_s5.rpt
+
+The Report command succeeded ( 00:00:02 )
+Wrote timing_violations report to file: mainprogram_timing_violations_min_r1_s5.rpt
+
+The Report command succeeded ( 00:00:01 )
+  - Reading netlist
+  - Initializing power engine...
+  - Restoring saved options...
+  - Power analysis done!
+Wrote power report to file: mainprogram_power_r1_s5.rpt
+
+The Report command succeeded ( 00:00:02 )
+Info: Multi-Pass: Iteration 5, Seed Index 5, Clock = clock_master/counter[7]:Q, Freq = 32.165,
+Range 30.235 - 33.110
+Info: Commit the changes made in SmartPower ?
+      Changes not commited will be lost. [YES]
+Design closed.
+
+Info: The design
+      C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designe\
+      r\impl1\mainprogram.adb was last modified by software version 11.7.1.14.
+Opened an existing Libero design
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+'MULTIPASS_LAYOUT_SEED_INDEX' set to '5'
+Design saved to file
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+Warning: Overwriting the existing file:
+         C:/_SWork/8xxx/8400-8499/8436/Electrical/Engineering/Source_Code/FPGA/F753033_117/desi\
+         gner/impl1/mainprogram_layout.log.
+Wrote to the file:
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram_layout.log
+
+The Export command succeeded ( 00:00:02 )
+Design closed.
+
+Info: The design
+      C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designe\
+      r\impl1\mainprogram.adb was last modified by software version 11.7.1.14.
+Opened an existing Libero design
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+
+#----------------------------------------------------------------------------------------------\
+--------------------------------------------
+# RUN NUMBER: 1   DATE: 09:13:40 27-Jul-2017
+# INVOKED AS:  extended_run_gui.tcl -n 5 -starting_seed_index 1 -timing_driven
+-place_incremental on -compare_criteria frequency
+#----------------------------------------------------------------------------------------------\
+--------------------------------------------
+# Seed Index  Seed      Slowest Clock          Frequency  Report Analyzed
+Saved Design
+# ==========  ========  ===============  ===============
+=============================================  ===================================
+           1         0  clock_master/counter[7]:Q           33.110  mainprogram_timing_r1_s1.rpt
+
+           2  86662958  clock_master/counter[7]:Q           30.235  mainprogram_timing_r1_s2.rpt
+
+           3   8988747  clock_master/counter[7]:Q           33.096  mainprogram_timing_r1_s3.rpt
+
+           4  51071856  clock_master/counter[7]:Q           30.920  mainprogram_timing_r1_s4.rpt
+
+           5  78381505  clock_master/counter[7]:Q           32.165  mainprogram_timing_r1_s5.rpt
+
+
+TIMER: Max delay timing requirements have NOT been met.
+TIMER: Min delay timing requirements have been met.
+
+The Execute Script command succeeded ( 00:07:54 )
+Design saved to file
+C:\_SWork\8xxx\8400-8499\8436\Electrical\Engineering\Source_Code\FPGA\F753033_117\designer\impl\
+1\mainprogram.adb.
+
+The Report command succeeded ( 00:00:01 )
+Design closed.
+

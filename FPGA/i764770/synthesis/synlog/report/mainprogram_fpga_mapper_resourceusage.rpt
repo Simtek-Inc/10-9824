@@ -1,0 +1,89 @@
+Target Part: AGLN250V5_VQFP100_STD
+Report for cell mainprogram.behavioral
+  Core Cell usage:
+              cell count     area count*area
+              AND2    40      1.0       40.0
+             AND2A    22      1.0       22.0
+              AND3    24      1.0       24.0
+             AND3A    11      1.0       11.0
+               AO1   114      1.0      114.0
+              AO13    39      1.0       39.0
+              AO18    23      1.0       23.0
+              AO1A    10      1.0       10.0
+              AO1C    44      1.0       44.0
+              AO1D    13      1.0       13.0
+              AOI1    18      1.0       18.0
+             AOI1A    66      1.0       66.0
+             AOI1B     7      1.0        7.0
+               AX1     3      1.0        3.0
+              AX1B     7      1.0        7.0
+              AX1C    57      1.0       57.0
+              AX1D    38      1.0       38.0
+              AX1E     1      1.0        1.0
+              BUFF     2      1.0        2.0
+            CLKINT     5      0.0        0.0
+               GND    28      0.0        0.0
+               INV    13      1.0       13.0
+              MAJ3   303      1.0      303.0
+              MIN3    22      1.0       22.0
+               MX2   132      1.0      132.0
+              MX2A     1      1.0        1.0
+              MX2B    18      1.0       18.0
+              MX2C     9      1.0        9.0
+              NOR2   110      1.0      110.0
+             NOR2A   438      1.0      438.0
+             NOR2B   334      1.0      334.0
+              NOR3    27      1.0       27.0
+             NOR3A   133      1.0      133.0
+             NOR3B    70      1.0       70.0
+             NOR3C   189      1.0      189.0
+               OA1    75      1.0       75.0
+              OA1A    40      1.0       40.0
+              OA1B     1      1.0        1.0
+              OA1C     2      1.0        2.0
+              OAI1     1      1.0        1.0
+               OR2   165      1.0      165.0
+              OR2A   147      1.0      147.0
+              OR2B    12      1.0       12.0
+               OR3    35      1.0       35.0
+              OR3A     5      1.0        5.0
+              OR3B     5      1.0        5.0
+              OR3C     2      1.0        2.0
+               VCC    28      0.0        0.0
+               XA1    79      1.0       79.0
+              XA1A    13      1.0       13.0
+              XA1B    20      1.0       20.0
+              XA1C     2      1.0        2.0
+              XAI1     1      1.0        1.0
+             XAI1A     1      1.0        1.0
+             XNOR2   159      1.0      159.0
+             XNOR3    47      1.0       47.0
+               XO1     8      1.0        8.0
+              XO1A     3      1.0        3.0
+              XOR2   223      1.0      223.0
+              XOR3   380      1.0      380.0
+              ZOR3     6      1.0        6.0
+
+
+              DFN1   325      1.0      325.0
+            DFN1E0    62      1.0       62.0
+            DFN1E1   449      1.0      449.0
+                   -----          ----------
+             TOTAL  4667              4606.0
+
+
+  IO Cell usage:
+              cell count
+            CLKBUF     1
+             INBUF    16
+            OUTBUF    21
+                   -----
+             TOTAL    38
+
+
+Core Cells         : 4606 of 6144 (75%)
+IO Cells           : 38
+
+  RAM/ROM Usage Summary
+Block Rams : 0 of 8 (0%)
+

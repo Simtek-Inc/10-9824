@@ -1,0 +1,123 @@
+SmartTime Version 11.7.1.14
+Microsemi Corporation - Microsemi Libero Software Release v11.7 SP1.1 (Version 11.7.1.14)
+Date: Fri Aug 11 13:04:43 2017
+
+ Design                         mainprogram
+ Family                         IGLOO
+ Die                            AGLN250V5
+ Package                        100 VQFP
+ Temperature Range              0 - 70 C
+ Voltage Range                  1.425 - 1.575 V
+ Speed Grade                    STD
+ Design State                   Post-Layout
+ Data source                    Silicon verified
+ Analysis Min Case              BEST - 1.575 V - 0 C
+ Analysis Max Case              WORST - 1.425 V - 70 C
+ Scenario for Timing Analysis   Primary
+
+ Using Enhanced Min Delay Analysis
+Pin Description
++-----------------------+----------+--------+----------------+
+| Name                  | Location | Type   | I/O Technology |
++-----------------------+----------+--------+----------------+
+| inputs60[3]           | 2        | Input  | LVCMOS33 (1)   |
+| inputs60[2]           | 4        | Input  | LVCMOS33 (1)   |
+| inputs60[1]           | 5        | Input  | LVCMOS33 (1)   |
+| inputs60[0]           | 6        | Input  | LVCMOS33 (1)   |
+| inputs61[3]           | 65       | Input  | LVCMOS33 (1)   |
+| inputs61[2]           | 62       | Input  | LVCMOS33 (1)   |
+| inputs61[1]           | 63       | Input  | LVCMOS33 (1)   |
+| inputs61[0]           | 64       | Input  | LVCMOS33 (1)   |
+| inputs62[2]           | 76       | Input  | LVCMOS33 (1)   |
+| inputs62[1]           | 72       | Input  | LVCMOS33 (1)   |
+| inputs62[0]           | 70       | Input  | LVCMOS33 (1)   |
+| inputs62_ctrl[4]      | 77       | Output | LVCMOS33 (2)   |
+| inputs62_ctrl[3]      | 73       | Output | LVCMOS33 (2)   |
+| inputs62_ctrl[2]      | 71       | Output | LVCMOS33 (2)   |
+| inputs62_ctrl[1]      | 69       | Output | LVCMOS33 (2)   |
+| inputs62_ctrl[0]      | 78       | Output | LVCMOS33 (2)   |
+| inputs67[2]           | 15       | Input  | LVCMOS33 (1)   |
+| inputs67[1]           | 11       | Input  | LVCMOS33 (1)   |
+| inputs67[0]           | 8        | Input  | LVCMOS33 (1)   |
+| inputs67_ctrl[4]      | 16       | Output | LVCMOS33 (2)   |
+| inputs67_ctrl[3]      | 13       | Output | LVCMOS33 (2)   |
+| inputs67_ctrl[2]      | 10       | Output | LVCMOS33 (2)   |
+| inputs67_ctrl[1]      | 7        | Output | LVCMOS33 (2)   |
+| inputs67_ctrl[0]      | 19       | Output | LVCMOS33 (2)   |
+| AdClock               | 59       | Output | LVCMOS33 (3)   |
+| AdCs1                 | 61       | Output | LVCMOS33 (3)   |
+| AdDout                | 60       | Input  | LVCMOS33 (4)   |
+| HrtBeat               | 23       | Output | LVCMOS33 (5)   |
+| AN1DimControl         | 35       | Output | LVCMOS33 (3)   |
+| AN2DimControl         | 36       | Output | LVCMOS33 (6)   |
+| AN3DimControl         | 34       | Output | LVCMOS33 (3)   |
+| AN4NRMControl         | 20       | Output | LVCMOS33 (3)   |
+| AN4PTTControl         | 21       | Output | LVCMOS33 (3)   |
+| AN5NRMControl         | 27       | Output | LVCMOS33 (3)   |
+| AN5PTTControl         | 26       | Output | LVCMOS33 (3)   |
+| AN6NRMControl         | 31       | Output | LVCMOS33 (3)   |
+| AN6PTTControl         | 30       | Output | LVCMOS33 (3)   |
+| EncLgtControl         | 28       | Output | LVCMOS33 (5)   |
+| PnlLgtControl         | 22       | Output | LVCMOS33 (7)   |
+| ExternalHardwareEn[6] | 45       | Output | LVCMOS33 (5)   |
+| ExternalHardwareEn[5] | 43       | Output | LVCMOS33 (5)   |
+| ExternalHardwareEn[4] | 96       | Output | LVCMOS33 (5)   |
+| ExternalHardwareEn[3] | 97       | Output | LVCMOS33 (8)   |
+| ExternalHardwareEn[2] | 98       | Output | LVCMOS33 (9)   |
+| ExternalHardwareEn[1] | 57       | Output | LVCMOS33 (6)   |
+| ExternalHardwareEn[0] | 58       | Output | LVCMOS33 (6)   |
+| XCLK                  | 80       | Clock  | LVCMOS33 (10)  |
+| ResetIn               | 82       | Input  | LVCMOS33 (10)  |
+| uCReset               | 83       | Output | LVCMOS33 (6)   |
+| SerialClock           | 95       | Clock  | LVCMOS33 (1)   |
+| SerialOut             | 94       | Output | LVCMOS33 (2)   |
+| SerialLoad            | 93       | Input  | LVCMOS33 (1)   |
+| SerialIn              | 92       | Input  | LVCMOS33 (1)   |
+| Ale                   | 91       | Input  | LVCMOS33 (1)   |
+| LogicReset            | 86       | Input  | LVCMOS33 (11)  |
++-----------------------+----------+--------+----------------+
+
+
+DC Electrical Characteristics
++---------------+------+----------+-----------+---------+--------------+--------+------+--------+
+| Name          | Vcci | Resistor | Hot       | Schmitt | Hold         | Output | Slew | Output |
+|               | (V)  | Pull     | Swappable | Trigger | previous     | Drive  |      | Load   |
+|               |      |          |           |         | I/O          | (mA)   |      | (pF)   |
+|               |      |          |           |         | state        |        |      |        |
+|               |      |          |           |         | in           |        |      |        |
+|               |      |          |           |         | Flash*Freeze |        |      |        |
+|               |      |          |           |         | mode         |        |      |        |
++---------------+------+----------+-----------+---------+--------------+--------+------+--------+
+| LVCMOS33 (1)  | 3.3  | Up       | no        | yes     | no           |        |      |        |
+| LVCMOS33 (10) | 3.3  | None     | no        | no      | no           |        |      |        |
+| LVCMOS33 (11) | 3.3  | Up       | no        | no      | no           |        |      |        |
+| LVCMOS33 (2)  | 3.3  | Up       | no        |         | no           | 4      | High | 5      |
+| LVCMOS33 (3)  | 3.3  | Up       | no        |         | no           | 2      | High | 5      |
+| LVCMOS33 (4)  | 3.3  | Down     | no        | yes     | no           |        |      |        |
+| LVCMOS33 (5)  | 3.3  | Up       | no        |         | no           | 4      | Low  | 5      |
+| LVCMOS33 (6)  | 3.3  | Up       | no        |         | no           | 2      | Low  | 5      |
+| LVCMOS33 (7)  | 3.3  | Down     | no        |         | no           | 4      | High | 5      |
+| LVCMOS33 (8)  | 3.3  | Down     | no        |         | no           | 4      | Low  | 5      |
+| LVCMOS33 (9)  | 3.3  | Down     | no        |         | no           | 2      | Low  | 5      |
++---------------+------+----------+-----------+---------+--------------+--------+------+--------+
+
+
+AC Electrical Characteristics
++-----------------+-------------+--------+--------------------+--------+---------+------+
+| Description     |             |        |                    | Min    | Max     | Unit |
++-----------------+-------------+--------+--------------------+--------+---------+------+
+| Clock frequency | SerialClock |        |                    |        | 114.077 | MHz  |
+| Clock period    | SerialClock |        |                    | 8.766  |         | ns   |
+| Clock frequency | XCLK        |        |                    |        | 299.401 | MHz  |
+| Clock period    | XCLK        |        |                    | 3.340  |         | ns   |
+| Setup time      | Ale         | before | SerialClock (rise) | 11.387 |         | ns   |
+| Setup time      | LogicReset  | before | SerialClock (rise) | 10.289 |         | ns   |
+| Setup time      | SerialIn    | before | SerialClock (rise) | 8.313  |         | ns   |
+| Setup time      | SerialLoad  | before | SerialClock (rise) | 13.553 |         | ns   |
+| Hold time       | Ale         | after  | SerialClock (rise) | -1.731 |         | ns   |
+| Hold time       | LogicReset  | after  | SerialClock (rise) | -1.238 |         | ns   |
+| Hold time       | SerialIn    | after  | SerialClock (rise) | -0.686 |         | ns   |
+| Hold time       | SerialLoad  | after  | SerialClock (rise) | -0.516 |         | ns   |
++-----------------+-------------+--------+--------------------+--------+---------+------+
+
+

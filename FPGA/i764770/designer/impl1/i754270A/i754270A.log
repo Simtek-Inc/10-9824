@@ -1,0 +1,71 @@
+Software Version: 11.9.2.1
+creating folder:
+G:\Instruments\9xxx\9100-9199\9182\SourceCode\10-9182\Source_Code\5330\FPGA\i754270A\designer\i\
+mpl1\i754270A
+Driver : 3.0.0 build 1
+programmer '74092' : FlashPro4
+Created new project
+'G:\Instruments\9xxx\9100-9199\9182\SourceCode\10-9182\Source_Code\5330\FPGA\i754270A\designer\\
+impl1\i754270A\i754270A.pro'
+PDB file
+'G:\Instruments\9xxx\9100-9199\9182\SourceCode\10-9182\Source_Code\5330\FPGA\i754270A\designer\\
+impl1\mainprogram.pdb' has been loaded successfully.
+DESIGN : mainprogram;  CHECKSUM : CB0E;  PDB_VERSION : 1.9
+programmer '74092' : Scan Chain...
+programmer '74092' : Scan Chain PASSED.
+programmer '74092' : Executing action PROGRAM
+programmer '74092' : EXPORT FSN[48] = 01a65e186479
+programmer '74092' : Erase ...
+programmer '74092' : Completed erase
+programmer '74092' : EXPORT CHECKSUM[16] = cb0e
+programmer '74092' : Programming FPGA Array
+programmer '74092' : Verifying FPGA Array
+programmer '74092' :         Verifying FPGA Array -- pass
+programmer '74092' : Finished: Fri Mar 31 10:43:42 2023 (Elapsed time 00:00:28)
+programmer '74092' : Executing action PROGRAM PASSED.
+
+                        o - o - o - o - o - o
+
+PDB file
+'G:\Instruments\9xxx\9100-9199\9182\SourceCode\10-9182\Source_Code\5330\FPGA\i754270A\designer\\
+impl1\mainprogram.pdb' has been loaded successfully.
+DESIGN : mainprogram;  CHECKSUM : AA6E;  PDB_VERSION : 1.9
+programmer '74092' : Scan Chain...
+programmer '74092' : Scan Chain PASSED.
+programmer '74092' : Executing action PROGRAM
+programmer '74092' : EXPORT FSN[48] = 01a65e186479
+programmer '74092' : Erase ...
+programmer '74092' : Completed erase
+programmer '74092' : EXPORT CHECKSUM[16] = aa6e
+programmer '74092' : Programming FPGA Array
+programmer '74092' : Verifying FPGA Array
+programmer '74092' :         Verifying FPGA Array -- pass
+programmer '74092' : Finished: Fri Mar 31 10:48:33 2023 (Elapsed time 00:00:28)
+programmer '74092' : Executing action PROGRAM PASSED.
+
+                        o - o - o - o - o - o
+
+PDB file
+'G:\Instruments\9xxx\9100-9199\9182\SourceCode\10-9182\Source_Code\5330\FPGA\i754270A\designer\\
+impl1\mainprogram.pdb' has been loaded successfully.
+DESIGN : mainprogram;  CHECKSUM : 059C;  PDB_VERSION : 1.9
+programmer '74092' : Scan Chain...
+programmer '74092' : Scan Chain PASSED.
+programmer '74092' : Executing action PROGRAM
+programmer '74092' : EXPORT FSN[48] = 01a65e186479
+programmer '74092' : Erase ...
+programmer '74092' : Completed erase
+programmer '74092' : EXPORT CHECKSUM[16] = 059c
+programmer '74092' : Programming FPGA Array
+programmer '74092' : Verifying FPGA Array
+programmer '74092' :         Verifying FPGA Array -- pass
+programmer '74092' : Finished: Fri Mar 31 10:54:47 2023 (Elapsed time 00:00:30)
+programmer '74092' : Executing action PROGRAM PASSED.
+
+                        o - o - o - o - o - o
+
+creating folder:
+G:\Instruments\9xxx\9100-9199\9182\SourceCode\10-9182\Source_Code\5330\FPGA\i754270A\designer\i\
+mpl1\i754270A\projectData
+Project saved.
+Project closed.

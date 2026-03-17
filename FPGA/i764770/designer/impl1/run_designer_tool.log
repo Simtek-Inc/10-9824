@@ -1,0 +1,24 @@
+Microsemi Libero Software
+Version: 11.9.2.1
+Release: v11.9 SP2
+
+'IDE_DESIGNERVIEW_ROOTDIR' set to 'C:\_swork\10-\9800\9824\FPGA\i764841\designer'
+Info: The design mainprogram.adb was last modified by software version 11.9.2.1.
+Opened an existing Libero design mainprogram.adb.
+
+The Execute Script command succeeded ( 00:00:25 )
+
+ Netlist Reading Time = 1.0 seconds
+Imported the file:
+   C:\_swork\10-\9800\9824\FPGA\i764841\synthesis\mainprogram.edn
+
+The Import command succeeded ( 00:00:02 )
+Design saved to file C:\_swork\10-\9800\9824\FPGA\i764841\designer\impl1\mainprogram.adb.
+Error: Cannot execute the specified report command in this design state.
+
+The Report command failed ( 00:00:00 )
+Error: Failure when executing Tcl script. [ Line 1 ]
+
+The Execute Script command failed ( 00:00:00 )
+Design closed.
+
